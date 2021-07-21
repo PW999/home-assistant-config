@@ -22,5 +22,4 @@ This is a very short list of the hardware I'm using:
   * Roomba 690
   * Foscam R2M Wifi camera
   * Fluvius Smart meter with [SlimmeLezer](https://www.zuidwijk.com/slimmelezer-smartreader/) 
-  
-  
+* HP Touchpad with Evervolv ROM to runn Wallpanel on (appdaemon dashboard)
