@@ -1,0 +1,29 @@
+# All "hidden" directories, probably a bad idea to commit them
+.*/
+
+# Don't commit compiled stuff
+appdaemon/compiled
+# I'm nut using apps
+appdaemon/apps
+
+# Don't commit a snapshot of my hall (last time motion was detected, so it's probably a snapshot of me)
+www/snap_hall.jpg
+
+# Don't commit user profile pictures
+image/
+
+# There's already a default gitignore in the esphome folder
+# Only commit the yaml's in the esphome folder root
+!esphome/*.yaml
+# But don't commit my secrets
+esphome/secrets.yaml
+
+# Don't commit any of the HA database files
+*.db*
+# Contains Bluetooth device MAC addresses (also from all my neighbours)
+known_devices.yaml
+# Don't commit any log files
+**/*.log
+
+# Again, no secrets please 
+**/secrets.yaml
