@@ -1,0 +1,28 @@
+#
+# Main arguments, all optional
+#
+title: Touchpad
+widget_dimensions: [120, 120]
+widget_margins: [7, 7]
+widget_size: [1, 1]
+columns: 8
+global_parameters:
+  use_hass_icon: 1
+
+scene_home_alone:
+  widget_type: scene
+  title: All off
+  entity: scene.home_alone_scene
+
+scene_night:
+  widget_type: scene
+  title: Night
+  entity: scene.home_night_scene
+
+layout: 
+  - scene_home_alone, scene_night
+  -
+  -
+  - 
+  - 
+  - include: footer 
