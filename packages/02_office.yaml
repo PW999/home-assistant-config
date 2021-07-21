@@ -1,0 +1,152 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   05/05/2021
+#   @package        :   Office light automation
+#   @description    :   Automates the WLED strip behind my desk
+#   @url            :
+###############################################################################
+
+homeassistant:
+  customize:
+    sensor.gosund_sp112_1_current:
+      friendly_name: Desktop Current
+    switch.gosund_sp112_1_main_relay:
+      friendly_name: Desktop Switch
+    switch.gosund_sp112_1_usb:
+      friendly_name: Desktop Usb Switch
+    sensor.gosund_sp112_1_rrsi:
+      friendly_name: Desktop RSSI
+    sensor.gosund_sp112_1_total_daily_energy_consumption:
+      friendly_name: Desktop today's energy consumption
+    sensor.gosund_sp112_1_uptime:
+      friendly_name: Desktop Uptime
+    sensor.gosund_sp112_1_voltage:
+      friendly_name: Desktop Voltage
+    sensor.gosund_sp112_1_wattage:
+      friendly_name: Desktop Power Consumption
+
+automation:
+  ##############################################
+  # OFFICE AUTOMATION (8000000002xxx)
+  ##############################################
+  - id: '8000000002001'
+    alias: Office WLED ON
+    description: Turn the lights behind the desk on when I turn on my computer(s)
+    trigger:
+    - entity_id: device_tracker.as_hq_lt_108
+      platform: state
+      to: home
+    - entity_id: device_tracker.pwnitrogen
+      platform: state
+      to: home
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'on'
+    condition:
+      condition: and
+      conditions:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: 'on'
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: device_tracker.pwnitrogen
+          state: home
+        - condition: state
+          entity_id: device_tracker.as_hq_lt_108
+          state: home
+    action:
+    - service: scene.turn_on
+      entity_id: scene.office_on_scene
+
+  - id: '8000000002002'
+    alias: Office WLED OFF
+    description: Turn the lights behind the desk off when I turn off my computer(s)
+    trigger:
+    - entity_id: device_tracker.as_hq_lt_108
+      platform: state
+      to: not_home
+    - entity_id: device_tracker.pwnitrogen
+      platform: state
+      to: not_home
+    condition:
+    - condition: state
+      entity_id: device_tracker.as_hq_lt_108
+      state: not_home
+    - condition: state
+      entity_id: device_tracker.pwnitrogen
+      state: not_home
+    action:
+      # segments don't support fancy on-off transitions, but they do have brightness transititions 
+    - service: scene.turn_on
+      entity_id: scene.office_off_scene_with_transition
+    - delay: 10
+    - service: scene.turn_on
+      entity_id: scene.office_off_scene
+
+scene:
+  - id: '7000000002000'
+    name: Office on scene
+    entities:
+      light.bureau_wled:
+        state: 'on'
+        brightness: 254
+        effect: Solid
+        rgb_color:
+        - 255
+        - 50
+        - 50
+      light.bureau_wled_segment_1:
+        state: 'on'
+        brightness: 254
+        effect: Solid
+        rgb_color:
+        - 222
+        - 222
+        - 255
+      light.bureau_wled_segment_2:
+        state: 'on'
+        brightness: 254
+        effect: Solid
+        rgb_color:
+        - 255
+        - 50
+        - 50
+  - id: '7000000002001'
+    name: Office off scene
+    entities:
+      light.bureau_wled:
+        state: 'off'
+      light.bureau_wled_segment_1:
+        state: 'off'
+      light.bureau_wled_segment_2:
+        state: 'off'
+
+  - id: '7000000002002'
+    name: Office off scene with transition
+    entities:
+      light.bureau_wled:
+        state: 'on'
+        brightness: 1
+        effect: Solid
+        rgb_color:
+        - 255
+        - 50
+        - 50
+      light.bureau_wled_segment_1:
+        state: 'on'
+        brightness: 1
+        effect: Solid
+        rgb_color:
+        - 222
+        - 222
+        - 255
+      light.bureau_wled_segment_2:
+        state: 'on'
+        brightness: 1
+        effect: Solid
+        rgb_color:
+        - 255
+        - 50
+        - 50

@@ -1,0 +1,236 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Digital Smart Meter enhancements
+#   @description    :   Generate some extra data to monitor power consumption
+#   @url            :
+#   @credit         :   https://github.com/home-assistant/core/issues/40595
+###############################################################################
+
+# TODO:
+# [X] One automation for high and low record
+# [ ] Automation on configurable date to record last year's value (check last invoice)
+# [ ] Add this year's average cost/day sensor + automation
+
+homeassistant:
+  customize:
+    sensor.current_phase_l1:
+      icon: mdi:current-ac
+    sensor.current_phase_l2:
+      icon: mdi:current-ac
+    sensor.current_phase_l3:
+      icon: mdi:current-ac
+    sensor.voltage_phase_l1:
+      icon: mdi:sine-wave
+    sensor.voltage_phase_l2:
+      icon: mdi:sine-wave
+    sensor.voltage_phase_l3:
+      icon: mdi:sine-wave
+      
+input_number:
+  # How much is paid per kWh
+  electricity_tarrif:
+    name: Hourly tarrif
+    initial: 0.2360
+    min: 0.2
+    max: 0.3
+
+  # Used to calculate today's consumption on the "high" (day) channel
+  electricity_previous_consumption_high:
+    name: Yesterday's high consumption
+    min: 0
+    max: 999999
+
+  # Used to calculate today's consumption on the "low" (night/weekend) channel
+  electricity_previous_consumption_low:
+    name: Yesterday's low consumption
+    min: 0
+    max: 999999
+
+  # Used to calculate this year's consumption on the "high" (day) channel
+  electricity_last_yr_consumption_high:
+    name: Last years high consumption
+    min: 0
+    max: 999999
+
+  # Used to calculate this year's consumption on the "low" (night/weekend) channel
+  electricity_last_yr_consumption_low:
+    name: Last years low consumption
+    min: 0
+    max: 999999
+
+counter:
+  # Old workaround, DMSR integration would not reconnect and my meter is really far away so it dropped a lot
+  # Plus there's a lot of noise on the 2.4Ghz channel apparently
+  dsmr_reconnect:
+    name: DSMR number of workaround reconnects
+    step: 1
+    icon: mdi:restart
+
+rest_command:
+  # Call HomeAssistant and force it to reload the integation
+  # dsmr_reload_url format: http://localhost:8123/api/config/config_entries/entry/{DSMR_INTEGRATION_ID}/reload
+  reload_dsmr:
+    url: !secret dsmr_reload_url
+    method: POST
+    headers:
+      authorization: !secret self_rest_token
+
+group:
+  meter_readings:
+    name: Meter readings
+    entities:
+      - sensor.energy_consumption_tarif_1
+      - sensor.energy_consumption_tarif_2
+  dsmr_input_values:
+    name: Smart meter input values
+    icon: mdi:sort-numeric-variant
+    entities:
+      - input_number.electricity_tarrif
+      - input_number.electricity_previous_consumption_high
+      - input_number.electricity_previous_consumption_low
+      - input_number.electricity_last_yr_consumption_high
+      - input_number.electricity_last_yr_consumption_low
+
+sensor:
+  # FYI: HA will only read this once, afterwards it's only configurable through the UI
+  - platform: dsmr
+    host: 192.168.0.60
+    port: 23
+    reconnect_interval: 60
+    dsmr_version: 5B  # 5B for Belgian readers
+
+  - platform: template
+    sensors:
+      energy_daily_consumption:
+        friendly_name: Today's energy consumption
+        unique_id: '9000000010001'
+        device_class: energy
+        unit_of_measurement: kWh
+        availability_template: >-
+          {{ True if
+              not is_state('sensor.energy_consumption_tarif_1', 'unavailable')
+              and not is_state('sensor.energy_consumption_tarif_2', 'unavailable')
+              else False
+          }}
+        value_template: >-
+          {{
+            (
+              float(states('sensor.energy_consumption_tarif_1')) - float(states('input_number.electricity_previous_consumption_high'))
+              +
+              float(states('sensor.energy_consumption_tarif_2')) - float(states('input_number.electricity_previous_consumption_low'))
+            ) | round(1)
+          }}
+
+  - platform: template
+    sensors:
+      energy_yearly_consumption:
+        friendly_name: This year's energy consumption
+        unique_id: '9000000010002'
+        device_class: energy
+        unit_of_measurement: kWh
+        availability_template: >-
+          {{ True if
+              not is_state('sensor.energy_consumption_tarif_1', 'unavailable')
+              and not is_state('sensor.energy_consumption_tarif_2', 'unavailable')
+              else False
+          }}
+        value_template: >-
+          {{
+            (
+              float(states('sensor.energy_consumption_tarif_1')) - float(states('input_number.electricity_last_yr_consumption_high'))
+              +
+              float(states('sensor.energy_consumption_tarif_2')) - float(states('input_number.electricity_last_yr_consumption_low'))
+            ) | round(1)
+          }}
+
+  - platform: template
+    sensors:
+      energy_daily_cost:
+        friendly_name: Today's energy cost
+        unique_id: '9000000010003'
+        unit_of_measurement: €
+        icon_template: mdi:currency-eur
+        availability_template: >-
+          {{ True if
+              not is_state('sensor.energy_daily_consumption', 'unavailable')
+              else False
+          }}
+        value_template: >-
+          {{
+            (
+              float(states('sensor.energy_daily_consumption')) * float(states('input_number.electricity_tarrif'))
+            ) | round(2)
+          }}
+
+  - platform: template
+    sensors:
+      energy_yearly_cost:
+        friendly_name: This year's energy cost
+        unique_id: '9000000010004'
+        unit_of_measurement: €
+        icon_template: mdi:currency-eur
+        availability_template: >-
+          {{ True if
+              not is_state('sensor.energy_yearly_consumption', 'unavailable')
+              else False
+          }}
+        value_template: >-
+          {{
+            (
+              float(states('sensor.energy_yearly_consumption')) * float(states('input_number.electricity_tarrif'))
+            ) | round(2)
+          }}
+
+    # For esp-link based P1-port readers, also record the wifi RSSI
+  - platform: rest
+    name: P1 Reader RSSI
+    resource: http://192.168.0.60/wifi/info
+    timeout: 30
+    value_template: "{{ value_json.rssi | replace('dB', '') | float }}"
+    device_class: signal_strength
+    unit_of_measurement: dB
+
+
+##############################################
+# DSMR integration (8000000010xxx)
+##############################################
+# NEXT_ID 4
+automation:
+  - id: '8000000010001'
+    alias: DSMR - Record yesterday consumption
+    description: Set yesterday's high and low consumption in a variable
+    trigger:
+      - platform: time
+        at: '00:00:00'
+    action:
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.electricity_previous_consumption_high
+          value: "{{ states('sensor.energy_consumption_tarif_1') }}"
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.electricity_previous_consumption_low
+          value: "{{ states('sensor.energy_consumption_tarif_2') }}"
+
+
+  # https://github.com/home-assistant/core/issues/40595
+  - id : '8000000010003'
+    alias: DSMR - Reconnect
+    description: Workaround for old bug, force DSMR integration reload if the P1 reader disconnected
+    mode: single
+    trigger:
+      - platform: time_pattern
+        minutes: /5
+    condition:
+      - condition: template
+        value_template: >-
+          {{ (as_timestamp(now()) -
+          as_timestamp(states.sensor.power_consumption.last_updated)) |
+          int > 120 }}
+    action:
+      - service: rest_command.reload_dsmr
+        data: {}
+      - service: counter.increment
+        data:
+          entity_id: counter.dsmr_reconnect

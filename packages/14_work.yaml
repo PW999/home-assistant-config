@@ -1,0 +1,85 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Work package
+#   @description    :   Small work related actions
+#   @url            :
+###############################################################################
+
+sensor:
+  # Avoiding toll, subscription
+  - platform: waze_travel_time
+    name: To work
+    origin: Kapellen, Antwerp, Belgium
+    destination: Hoboken, Antwerp, Belgium
+    region: 'EU'
+    avoid_toll_roads: true
+    avoid_subscription_roads: true
+  # Avoiding toll, subscription
+  - platform: waze_travel_time
+    name: To home
+    destination: Kapellen, Antwerp, Belgium
+    origin: Hoboken, Antwerp, Belgium
+    region: 'EU'
+    avoid_toll_roads: true
+    avoid_subscription_roads: true
+
+binary_sensor:
+  - platform: workday
+    country: BE
+
+timer:
+  workday_countdown:
+    name: Countdown untill I can leave from work
+    duration: 08:00:00
+
+##############################################
+# Workday automation (8000000014xxx)
+##############################################
+# NEXT_ID 2
+
+automation:
+  ## Work time ##
+  - id: '8000000014001'
+    alias: Timer - Start at work timer
+    description: 'Starts timer when I arrive at work or start my laptop'
+    trigger:
+    - platform: zone
+      entity_id:
+        - person.phillip
+      zone: zone.work
+      event: enter
+    - platform: state
+      entity_id:
+        - device_tracker.as_hq_lt_108
+      to: home
+    action:
+    - service: timer.cancel
+      data:
+        entity_id: timer.workday_countdown
+    - delay: 300  # Zone is pretty big, gotta park my car and stuff
+    - service: timer.start
+      data:
+        entity_id: timer.workday_countdown
+
+
+  - id: '8000000014002'
+    alias: Notification - Return from work travel time
+    description: Send travel to home time when I'm at work for 8h
+    mode: single
+    trigger:
+      - platform: event
+        event_type: timer.finished
+        event_data:
+          entity_id: timer.workday_countdown
+    condition:
+      - condition: zone
+        entity_id: person.phillip
+        zone: zone.work
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Almost time to go home, travel time is {{ states('sensor.to_home') }} {{ state_attr('sensor.to_home', 'unit_of_measurement') }} via {{ state_attr('sensor.to_home', 'route') }}
+          title: Yow !
+      - delay: 600

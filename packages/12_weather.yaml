@@ -1,0 +1,98 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Weather package
+#   @description    :   Small weather related actions
+#   @url            :
+###############################################################################
+
+input_number:
+  # We only have next day's weather forecast, so before midnight, we record next day's
+  # forecast so that in the morning we can send the forcast of today through notification
+  forecast_temp:
+    name: Weather forecast temperature
+    min: -50
+    max: 50
+    step: 0.1
+    unit_of_measurement: '°C'
+  forecast_min_temp:
+    name: Weather forecast low temperature
+    min: -50
+    max: 50
+    step: 0.1
+    unit_of_measurement: '°C'
+  forecast_precip:
+    name: Weather forecast precipitation
+    min: 0
+    max: 100
+    step: 0.1
+    unit_of_measurement: mm
+
+input_text:
+  forecast_weather:
+    name: Weather forecast
+    icon: mdi:cloud-outline
+
+input_boolean:
+  # Decouples weather from automation. Naming could be better though, "It's sunny" would've been easier.
+  darkweather:
+    name: It's not sunny
+    icon: mdi:cloud
+
+##############################################
+# Weather (8000000012xxx)
+##############################################
+# NEXT_ID 4
+
+automation:
+  - id: '8000000012001'
+    alias: Switches - Dark weather
+    description: Turn on the darkweather switch if it's not sunny outside
+    trigger:
+    - entity_id: weather.pw_casa
+      platform: state
+    condition:
+    - condition: template
+      value_template: "{{ not (is_state('weather.pw_casa', 'sunny') ) }}"
+    action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.darkweather
+
+  - id: '8000000012002'
+    alias: Switches - Sunny weather
+    description: Turn off the darkweather switch if it's sunny outside
+    trigger:
+    - entity_id: weather.pw_casa
+      platform: state
+    condition:
+    - condition: template
+      value_template: "{{ (is_state('weather.pw_casa', 'sunny') ) }}"
+    action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.darkweather
+
+  - id: '8000000012003'
+    alias: Forecast - Record tomorrow weather
+    description: Record's tomorrow's forecast so we can use it the next day as today's forecast
+    trigger:
+      - platform: time
+        at: '22:00:00'
+    action:
+      - service: input_text.set_value
+        data:
+          entity_id: input_text.forecast_weather
+          value: "{{ state_attr('weather.pw_casa', 'forecast')[0].condition }}"
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.forecast_min_temp
+          value: "{{ state_attr('weather.pw_casa', 'forecast')[0].templow | float }}"
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.forecast_precip
+          value: "{{ state_attr('weather.pw_casa', 'forecast')[0].precipitation | float }}"
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.forecast_temp
+          value: "{{ state_attr('weather.pw_casa', 'forecast')[0].temperature | float }}"

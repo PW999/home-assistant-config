@@ -1,0 +1,208 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   05/2021
+#   @package        :   General Living room light automation
+#   @description    :   Contains living room light
+#   @url            :
+###############################################################################
+
+
+##############################################
+# LIVING ROOM AUTOMATION (8000000001xxx)
+##############################################
+# Next: 5
+automation:
+  - id: '8000000001001'
+    alias: Living room evening mode
+    description: Turn on the living room lights in the evening based on sunset
+    trigger:
+    - entity_id: input_boolean.dusk_till_dawn
+      platform: state
+      from: 'off'
+      to: 'on'
+    - entity_id: input_boolean.dimm_lights
+      platform: state
+      from: 'on'
+      to: 'off'
+    - entity_id: input_boolean.night
+      platform: state
+      from: 'on'
+      to: 'off'
+    - entity_id: input_boolean.master_switch
+      platform: state
+      from: 'off'
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.dusk_till_dawn
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.dimm_lights
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.night
+      state: 'off'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.living_room_evening
+      data:
+        transition: 5
+
+
+  - id: '8000000001002'
+    alias: Living room off at sunrise
+    description: Turn off the living room lights in the morning
+    trigger:
+    - entity_id: input_boolean.dusk_till_dawn
+      platform: state
+      from: 'on'
+      to: 'off'
+    - entity_id: input_boolean.dimm_lights
+      platform: state
+      from: 'on'
+      to: 'off'
+    - entity_id: input_boolean.night
+      platform: state
+      from: 'on'
+      to: 'off'
+    condition:
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.dusk_till_dawn
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.dimm_lights
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.night
+      state: 'off'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.living_room_off
+      data:
+        transition: 5
+
+
+  - id: '8000000001003'
+    alias: Living room dimmed evening mode
+    description: Slowly dimm the living room lights at fixed time
+    trigger:
+    - entity_id: input_boolean.dusk_till_dawn
+      platform: state
+      from: 'off'
+      to: 'on'
+    - entity_id: input_boolean.dimm_lights
+      platform: state
+      from: 'off'
+      to: 'on'
+    - entity_id: input_boolean.night
+      platform: state
+      from: 'on'
+      to: 'off'
+    - entity_id: input_boolean.master_switch
+      platform: state
+      from: 'off'
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.dusk_till_dawn
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.dimm_lights
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.night
+      state: 'off'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.living_room_evening_dimmed
+      data:
+        transition: 60
+
+scene:
+  ##############################################
+  # LIVING ROOM SCENES (7000000001xxx)
+  ##############################################
+  - id: '7000000001000'
+    name: Living Room Evening
+    entities:
+      light.front_window:
+        intensity: 97
+        speed: 35
+        state: 'on'
+        brightness: 254
+        effect: 'Candle Multi'
+        rgb_color:
+        - 255
+        - 0
+        - 0
+      light.living_room_tv:
+        intensity: 166
+        speed: 25
+        state: 'on'
+        brightness: 254
+        effect: Palette
+      light.living_room_big:
+        color_temp: 370
+        brightness: 196
+        state: 'on'
+      light.living_room_small:
+        color_temp: 370
+        brightness: 196
+        state: 'on'
+      switch.on_off_plug_1:
+        state: 'on'
+  - id: '7000000001001'
+    name: Living Room off
+    entities:
+      light.front_window:
+        state: 'off'
+      light.living_room_tv:
+        state: 'off'
+      light.living_room_big:
+        state: 'on'
+        brightness: 0
+        color_temp: 370
+      light.living_room_small:
+        state: 'on'
+        brightness: 0
+        color_temp: 370
+      switch.on_off_plug_1:
+        state: 'off'
+  - id: '7000000001002'
+    name: Living Room Evening Dimmed
+    entities:
+      light.front_window:
+        intensity: 97
+        speed: 35
+        state: 'on'
+        brightness: 128
+        effect: 'Candle Multi'
+        rgb_color:
+        - 255
+        - 0
+        - 0
+      light.living_room_tv:
+        intensity: 166
+        speed: 25
+        state: 'on'
+        brightness: 128
+        effect: Palette
+      light.living_room_big:
+        color_temp: 370
+        brightness: 96
+        state: 'on'
+      light.living_room_small:
+        color_temp: 370
+        brightness: 64
+        state: 'on'
+      switch.on_off_plug_1:
+        state: 'on'

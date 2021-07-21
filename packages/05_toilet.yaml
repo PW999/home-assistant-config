@@ -1,0 +1,50 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   05/2021
+#   @package        :   General toilet light automation
+#   @description    :   Way to complex toilet light scheme for my toilet
+#   @url            :
+###############################################################################
+
+sensor:
+  - platform: template
+    sensors:
+      toilet_temperature_corrected:
+        friendly_name: "Toilet temperature"
+        unit_of_measurement: '°C'
+        device_class: temperature
+        availability_template: "{{ not is_state('sensor.toilet_presence', 'unavailable')  }}"
+        value_template: "{{ (float(states('sensor.toilet_presence')) + 0.4) | round(1) }}"
+
+
+##############################################
+# HOUSE AUTOMATION (8000000005xxx)
+##############################################
+automation:
+  - id: '8000000005000'
+    alias: Toilet light on
+    description: Turns the toilet light on when motion is detected
+    trigger:
+    - entity_id: binary_sensor.toilet_presence
+      platform: state
+      to: 'on'
+    action:
+      service: light.turn_on
+      data_template:
+        brightness: " {{ [16, (255 * ( cos(0.11* ( 13 - now().hour)) - 0.2 ) /0.8)] | max | round(0) }}"  # https://www.desmos.com/calculator
+        entity_id:
+          - light.toilet
+
+  - id: '8000000005001'
+    alias: Toilet light off
+    description: Turns the toilet light off when motion is not detected for 4 min
+    trigger:
+    - entity_id: binary_sensor.toilet_presence
+      platform: state
+      to: 'off'
+      for: '00:04'
+    action:
+      service: light.turn_off
+      data:
+        entity_id:
+          - light.toilet

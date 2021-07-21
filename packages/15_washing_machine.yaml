@@ -1,0 +1,185 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Washing machine package
+#   @description    :   Monitor washing machine and notify so I don't forget to empty it
+#   @url            :
+#   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
+###############################################################################
+
+
+homeassistant:
+  customize:
+    sensor.washing_machine_status:
+      icon: mdi:washing-machine
+
+    sensor.gosund_sp1_2_current:
+      friendly_name: Washing machine Current
+    switch.gosund_sp1_2_main_relay:
+      friendly_name: Washing machine Switch
+    switch.gosund_sp1_2_usb:
+      friendly_name: Washing machine Usb Switch
+    sensor.gosund_sp1_2_rrsi:
+      friendly_name: Washing machine RSSI
+    sensor.gosund_sp1_2_total_daily_energy_consumption:
+      friendly_name: Washing machine today's energy consumption
+    sensor.gosund_sp1_2_uptime:
+      friendly_name: Washing machine Uptime
+    sensor.gosund_sp1_2_voltage:
+      friendly_name: Washing machine Voltage
+    sensor.gosund_sp1_2_wattage:
+      friendly_name: Washing machine Power Consumption
+
+input_boolean:
+  disable_washing_machine_notification:
+    name: Disable Washing Machine Notification
+    initial: off
+    icon: mdi:washing-machine
+
+input_select:
+  washing_machine_status:
+    name: Washing Machine Status
+    options:
+      - Idle
+      - Running
+      - Finished
+
+sensor:
+- platform: template
+  sensors:
+  # Washing Machine Status
+      washing_machine_status:
+        value_template: '{{ states.input_select.washing_machine_status.state}}'
+        friendly_name: Washing machine status
+        availability_template: >-
+          {{ True if
+              not is_state('input_select.washing_machine_status', 'unavailable')
+              else False
+          }}
+
+##############################################
+# Workday automation (8000000015xxx)
+##############################################
+# NEXT_ID 5
+automation:
+
+    # When power is detected, and the washing machine is not in
+    # the Running state, change the status of the washing machine
+    # to Running.
+    # The status check will ensure we don't try to put the state
+    # to Running each time the power level changes, and we're already
+    # in the Running state.
+  - id: '8000000015001'
+    alias: Washing Machine - Set active when power detected
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.gosund_sp1_2_wattage
+        above: 10
+        for:
+          minutes: 2
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.washing_machine_status
+          state: Idle
+        - condition: state
+          entity_id: sensor.washing_machine_status
+          state: Finished
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.washing_machine_status
+          option: Running
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.disable_washing_machine_notification
+
+    # When the power drops, move the state of the washing machine to Finished.
+  - id: '8000000015002'
+    alias: Washing Machine - Set finished when power drops
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.gosund_sp1_2_wattage
+        below: 10
+        for:
+          minutes: 5
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_select.washing_machine_status
+          state: Running
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.washing_machine_status
+          option: Finished
+
+    # As soon as I am home, send an actionable notification telling me to empty the washing machine.
+    # Will repeat until I click Finish on the notification.
+  - id: '8000000015003'
+    alias: Notification - Send alert when washing machine is finished
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: sensor.washing_machine_status
+        to: Finished
+      - platform: state
+        entity_id: person.phillip
+        to: home
+        for:
+          minutes: 1
+      - platform: time_pattern
+        minutes: '/30'
+    condition:
+      condition: and
+      conditions:
+        - condition: time
+          before: '22:30:00'
+          after: '08:30:00'
+        - condition: state
+          entity_id: group.household_members
+          state: home
+        - condition: state
+          entity_id: input_select.washing_machine_status
+          state: Finished
+        - condition: state
+          entity_id: input_boolean.disable_washing_machine_notification
+          state: 'off'
+        - condition: template
+          value_template: >
+            {% if states.automation.notification_send_alert_when_washing_machine_is_finished.last_triggered is not none %}
+              {% if as_timestamp(now()) | int   -  as_timestamp(states.automation.notification_send_alert_when_washing_machine_is_finished.attributes.last_triggered) | int > 1800 %} true {% else %} false
+              {% endif %}
+            {% else %}
+            false
+            {% endif %}
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Do not forget to empty the washing machine.
+          title: Waching machine ready
+          data:
+            actions:
+              - action: 'WASHING_MACHINE_DISABLE_NOTIFICATION' # The key you are sending for the event
+                title: 'Finish' # The button title
+      - delay: 600
+
+    # When clicked on the Finish button in the above notification, set the washing machine to Idle
+  - id: '8000000015004'
+    alias: Washing Machine - Emptied event
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: WASHING_MACHINE_DISABLE_NOTIFICATION
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.washing_machine_status
+          option: Idle
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.disable_washing_machine_notification

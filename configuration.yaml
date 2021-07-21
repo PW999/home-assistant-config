@@ -1,0 +1,117 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+homeassistant:
+  packages: !include_dir_named packages
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+
+python_script:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include_dir_merge_list automations/
+script: !include scripts.yaml
+scene: !include_dir_merge_list scenes/
+frontend: !include themes.yaml
+sensor: !include_dir_merge_list sensors/
+
+
+recorder:
+  purge_keep_days: 4
+  commit_interval: 240
+  exclude:
+    domains:
+      - automation
+      - updater
+      - timer
+    entities:
+      - binary_sensor.updater
+      - sensor.last_boot
+      - binary_sensor.mi_9t_is_charging
+      - camera.buienradar_loop
+      - weather.pw_casa_hourly
+    entity_globs:
+      - sensor.*absolute_humidity
+      - sensor.*estimated_current
+      - sensor.*_wled_free_memory
+      - sensor.*_wled_wi_fi_bssid
+      - sensor.*_wled_uptime
+      - sensor.*_wled_wi_fi_channel
+      - sensor.mi_9t*
+      - sensor.*presence
+      - input_number.electricity_*
+      - input_number.forecast_*
+      - input_text.forecast_*
+    event_types:
+      - call_service # Don't record service calls
+
+
+influxdb:
+  host: localhost
+  port: 8086
+  database: homeassistant
+  username: !secret influx_user
+  password: !secret influx_pass
+  ssl: false
+  verify_ssl: false
+  max_retries: 5
+  include:
+    entities:
+      - counter.dsmr_reconnect
+      - weather.pw_casa
+    domains:
+      - sensor
+      - device_tracker
+      - climate
+  exclude:
+    entities:
+      - sensor.last_boot
+      - sensor.washing_machine_status
+      - sensor.dryer_status
+      - sensor.dish_washer_status
+    entity_globs:
+      - sensor.*absolute_humidity
+      - sensor.*estimated_current
+      - sensor.*_wled_free_memory
+      - sensor.*_wled_wi_fi_bssid
+      - sensor.*_wled_uptime
+      - sensor.*_wled_wi_fi_channel
+      - sensor.mi_9t*
+      - sensor.*presence
+      - sensor.foscam_r2m_1_log*
+
+
+device_tracker:
+  - platform: bluetooth_tracker
+    interval_seconds: 30
+    consider_home: 240
+    new_device_defaults:
+      track_new_devices: false
+  - platform: ping
+    hosts:
+      pwnitrogen: 192.168.0.101
+#      hasspi: 192.168.0.16
+
+camera:
+  - platform: buienradar
+    country_code: BE
+
+roomba:
+  - host: 192.168.0.40
+    blid: !secret roomba_blid
+    password: !secret roomba_password
+    continuous: true
+
+
+
+#shell_command:
+  #Created a preset point in Foscam Web Interface named Off which essentially points the camera down and away
+  #foscam_r2m_one_turn_off: !secret foscam_r2m_one_off_url
+  #Created a preset point in Foscam Web Interface named Main which points in the direction I would like to record
+  #foscam_r2m_one_turn_on: !secret foscam_r2m_one_on_url

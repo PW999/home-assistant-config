@@ -1,0 +1,395 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   05/2021
+#   @package        :   General hall light automation
+#   @description    :   Motion, presence and sun based hall light automation
+#   @url            :
+###############################################################################
+
+##############################################
+# HALL AUTOMATION (8000000004xxx)
+##############################################
+# NEXT_ID 10
+sensor:
+  - platform: template
+    sensors:
+      hall_temperature_corrected:
+        friendly_name: "Hall temperature"
+        unit_of_measurement: '°C'
+        device_class: temperature
+        availability_template: "{{ not is_state('sensor.hall_presence', 'unavailable')  }}"
+        value_template: "{{ (float(states('sensor.hall_presence')) + 0.7) | round(1) }}"
+      pantry_temperature_corrected:
+        friendly_name: "Pantry temperature"
+        unit_of_measurement: '°C'
+        device_class: temperature
+        availability_template: "{{ not is_state('sensor.pantry_presence', 'unavailable')  }}"
+        value_template: "{{ (float(states('sensor.pantry_presence')) + 0.7) | round(1) }}"
+
+## SENSOR PRESENCE ##
+automation:
+  - id: '8000000004001'
+    alias: Hall presence detected during day
+    description: Increase hall brightness during the day when presence is detected
+    trigger:
+    - entity_id: binary_sensor.hall_presence
+      platform: state
+      to: 'on'
+    - entity_id: binary_sensor.pantry_presence
+      platform: state
+      to: 'off'
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'on'
+    - entity_id: input_boolean.darkweather
+      platform: state
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.dusk_till_dawn
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.darkweather
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.hall_presence
+      state: 'on'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.hall_100
+
+  - id: '8000000004002'
+    alias: Hall presence detected during evening
+    description: Increase hall brightness during the evening when presence is detected
+    trigger:
+    - entity_id: binary_sensor.hall_presence
+      platform: state
+      to: 'on'
+    - entity_id: binary_sensor.pantry_presence
+      platform: state
+      to: 'off'
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.dusk_till_dawn
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.night
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.hall_presence
+      state: 'on'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.hall_50
+
+
+  - id: '8000000004006'
+    alias: Hall presence detected during night
+    description: Turn on a little light during the night when presence detected
+    trigger:
+    - entity_id: binary_sensor.hall_presence
+      platform: state
+      to: 'on'
+    - entity_id: binary_sensor.pantry_presence
+      platform: state
+      to: 'off'
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.dusk_till_dawn
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.night
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.hall_presence
+      state: 'on'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.hall_night
+
+
+  ## SENSOR CLEAR ##
+  - id: '8000000004003'
+    alias: Hall no presence during day
+    description: Keep a dim light on during the day when no presence is detected
+    trigger:
+    - entity_id: binary_sensor.hall_presence
+      platform: state
+      to: 'off'
+      for: '00:01'
+    - entity_id: input_boolean.darkweather
+      platform: state
+      to: 'on'
+    - entity_id: input_boolean.dusk_till_dawn
+      platform: state
+      to: 'off'
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'on'
+    - entity_id: binary_sensor.pantry_presence
+      platform: state
+      to: 'off'
+    condition:
+    - condition: state
+      entity_id: input_boolean.dusk_till_dawn
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.hall_presence
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.darkweather
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'on'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.hall_25
+
+
+  - id: '8000000004004'
+    alias: Hall no presence during the evening
+    description: Keeps a dim light on during the evening when no motion is detected
+    trigger:
+    - entity_id: binary_sensor.hall_presence
+      platform: state
+      to: 'off'
+      for: '00:01'
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'on'
+    - entity_id: binary_sensor.pantry_presence
+      platform: state
+      to: 'off'
+    - platform: state
+      entity_id: input_boolean.dusk_till_dawn
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.dusk_till_dawn
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.night
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.hall_presence
+      state: 'off'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.hall_25
+
+  # This used to turn the hall lights off when it's sunny because the lights were of no much use,
+  # but it kept confusing me because 'off' could also have meant that
+  # the master switch was turned off (or I forgot to turn it on in the morning)
+  - id: '8000000004005'
+    alias: Hall minimum brightness during sunny day
+    description: Turn the lights to minimum brightness when it's sunny during the day
+    trigger:
+    - entity_id: binary_sensor.hall_presence
+      platform: state
+      to: 'off'
+      for: '00:01'
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'on'
+    - entity_id: binary_sensor.pantry_presence
+      platform: state
+      to: 'off'
+    - entity_id: input_boolean.darkweather
+      platform: state
+      to: 'off'
+    condition:
+    #- condition: state
+    #  entity_id: binary_sensor.hall_presence
+    #  state: 'off'
+    - condition: state
+      entity_id: input_boolean.darkweather
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'on'
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: input_boolean.dusk_till_dawn
+        state: 'off'
+  #    - condition: state
+  #      entity_id: input_boolean.master_switch
+  #      state: 'off'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.hall_10
+
+
+  - id: '8000000004009'
+    alias: Hall off at night
+    description: Turn the lights off when it's night
+    trigger:
+    - entity_id: binary_sensor.hall_presence
+      platform: state
+      to: 'off'
+    - entity_id: binary_sensor.pantry_presence
+      platform: state
+      to: 'off'
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.dusk_till_dawn
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.night
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.hall_presence
+      state: 'off'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.hall_0
+
+
+
+  # Pantry
+  - id: '8000000004007'
+    alias: Pantry open day
+    description: Turn on the hall light closest to the pantry to get some extra pantry light
+    trigger:
+    - entity_id: binary_sensor.pantry_presence
+      platform: state
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: binary_sensor.pantry_presence
+      state: 'on'
+    - condition: time
+      before: '23:00:00'
+    - condition: time
+      after: '7:00:00'
+    action:
+      service: light.turn_on
+      data:
+        brightness: 255
+        entity_id:
+          - light.hall_3
+
+  - id: '8000000004008'
+    alias: Pantry open night
+    description: Turn on the hall light closest to the pantry to get some extra pantry light (but less bright because it's night time)
+    trigger:
+    - entity_id: binary_sensor.pantry_presence
+      platform: state
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: binary_sensor.pantry_presence
+      state: 'on'
+    - condition: time
+      after: '23:00:00'
+      before: '7:00:00'
+    action:
+      service: light.turn_on
+      data:
+        brightness: 96
+        entity_id:
+          - light.hall_3
+
+
+scene:
+  ##############################################
+  # HALL SCENES (7000000004xxx)
+  ##############################################
+  - id: '7000000004001'
+    name: Hall 100%
+    entities:
+      light.hall_1:
+        brightness: 255
+        state: 'on'
+      light.hall_2:
+        brightness: 255
+        state: 'on'
+      light.hall_3:
+        brightness: 255
+        state: 'on'
+  - id: '7000000004002'
+    name: Hall 75%
+    entities:
+      light.hall_1:
+        brightness: 192
+        state: 'on'
+      light.hall_2:
+        brightness: 192
+        state: 'on'
+      light.hall_3:
+        brightness: 192
+        state: 'on'
+  - id: '7000000004003'
+    name: Hall 50%
+    entities:
+      light.hall_1:
+        brightness: 128
+        state: 'on'
+      light.hall_2:
+        brightness: 128
+        state: 'on'
+      light.hall_3:
+        brightness: 128
+        state: 'on'
+  - id: '7000000004004'
+    name: Hall 25%
+    entities:
+      light.hall_1:
+        brightness: 64
+        state: 'on'
+      light.hall_2:
+        brightness: 64
+        state: 'on'
+      light.hall_3:
+        brightness: 64
+        state: 'on'
+  - id: '7000000004005'
+    name: Hall 0%
+    entities:
+      light.hall_1:
+        state: 'off'
+      light.hall_2:
+        state: 'off'
+      light.hall_3:
+        state: 'off'
+  - id: '7000000004006'
+    name: Hall night
+    entities:
+      light.hall_1:
+        state: 'off'
+      light.hall_2:
+        state: 'on'
+        brightness: 16
+      light.hall_3:
+        state: 'off'
+  - id: '7000000004007'
+    name: Hall 10%
+    entities:
+      light.hall_1:
+        state: 'on'
+        brightness: 26
+      light.hall_2:
+        state: 'on'
+        brightness: 26
+      light.hall_3:
+        state: 'on'
+        brightness: 26

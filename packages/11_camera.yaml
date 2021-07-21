@@ -1,0 +1,211 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Foscam camera integration
+#   @description    :   Foscam motion sensor control
+#   @url            :
+#   @credit         :   TODO
+###############################################################################
+
+# TODO:
+# [ ] Site source (find it first, should have noted it when I used it)
+# [X] Use dusk_till_dawn switch instead of fixed times
+# [X] Format date time better in notification
+# [ ] Add secret templates to this yaml
+
+homeassistant:
+  customize:
+    sensor.foscam_r2m_1_log0:
+      icon: mdi:post
+    sensor.foscam_r2m_1_log1:
+      icon: mdi:post
+    sensor.foscam_r2m_1_log2:
+      icon: mdi:post
+    sensor.foscam_r2m_1_log3:
+      icon: mdi:post
+    sensor.foscam_r2m_1_motion_detected:
+      icon: mdi:motion-sensor
+    switch.foscam_r2m_one_motion:
+      icon: mdi:cctv
+    switch.foscam_r2m_one_infrared:
+      icon: mdi:cctv
+sensor:
+    # Read the logs so we can show a history of motion detections. Sensor value length
+    # is only limited, so one sensor per log line.
+  - platform: command_line
+    name: Foscam R2M-1 log0
+    scan_interval: 300
+    command: !secret foscam_r2m_one_log_0
+  - platform: command_line
+    name: Foscam R2M-1 log1
+    scan_interval: 300
+    command: !secret foscam_r2m_one_log_1
+  - platform: command_line
+    name: Foscam R2M-1 log2
+    scan_interval: 300
+    command: !secret foscam_r2m_one_log_2
+  - platform: command_line
+    name: Foscam R2M-1 log3
+    scan_interval: 300
+    command: !secret foscam_r2m_one_log_3
+
+    # Check if Foscam camera detected motion.
+  - platform: command_line
+    name: Foscam R2M-1 Motion Detected
+    scan_interval: 2
+    command: !secret foscam_r2m_one_motion_detected_url
+    value_template: '{{ value == "2" }}'
+
+switch:
+  - platform: command_line
+    switches:
+      #Switch for Foscam Motion Detection
+      foscam_r2m_one_motion:
+        friendly_name : Foscam R2M-1 Motion Sensor
+        command_on: !secret foscam_r2m_one_motion_on_url
+        command_off: !secret foscam_r2m_one_motion_off_url
+        command_state: !secret foscam_r2m_one_motion_state_url
+        value_template: '{{ value == "1" }}'
+      foscam_r2m_one_infrared:
+        friendly_name : Foscam R2M-1 Infrared
+        command_on: !secret foscam_r2m_one_infrared_on_url
+        command_off: !secret foscam_r2m_one_infrared_off_url
+        command_state: !secret foscam_r2m_one_infrared_state_url
+        value_template: '{{ value == "1" }}'
+
+##############################################
+# Handle camera's (8000000011xxx)
+##############################################
+# NEXT_ID 7
+
+automation:
+  - id: '8000000011001'
+    alias: Camera - Disable motion detection when home
+    description: Disable the camera surveillance when home
+    trigger:
+      - platform: state
+        entity_id: input_boolean.master_switch
+        from: 'off'
+        to: 'on'
+    action:
+      - service: switch.turn_off
+        entity_id: switch.foscam_r2m_one_motion
+      - service: foscam.ptz_preset
+        entity_id: camera.foscam_r2m_one
+        data:
+          preset_name: Park
+
+
+  - id: '8000000011002'
+    alias: Camera - Enable motion detection when not home
+    description: Enable the camera surveillance when leaving home or at night
+    trigger:
+      - platform: state
+        entity_id: input_boolean.master_switch
+        from: 'on'
+        to: 'off'
+        for:
+          minutes: 2
+    action:
+      - service: foscam.ptz_preset
+        entity_id: camera.foscam_r2m_one
+        data:
+          preset_name: Hall
+      - delay: 30   # make sure the camera has stopped moving (it shouldn't detect motion while moving but still ...)
+      - service: switch.turn_on
+        entity_id: switch.foscam_r2m_one_motion
+
+  - id: '8000000011003'
+    alias: Camera - Infrared on
+    description: Enable camera infrared when it's getting dark and motion detection is active
+    trigger:
+      - platform: state
+        entity_id: switch.foscam_r2m_one_motion
+        to: 'on'
+      - platform: state
+        entity_id: input_boolean.dusk_till_dawn
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: input_boolean.dusk_till_dawn
+        state: 'on'
+      - condition: state
+        entity_id: switch.foscam_r2m_one_motion
+        state: 'on'
+    action:
+      - service: switch.turn_on
+        entity_id: switch.foscam_r2m_one_infrared
+
+  - id: '8000000011004'
+    alias: Camera - Infrared off
+    description: Disable camera infrared when it's light or motion detection is disabled
+    trigger:
+      - platform: state
+        entity_id: switch.foscam_r2m_one_motion
+        to: 'off'
+      - platform: state
+        entity_id: input_boolean.dusk_till_dawn
+        to: 'off'
+    condition:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: input_boolean.dusk_till_dawn
+          state: 'off'
+        - condition: state
+          entity_id: switch.foscam_r2m_one_motion
+          state: 'off'
+    action:
+      - service: switch.turn_off
+        entity_id: switch.foscam_r2m_one_infrared
+
+  - id: '8000000011005'
+    alias: Camera - Notify on motion
+    mode: single
+    description: Take snapshot from camera and notify in case of motion
+    trigger:
+      - platform: state
+        entity_id: sensor.foscam_r2m_1_motion_detected
+        to: 'True'
+    action:
+      - service: camera.snapshot
+        alias: 'Take snapshot for notification'
+        data:
+          filename: /config/www/snap_hall.jpg
+        target:
+          entity_id: camera.foscam_r2m_one
+      - delay: 5  # make sure the file is properly written
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            It is {{ as_timestamp(now()) | timestamp_custom('%a %B %-m, %I:%M %p') }}
+          title: Motion detected in hallway
+          data:
+            sticky: true
+            image: "http://192.168.0.16:8123/local/snap_hall.jpg"
+      - delay: 600  # do no spam me with notifications (and keep HA's cost low)
+
+  - id: '8000000011006'
+    alias: Camera - Take snapshot to media folder on motion
+    mode: single
+    description: Take snapshot from camera and store in media folder (can run more frequently)
+    trigger:
+      - platform: state
+        entity_id: sensor.foscam_r2m_1_motion_detected
+        to: 'True'
+    condition:
+      - alias: Only run it when motion is detected (steps out of the loop)
+        condition: state
+        entity_id: sensor.foscam_r2m_1_motion_detected
+        state: 'True'
+    action:
+      - service: camera.snapshot
+        alias: 'Take a snapshot for storage'
+        data:
+          filename: /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M') }}.jpg
+        target:
+          entity_id: camera.foscam_r2m_one
+      - delay: 5
+      - service: automation.trigger # (loop)
+        target:
+          entity_id: automation.camera_take_snapshot_to_media_folder_on_motion

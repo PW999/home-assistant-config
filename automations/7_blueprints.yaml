@@ -1,0 +1,30 @@
+- id: '1611432052852'
+  alias: Low battery level detection & notification for all battery sensors
+  description: ''
+  use_blueprint:
+    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+    input:
+      day: 0
+      threshold: 50
+      time: '18:00:00'
+      exclude:
+        entity_id:
+        - sensor.mi_9t_battery_level
+        - sensor.pwroomba_battery_level
+      actions:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: 'Low battery warning for: {{sensors}}'
+      - service: notify.persistent_notification
+        data:
+          message: 'Low battery warning for: {{sensors}}'
+
+- id: '1611434559903'
+  alias: Mute mediaplayer when calling.
+  description: ''
+  use_blueprint:
+    path: JackPoint/mute_media_player_on_call.yaml
+    input:
+      phone_state: sensor.mi_9t_phone_state
+      person: person.phillip
+      media_player: media_player.living_room_tv

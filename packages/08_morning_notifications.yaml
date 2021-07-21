@@ -1,0 +1,54 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   05/05/2021
+#   @package        :   Morning notification
+#   @description    :   Send me an update every morning
+#   @url            :
+#   @requires       :   14_work.yaml, 12_weather.yaml
+###############################################################################
+
+##############################################
+# All related to notifications (8000000008xxx)
+##############################################
+# NEXT_ID 10
+automation:
+  - id: '8000000008001'
+    alias: Notification - Morning notification on workday
+    description: Send morning updates to my smartphone on a workday
+    mode: single
+    trigger:
+      - platform: time
+        at: '07:20:00'
+    condition:
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state:  'on'
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
+            Travel time is {{ states('sensor.to_work') }} {{ state_attr('sensor.to_work', 'unit_of_measurement') }} via {{ state_attr('sensor.to_work', 'route') }}<br />
+            Today will be {{ states('input_text.forecast_weather') }} at {{ states('input_number.forecast_min_temp') }} - {{ states('input_number.forecast_temp') }}°C with {{ states('input_number.forecast_precip') }}mm rain.
+          title: Good morning
+      - delay: 600
+
+  - id: '8000000008002'
+    alias: Notification - Morning notification on non-workdays
+    description: Send morning updates to my smartphone on a non-working day
+    mode: single
+    trigger:
+      - platform: time
+        at: '08:30:00'
+    condition:
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state:  'off'
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
+            Today will be {{ states('input_text.forecast_weather') }} at {{ states('input_number.forecast_min_temp') }} - {{ states('input_number.forecast_temp') }}°C with {{ states('input_number.forecast_precip') }}mm rain.
+          title: Good morning
+      - delay: 600

@@ -1,0 +1,61 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   05/05/2021
+#   @package        :   Bathroom fan automation
+#   @description    :   Triggers the bathroom fan
+#   @url            :
+#   @requires       :   16_dryer.yaml
+###############################################################################
+
+homeassistant:
+  customize:
+    switch.fan_switch:
+      icon: mdi:fan
+
+##############################################
+# FAN AUTOMATION (8000000006xxx)
+##############################################
+automation:
+  - id: '8000000006000'
+    alias: Bathroom fan on
+    description: 'Turn the bathroom fan on it is too humid in the house or if dryer is on'
+    trigger:
+    - entity_id: sensor.bathroom_2
+      platform: numeric_state
+      above: 60
+    - entity_id: sensor.bedroom_2
+      platform: numeric_state
+      above: 70
+    - entity_id: sensor.bureau_2
+      platform: numeric_state
+      above: 70
+    - entity_id: sensor.kitchen_2
+      platform: numeric_state
+      above: 70
+    - entity_id: sensor.living_room_2
+      platform: numeric_state
+      above: 70
+    - platform: state
+      entity_id: sensor.dryer_status
+      to: 'Running'
+    action:
+      service: switch.turn_on
+      data:
+          entity_id: switch.fan_switch
+
+  - id: '8000000006001'
+    alias: Bathroom fan off
+    description: 'Turn the bathroom fan off if humidity has dropped or after running for an hour'
+    trigger:
+    - entity_id: sensor.bathroom_2
+      platform: numeric_state
+      below: 60
+      for: '00:10'
+    - entity_id: switch.fan_switch
+      platform: state
+      to: 'on'
+      for: '01:00'
+    action:
+      service: switch.turn_off
+      data:
+          entity_id: switch.fan_switch

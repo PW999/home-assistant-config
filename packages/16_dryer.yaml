@@ -1,0 +1,188 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Dryer package
+#   @description    :   Monitor dryer and notify so I don't forget to empty it
+#   @url            :
+#   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
+###############################################################################
+
+
+homeassistant:
+  customize:
+    sensor.dryer_status:
+      icon: mdi:tumble-dryer
+
+    sensor.gosund_sp1_1_current:
+      friendly_name: Dryer Current
+    switch.gosund_sp1_1_main_relay:
+      friendly_name: Dryer Switch
+    switch.gosund_sp1_1_usb:
+      friendly_name: Dryer Usb Switch
+    sensor.gosund_sp1_1_rrsi:
+      friendly_name: Dryer RSSI
+    sensor.gosund_sp1_1_total_daily_energy_consumption:
+      friendly_name: Dryer today's energy consumption
+    sensor.gosund_sp1_1_uptime:
+      friendly_name: Dryer Uptime
+    sensor.gosund_sp1_1_voltage:
+      friendly_name: Dryer Voltage
+    sensor.gosund_sp1_1_wattage:
+      friendly_name: Dryer Power Consumption
+
+input_boolean:
+  disable_dryer_notification:
+    name: Disable Dryer Notification
+    initial: off
+    icon: mdi:tumble-dryer
+
+input_select:
+  dryer_status:
+    name: Dryer Status
+    options:
+      - Idle
+      - Running
+      - Finished
+
+sensor:
+- platform: template
+  sensors:
+  # Dryer Status
+      dryer_status:
+        value_template: '{{ states.input_select.dryer_status.state}}'
+        friendly_name: Dryer Status
+        availability_template: >-
+          {{ True if
+              not is_state('input_select.dryer_status', 'unavailable')
+              else False
+          }}
+
+##############################################
+# Workday automation (8000000016xxx)
+##############################################
+# NEXT_ID 5
+automation:
+
+# When power is detected, and the Dryer is not in
+# the Running state, change the status of the Dryer
+# to Running.
+# The status check will ensure we don't try to put the state
+# to Running each time the power level changes, and we're already
+# in the Running state.
+
+  - id: '8000000016001'
+    alias: Dryer - Set active when power detected
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.gosund_sp1_1_wattage
+        above: 10
+        for:
+          minutes: 2
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.dryer_status
+          state: Idle
+        - condition: state
+          entity_id: sensor.dryer_status
+          state: Finished
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.dryer_status
+          option: Running
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.disable_dryer_notification
+
+# When the power drops, move the state of the Dryer to Finished.
+
+  - id: '8000000016002'
+    alias: Dryer - Set finished when power drops
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.gosund_sp1_1_wattage
+        below: 50
+        for:
+          minutes: 5
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_select.dryer_status
+          state: Running
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.dryer_status
+          option: Finished
+
+
+    # As soon as I am home, send an actionable notification telling me to empty the dryer.
+    # Will repeat until I click Finish on the notification.
+  - id: '8000000016003'
+    alias: Notification - Send alert when Dryer is finished
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: sensor.dryer_status
+        to: Finished
+      - platform: state
+        entity_id: person.phillip
+        to: home
+        for:
+          minutes: 1
+      - platform: time_pattern
+        minutes: '/30'
+    condition:
+      condition: and
+      conditions:
+        - condition: time
+          before: '22:30:00'
+          after: '08:30:00'
+        - condition: state
+          entity_id: group.household_members
+          state: home
+        - condition: state
+          entity_id: input_select.dryer_status
+          state: Finished
+        - condition: state
+          entity_id: input_boolean.disable_dryer_notification
+          state: 'off'
+        - condition: template
+          value_template: >
+            {% if states.automation.notification_send_alert_when_dryer_is_finished.last_triggered is not none %}
+              {% if as_timestamp(now()) | int   -  as_timestamp(states.automation.notification_send_alert_when_dryer_is_finished.attributes.last_triggered) | int > 1800 %} true {% else %} false
+              {% endif %}
+            {% else %}
+            false
+            {% endif %}
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Do not forget to empty the Dryer.
+          title: Dryer ready
+          data:
+            actions:
+              - action: 'DRYER_DISABLE_NOTIFICATION' # The key you are sending for the event
+                title: 'Finish' # The button title
+      - delay: 600
+
+    # When clicked on the Finish button in the above notification, set the dryer to Idle
+  - id: '8000000016004'
+    alias: Dryer - Emptied event
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: DRYER_DISABLE_NOTIFICATION
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.dryer_status
+          option: Idle
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.disable_dryer_notification

@@ -1,0 +1,60 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Fridge package
+#   @description    :   Management of the fridge's power plug
+#   @url            :
+#   @credit         :   https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/
+###############################################################################
+
+# TODO:
+# [ ] Also notify when the plug is unavailable ?
+
+homeassistant:
+  customize:
+    sensor.gosund_sp112_2_current:
+      friendly_name: Fridge Current
+    switch.gosund_sp112_2_main_relay:
+      friendly_name: Fridge Switch
+    switch.gosund_sp112_2_usb:
+      friendly_name: Fridge Usb Switch
+    sensor.gosund_sp112_2_rrsi:
+      friendly_name: Fridge RSSI
+    sensor.gosund_sp112_2_total_daily_energy_consumption:
+      friendly_name: Fridge today's energy consumption
+    sensor.gosund_sp112_2_uptime:
+      friendly_name: Fridge Uptime
+    sensor.gosund_sp112_2_voltage:
+      friendly_name: Fridge Voltage
+    sensor.gosund_sp112_2_wattage:
+      friendly_name: Fridge Power Consumption
+
+##############################################
+# All related to the fridge's power switch (8000000018xxx)
+##############################################
+# NEXT_ID 2
+automation:
+    # Just make sure that the power plug of the fridge is always on !
+  - id: '8000000018001'
+    alias: Ensure fridge remains on
+    trigger:
+      - platform: time_pattern
+        minutes: '/10'
+      - platform: state
+        entity_id: switch.gosund_sp112_2_main_relay
+        to: 'off'
+    condition:
+      - alias: Fridge power was off
+        condition: state
+        entity_id: switch.gosund_sp112_2_main_relay
+        state: 'off'
+    action:
+      - alias: Turn on the fridge's power
+        service: switch.turn_on
+        target:
+          entity_id: switch.gosund_sp112_2_main_relay
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Fridge power was off !
+          title: Fridge warning

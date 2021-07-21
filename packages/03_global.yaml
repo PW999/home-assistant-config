@@ -1,0 +1,290 @@
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Global switches
+#   @description    :   Contains global switches which decouple sensors
+#   @url            :
+###############################################################################
+
+zone:
+  # This will override the default home zone
+  - name: Home
+    latitude: !secret home_lat
+    longitude: !secret home_lon
+    radius: 283
+    icon: mdi:account-multiple
+
+input_boolean:
+  # The master switch acts as a sort of home/not-home switch.
+  # It decouples zones/presence from automations.
+  # If it's off, then most automations won't do anything.
+  # If it's turned off, it still needs a scene to turn off the lights.
+  master_switch:
+    name: Master switch
+    icon: mdi:light-switch
+
+  # Dusk till dawn switch is active between sunset and sunrise (with some extra padding)
+  # It's more or less an evening mode switch (but it's on untill sunrise, which is technically night/morning)
+  # It decouples the sun events from automations.
+  dusk_till_dawn:
+    name: Light needed
+    icon: mdi:brightness-5
+
+  # This is an extra switch to dimm the lights even further, around 21:30.
+  # It decouples time from automations
+  dimm_lights:
+    name: Dimm the lights
+    icon: mdi:brightness-4
+
+  # The night switch should only be active if the master switch is off and when
+  # it's at night. It's usefull for reducing brightness to a minimum if I need
+  # to go the toilet at night (or in dire need of a snack).
+  # It decouples zones/presence and time from automations.
+  night:
+    name: Too dark for bright light
+    icon: mdi:brightness-3
+
+  # The vacation switch can provide alternative behaviour when on vacation.
+  # E.g. prevent the thermostat from turning on, activate lights while away, ...
+  vacation:
+    name: Vacation
+    icon: mdi:palm-tree
+
+##############################################
+# HOUSE-WIDE AUTOMATION (8000000003xxx)
+##############################################
+#next = 13
+automation:
+  # MASTER SWITCH PRESENCE DETECTION #
+  - id: '8000000003001'
+    alias: Switches - Somebody comes home
+    description: Turn on the master switch when somebody from the household members comes home
+    trigger:
+    - platform: state
+      entity_id: group.household_members
+      to: home
+    action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.master_switch
+
+  - id: '8000000003002'
+    alias: Switches - Everybody left home
+    description: Turn off the master switch when everybody from the household members left
+    trigger:
+    - platform: state
+      entity_id: group.household_members
+      to: 'not_home'
+    action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.master_switch
+
+  ## DUSK TILL DAWN SWITCH ##
+  - id: '8000000003003'
+    alias: Switches - Turn on lights when sun is gone
+    description: Turn on the dusk_till_dawn switch at or between sunset and sunrise (e.g. when somebody comes home)
+    trigger:
+    - event: sunset
+      offset: -00:40:00
+      platform: sun
+    condition:
+    - condition: or
+      conditions:
+      - after: sunset
+        after_offset: -00:45:00
+        condition: sun
+      - before: sunrise
+        condition: sun
+    action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.dusk_till_dawn
+
+  - id: '8000000003004'
+    alias: Switches - Turn off lights when the sun is back
+    description: Turn off the dusk_till_dawn switch at sunrise
+    trigger:
+    - event: sunrise
+      offset: 00:45:00
+      platform: sun
+    condition:
+    - condition: state
+      entity_id: sun.sun
+      state: above_horizon
+    action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.dusk_till_dawn
+
+  ## DIMM LIGHTS IN THE EVENING SWITCH ##
+  - id: '8000000003005'
+    alias: Switches - Dimm the lights
+    description: Turn on the dimm_lights switch at/after 21:30 for reduced brightness (prepare my body for sleep)
+    trigger:
+    - platform: time
+      at: '21:30:00'
+    condition:
+    - condition: or
+      conditions:
+      - after: sunset
+        after_offset: -00:45:00
+        condition: sun
+      - before: sunrise
+        condition: sun
+        before_offset: "-01:00:00"
+    - condition: time
+      after: '21:30:00'
+      before: '09:00:00'
+    action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.dimm_lights
+
+  - id: '8000000003006'
+    alias: Switches - Do not dimm the lights
+    description: Before the sunrise, switch off dimm_lights to make sure the lights shine brighter (more light in the morning)
+    trigger:
+    - event: sunrise
+      platform: sun
+      offset: "-01:00:00"
+    condition:
+    - before: sunset
+      before_offset: "-00:45:00"
+      condition: sun
+    - after: sunrise
+      after_offset: "-01:00:00"
+      condition: sun
+    action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.dimm_lights
+
+
+  ## NIGHT LIGHT SWITCH (master switch is switched of when I go to bed) ##
+  - id: '8000000003007'
+    alias: Switches - Night lights on
+    description: If the master switch is off (nobody home) and it's between sunset and sunrise, turn on the night switch
+    trigger:
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'off'
+    - event: sunset
+      platform: sun
+    condition:
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'off'
+    - condition: state
+      entity_id: sun.sun
+      state: below_horizon
+    action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.night
+
+  - id: '8000000003008'
+    alias: Switches - Night lights off
+    description: Turn off the light switch during the day or when somebody is home
+    trigger:
+    - event: sunrise
+      platform: sun
+    - entity_id: input_boolean.master_switch
+      platform: state
+      from: 'off'
+      to: 'on'
+    condition:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: sun.sun
+        state: above_horizon
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: 'on'
+    action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.night
+
+  # ZIGBEE BUTTON INTEGRATION - lightify_switch_mini_26 is located in the hallway#
+  - id: '8000000003009'
+    alias: Button - Toggle master switch on
+    description: Use center button of Osram Mini to turn on the master switch immediately
+    trigger:
+      - platform: event
+        event_type: deconz_event
+        event_data:
+          id: 'lightify_switch_mini_26'
+          event: 3002
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state:  'off'
+    action:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.master_switch
+
+  - id: '8000000003010'
+    alias: Button - Toggle master switch off
+    description: Use center button of Osram Mini to turn off the master switch after 15s (blink hall light to confirm action)
+    mode: single  # make sure a double press doesn't do strange things
+    trigger:
+      - platform: event
+        event_type: deconz_event
+        event_data:
+          id: 'lightify_switch_mini_26'
+          event: 3002
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state:  'on'
+    action:
+      - service: light.toggle
+        data:
+          entity_id: light.hall_2
+          flash: short
+      - delay: 15
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.master_switch
+
+  # APPLY GLOBAL SCENES TO ALL LIGHTS AT NIGHT - Night scene has all lights off exception some very dim light in the living room for my cat #
+  - id: '8000000003011'
+    alias: Home to night mode
+    description: If night switch is on (nobody home between sunset and sunrise), switch to nighs scene
+    trigger:
+    - entity_id: input_boolean.night
+      platform: state
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.night
+      state: 'on'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.home_night_scene
+
+  # APPLY GLOBAL SCENES TO ALL LIGHTS WHEN I LEAVE #
+  - id: '8000000003012'
+    alias: Home alone
+    description: If everybody left during the day, turn off all lights using the home_alone_scene
+    trigger:
+    - entity_id: input_boolean.master_switch
+      for: 00:01
+      platform: state
+      to: 'off'
+    - entity_id: input_boolean.night
+      platform: state
+      to: 'off'
+    condition:
+    - condition: state
+      entity_id: input_boolean.night
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'off'
+    action:
+    - service: scene.turn_on
+      entity_id: scene.home_alone_scene
