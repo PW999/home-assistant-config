@@ -1,0 +1,177 @@
+---
+substitutions:
+  plug_name: gosund-sp1-1
+  plug_id: gosund_sp1_1
+  ip: 192.168.0.61
+  # Higher value gives lower watt readout
+  current_res: "0.00200"
+  # Lower value gives lower voltage readout
+  voltage_div: "945"
+
+esphome:
+  name: ${plug_name}
+  platform: ESP8266
+  board: esp8285
+
+# WiFi connection
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true
+  reboot_timeout: 2h
+  manual_ip:
+    static_ip: ${ip}
+    gateway: 192.168.0.2
+    subnet: 255.255.255.0
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${plug_name} Fallback Hotspot"
+    password: !secret ap_password
+    ap_timeout: 15min
+
+captive_portal:
+
+# Enable logging
+logger:
+  logs:
+    sensor: INFO
+    adc: INFO
+    hlw8012: INFO
+    
+# Enable Home Assistant API
+api:
+  reboot_timeout: 1h
+
+# Enable over-the-air updates
+ota:
+  password: !secret ota_password
+  
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+# Enable Web server
+web_server:
+  port: 80
+
+sensor:
+  # Power sensor
+  - platform: hlw8012
+    sel_pin:
+      number: GPIO12
+      inverted: true
+    cf_pin: GPIO04
+    cf1_pin: GPIO05
+    current_resistor: ${current_res}
+    voltage_divider: ${voltage_div}
+    change_mode_every: 3
+    update_interval: 5s
+    # Current sensor
+    current:
+      id: ${plug_id}_current
+      name: ${plug_name} Current
+      unit_of_measurement: A
+      accuracy_decimals: 2
+      filters:
+        # Map from sensor -> measured value
+        - calibrate_linear:
+          - 0.0 -> 0.0
+          - 0.067 -> 0.09
+          - 2.11 -> 2.83
+          - 4.063 -> 6.36
+        - lambda: if (x < 0.01) return 0; else return x;
+        - sliding_window_moving_average:
+            window_size: 5
+            send_every: 6
+    # Voltage sensor
+    voltage:
+      id: ${plug_id}_voltage
+      name: ${plug_name} Voltage
+      unit_of_measurement: V
+      accuracy_decimals: 0
+      filters:
+        # Map from sensor -> measured value
+        - calibrate_linear:
+           - 0.0 -> 0.0
+           - 218.1 -> 218
+        - throttle: 30s
+    # Power sensor
+    power:
+      id: ${plug_id}_wattage
+      name: ${plug_name} Wattage
+      unit_of_measurement: W
+      accuracy_decimals: 1
+      filters:
+        # Map from sensor -> measured value
+        - calibrate_linear:
+           - 0.0 -> 0
+           - 27.5 -> 24.3
+           - 9.3 -> 8
+           - 331 -> 283
+           - 1572 -> 1415
+        - lambda: if (x < 2) return 0; else return x;
+        - sliding_window_moving_average:
+            window_size: 5
+            send_every: 6
+  - platform: total_daily_energy
+    name: ${plug_name} Total Daily Energy Consumption
+    power_id: ${plug_id}_wattage
+    id: ${plug_id}_total_daily_energy
+    filters:
+        # Multiplication factor from W to kW is 0.001
+        - multiply: 0.001
+    unit_of_measurement: kWh
+      
+  # Extra sensor to keep track of plug uptime
+  - platform: uptime
+    name: "${plug_name} Uptime"
+    
+  - platform: wifi_signal
+    name: "${plug_name} RSSI"
+    update_interval: 60s
+    unit_of_measurement: dBm
+
+binary_sensor:
+  # Binary sensor for the button press
+  - platform: gpio
+    name: "${plug_name} Button"
+    pin:
+      number: GPIO3
+      inverted: true
+    on_press:
+      - switch.toggle: ${plug_id}_relay
+
+switch:
+  # Switch to toggle the relay
+  - platform: gpio
+    id: ${plug_id}_relay
+    name: "${plug_name} Main relay"
+    pin: GPIO14
+    restore_mode: RESTORE_DEFAULT_ON 
+    on_turn_on:
+      - light.turn_on: ${plug_id}_led
+    on_turn_off:
+      - light.turn_off: ${plug_id}_led
+
+output:
+  # Relay state led
+  - platform: esp8266_pwm
+    id: ${plug_id}_state_led
+    pin:
+      number: GPIO13
+      inverted: true
+
+light:
+  # Relay state light
+  - platform: monochromatic
+    output: ${plug_id}_state_led
+    id: ${plug_id}_led
+    restore_mode: RESTORE_DEFAULT_ON 
+
+# Uses the red BLUE as a status indicator
+status_led:
+  pin:
+    number: GPIO1
+    inverted: true
+
