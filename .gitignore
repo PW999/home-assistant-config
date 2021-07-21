@@ -5,6 +5,8 @@
 appdaemon/compiled
 # I'm nut using apps
 appdaemon/apps
+# Contains home location
+appdaemon/appdaemon.yaml
 
 # Don't commit a snapshot of my hall (last time motion was detected, so it's probably a snapshot of me)
 www/snap_hall.jpg
