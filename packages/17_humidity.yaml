@@ -167,7 +167,7 @@ automation:
       # only if rising: {{ states(trigger.from_state) | float < states(trigger.to_state) | float  }}
       value_template: >
         {%  if trigger.entity_id != 'sensor.living_room_2'  %}
-        true
+        false
         {% else %}
         {{ states(trigger.from_state) | float <= 65.0   }}
         {% endif %}
@@ -210,7 +210,7 @@ automation:
       # only if rising: {{ states(trigger.from_state) | float < states(trigger.to_state) | float  }}
       value_template: >
         {%  if trigger.entity_id != 'sensor.kitchen_2'  %}
-        true
+        false
         {% else %}
         {{ states(trigger.from_state) | float <= 65.0   }}
         {% endif %}
@@ -251,7 +251,7 @@ automation:
       # only if rising: {{ states(trigger.from_state) | float < states(trigger.to_state) | float  }}
       value_template: >
         {%  if trigger.entity_id != 'sensor.bureau_2'  %}
-        true
+        false
         {% else %}
         {{ states(trigger.from_state) | float <= 65.0   }}
         {% endif %}
@@ -295,7 +295,7 @@ automation:
       # only if rising: {{ states(trigger.from_state) | float < states(trigger.to_state) | float  }}
       value_template: >
         {%  if trigger.entity_id != 'sensor.bedroom_2'  %}
-        true
+        false
         {% else %}
         {{ states(trigger.from_state) | float <= 65.0   }}
         {% endif %}
@@ -342,7 +342,7 @@ automation:
       condition: template
       value_template: >
         {%  if trigger.entity_id != 'sensor.living_room_2'  %}
-        true
+        false
         {% else %}
         {{ states(trigger.from_state) | float >= 40.0   }}
         {% endif %}
@@ -371,7 +371,7 @@ automation:
       # only if rising: {{ states(trigger.from_state) | float < states(trigger.to_state) | float  }}
       value_template: >
         {%  if trigger.entity_id != 'sensor.kitchen_2'  %}
-        true
+        false
         {% else %}
         {{ states(trigger.from_state) | float >= 40.0   }}
         {% endif %}
@@ -398,7 +398,7 @@ automation:
       # only if rising: {{ states(trigger.from_state) | float < states(trigger.to_state) | float  }}
       value_template: >
         {%  if trigger.entity_id != 'sensor.bureau_2'  %}
-        true
+        false
         {% else %}
         {{ states(trigger.from_state) | float >= 40.0   }}
         {% endif %}
@@ -428,7 +428,7 @@ automation:
       # only if rising: {{ states(trigger.from_state) | float < states(trigger.to_state) | float  }}
       value_template: >
         {%  if trigger.entity_id != 'sensor.bedroom_2'  %}
-        true
+        false
         {% else %}
         {{ states(trigger.from_state) | float >= 40.0   }}
         {% endif %}
