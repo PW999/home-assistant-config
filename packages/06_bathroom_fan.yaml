@@ -1,6 +1,6 @@
 ###############################################################################
 #   @author         :   Phillip (P_W999)
-#   @date           :   05/05/2021
+#   @date           :   08/08/2021
 #   @package        :   Bathroom fan automation
 #   @description    :   Triggers the bathroom fan
 #   @url            :
@@ -22,14 +22,11 @@ automation:
     trigger:
     - entity_id: sensor.bathroom_2
       platform: numeric_state
-      above: 60
+      above: 65
     - entity_id: sensor.bedroom_2
       platform: numeric_state
       above: 70
     - entity_id: sensor.bureau_2
-      platform: numeric_state
-      above: 70
-    - entity_id: sensor.kitchen_2
       platform: numeric_state
       above: 70
     - entity_id: sensor.living_room_2
@@ -49,7 +46,7 @@ automation:
     trigger:
     - entity_id: sensor.bathroom_2
       platform: numeric_state
-      below: 60
+      below: 65
       for: '00:10'
     - entity_id: switch.fan_switch
       platform: state
