@@ -18,7 +18,7 @@ automation:
     mode: single
     trigger:
       - platform: time
-        at: '07:20:00'
+        at: '07:02:00'
     condition:
       - condition: state
         entity_id: binary_sensor.workday_sensor
