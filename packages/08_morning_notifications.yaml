@@ -3,7 +3,7 @@
 #   @date           :   05/05/2021
 #   @package        :   Morning notification
 #   @description    :   Send me an update every morning
-#   @url            :
+#   @url            :   https://github.com/PW999/home-assistant-config/
 #   @requires       :   14_work.yaml, 12_weather.yaml
 ###############################################################################
 

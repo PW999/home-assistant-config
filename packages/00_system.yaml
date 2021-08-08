@@ -3,7 +3,7 @@
 #   @date           :   04/2021
 #   @package        :   General System Configuration
 #   @description    :   Contains system related sensors and automations
-#   @url            :
+#   @url            :   https://github.com/PW999/home-assistant-config/
 ###############################################################################
 
 sensor:
