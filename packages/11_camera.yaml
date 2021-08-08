@@ -52,7 +52,7 @@ sensor:
     # Check if Foscam camera detected motion.
   - platform: command_line
     name: Foscam R2M-1 Motion Detected
-    scan_interval: 2
+    scan_interval: 1
     command: !secret foscam_r2m_one_motion_detected_url
     value_template: '{{ value == "2" }}'
 
@@ -167,6 +167,7 @@ automation:
       - platform: state
         entity_id: sensor.foscam_r2m_1_motion_detected
         to: 'True'
+        for: 00:00:03 # 3 consecutive "polls" to stop false positive alerts (like sunshine or turning on the lights)
     action:
       - service: camera.snapshot
         alias: 'Take snapshot for notification'
