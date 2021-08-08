@@ -3,15 +3,16 @@ This is the home-assistant configuration which I'm using in my little appartment
 
 # Hardware
 This is a very short list of the hardware I'm using:
+
 * Raspberry Pi 3B running from a USB HDD
 * Conbee stick (Zigbee/Deconz)
   * Xiaomi Aqara sensors
-  * Osram Smart+ Motion sensors
-  * Osram Lightify wall socket
   * Xiaomi Mi Smart plug
+  * Osram Smart+ Motion sensors
   * Osram Smart+ Switch mini
-  * Philips Hue spots
   * Osram Smart+ Light bulb
+  * Osram Lightify wall socket
+  * Philips Hue spots
 * HM-MOD-RPI-PCB (Homematic/Raspberrymatic) 
   * Homematic basic thermostat
 * ESPHome
@@ -22,4 +23,15 @@ This is a very short list of the hardware I'm using:
   * Roomba 690
   * Foscam R2M Wifi camera
   * Fluvius Smart meter with [SlimmeLezer](https://www.zuidwijk.com/slimmelezer-smartreader/) 
-* HP Touchpad with Evervolv ROM to runn Wallpanel on (appdaemon dashboard)
+* HP Touchpad with Evervolv ROM to run Wallpanel on (appdaemon dashboard)
+
+# Installation
+I'm running Home Assistant Supervised on Raspbian 10. The following is a complete list of the containers running on my Pi (apart from the default HA containers)
+
+* ghcr.io/hassio-addons/appdaemon/armv7
+* esphome/esphome-hassio-armv7
+* homeassistant/armhf-addon-deconz
+* grafana/grafana
+* influxdb
+* ghcr.io/jens-maus/raspberrymatic
+* gists/samba-server
