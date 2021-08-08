@@ -70,9 +70,14 @@ sensor:
     # Check if Foscam camera detected motion.
   - platform: command_line
     name: Foscam R2M-1 Motion Detected
-    scan_interval: 1
+    scan_interval: 2
     command: !secret foscam_r2m_one_motion_detected_url
     value_template: '{{ value == "2" }}'
+
+input_boolean:
+  foscam_r2m_1_motion_detected_smooth:
+    name: Foscam R2M-1 Motion Detected
+    icon: mdi:motion-sensor
 
 switch:
   - platform: command_line
@@ -94,7 +99,7 @@ switch:
 ##############################################
 # Handle camera's (8000000011xxx)
 ##############################################
-# NEXT_ID 7
+# NEXT_ID 9
 
 automation:
   - id: '8000000011001'
@@ -183,9 +188,9 @@ automation:
     description: Take snapshot from camera and notify in case of motion
     trigger:
       - platform: state
-        entity_id: sensor.foscam_r2m_1_motion_detected
-        to: 'True'
-        for: 00:00:03 # 3 consecutive "polls" to stop false positive alerts (like sunshine or turning on the lights)
+        entity_id: input_boolean.foscam_r2m_1_motion_detected_smooth
+        to: 'on'
+        for: 00:00:04
     action:
       - service: camera.snapshot
         alias: 'Take snapshot for notification'
@@ -210,13 +215,14 @@ automation:
     description: Take snapshot from camera and store in media folder (can run more frequently)
     trigger:
       - platform: state
-        entity_id: sensor.foscam_r2m_1_motion_detected
-        to: 'True'
+        entity_id: input_boolean.foscam_r2m_1_motion_detected_smooth
+        to: 'on'
+        for: 00:00:04
     condition:
       - alias: Only run it when motion is detected (steps out of the loop)
         condition: state
-        entity_id: sensor.foscam_r2m_1_motion_detected
-        state: 'True'
+        entity_id: input_boolean.foscam_r2m_1_motion_detected_smooth
+        state: 'on'
     action:
       - service: camera.snapshot
         alias: 'Take a snapshot for storage'
@@ -228,3 +234,30 @@ automation:
       - service: automation.trigger # (loop)
         target:
           entity_id: automation.camera_take_snapshot_to_media_folder_on_motion
+
+  - id: '8000000011007'
+    alias: Camera - Motion detected (dejitter)
+    description: Motion detected, act immediately
+    trigger:
+      - platform: state
+        entity_id: sensor.foscam_r2m_1_motion_detected
+        from: 'False'
+        to: 'True'
+    action:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.foscam_r2m_1_motion_detected_smooth
+
+  - id: '8000000011008'
+    alias: Camera - No more motion detected (dejitter)
+    description: No motion detected anymore, wait for another confirm
+    trigger:
+      - platform: state
+        entity_id: sensor.foscam_r2m_1_motion_detected
+        from: 'True'
+        to: 'False'
+        for: 00:00:04
+    action:
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.foscam_r2m_1_motion_detected_smooth
