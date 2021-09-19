@@ -24,6 +24,8 @@ homeassistant:
       friendly_name: Desktop Voltage
     sensor.gosund_sp112_1_wattage:
       friendly_name: Desktop Power Consumption
+    sensor.gosund_sp112_1_consumption:
+      friendly_name: Desktop total energy consumption
 
 automation:
   ##############################################
@@ -78,7 +80,7 @@ automation:
       entity_id: device_tracker.pwnitrogen
       state: not_home
     action:
-      # segments don't support fancy on-off transitions, but they do have brightness transititions 
+      # segments don't support fancy on-off transitions, but they do have brightness transititions
     - service: scene.turn_on
       entity_id: scene.office_off_scene_with_transition
     - delay: 10

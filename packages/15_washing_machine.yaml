@@ -29,6 +29,8 @@ homeassistant:
       friendly_name: Washing machine Voltage
     sensor.gosund_sp1_2_wattage:
       friendly_name: Washing machine Power Consumption
+    sensor.gosund_sp1_2_consumption:
+      friendly_name: Washing machine total energy consumption
 
 input_boolean:
   disable_washing_machine_notification:

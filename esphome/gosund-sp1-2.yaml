@@ -114,6 +114,10 @@ sensor:
         - sliding_window_moving_average:
             window_size: 5
             send_every: 6
+    energy:
+      id: ${plug_id}_total_energy
+      name: ${plug_name} Consumption
+
   - platform: total_daily_energy
     name: ${plug_name} Total Daily Energy Consumption
     power_id: ${plug_id}_wattage
@@ -122,10 +126,7 @@ sensor:
         # Multiplication factor from W to kW is 0.001
         - multiply: 0.001
     unit_of_measurement: kWh
-      
-  # Extra sensor to keep track of plug uptime
-  - platform: uptime
-    name: "${plug_name} Uptime"
+    device_class: energy
     
   - platform: wifi_signal
     name: "${plug_name} RSSI"

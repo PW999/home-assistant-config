@@ -29,6 +29,8 @@ homeassistant:
       friendly_name: Dish washer Voltage
     sensor.gosund_sp112_3_wattage:
       friendly_name: Dish washer Power Consumption
+    sensor.gosund_sp112_3_consumption:
+      friendly_name: Dish washer total energy consumption
 
 input_boolean:
   disable_dish_washer_notification:

@@ -29,6 +29,8 @@ homeassistant:
       friendly_name: Dryer Voltage
     sensor.gosund_sp1_1_wattage:
       friendly_name: Dryer Power Consumption
+    sensor.gosund_sp1_1_consumption:
+      friendly_name: Dryer total energy consumption
 
 input_boolean:
   disable_dryer_notification:

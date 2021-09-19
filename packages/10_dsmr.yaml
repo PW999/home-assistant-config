@@ -26,38 +26,43 @@ homeassistant:
       icon: mdi:sine-wave
     sensor.voltage_phase_l3:
       icon: mdi:sine-wave
-      
+
 input_number:
   # How much is paid per kWh
   electricity_tarrif:
     name: Hourly tarrif
-    initial: 0.2360
+    initial: 0.2403
     min: 0.2
     max: 0.3
+    unit_of_measurement: EUR/kWh
 
   # Used to calculate today's consumption on the "high" (day) channel
   electricity_previous_consumption_high:
     name: Yesterday's high consumption
     min: 0
     max: 999999
+    unit_of_measurement: kWh
 
   # Used to calculate today's consumption on the "low" (night/weekend) channel
   electricity_previous_consumption_low:
     name: Yesterday's low consumption
     min: 0
     max: 999999
+    unit_of_measurement: kWh
 
   # Used to calculate this year's consumption on the "high" (day) channel
   electricity_last_yr_consumption_high:
     name: Last years high consumption
     min: 0
     max: 999999
+    unit_of_measurement: kWh
 
   # Used to calculate this year's consumption on the "low" (night/weekend) channel
   electricity_last_yr_consumption_low:
     name: Last years low consumption
     min: 0
     max: 999999
+    unit_of_measurement: kWh
 
 counter:
   # Old workaround, DMSR integration would not reconnect and my meter is really far away so it dropped a lot
