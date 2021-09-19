@@ -26,6 +26,7 @@ esphome/secrets.yaml
 known_devices.yaml
 # Don't commit any log files
 **/*.log
+**/*.log.*
 
 # Again, no secrets please 
 **/secrets.yaml
