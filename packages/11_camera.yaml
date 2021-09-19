@@ -110,6 +110,11 @@ automation:
         entity_id: input_boolean.master_switch
         from: 'off'
         to: 'on'
+    condition:
+      # vacation mode can trigger master switch to on
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: 'off'
     action:
       - service: switch.turn_off
         entity_id: switch.foscam_r2m_one_motion
@@ -121,12 +126,18 @@ automation:
 
   - id: '8000000011002'
     alias: Camera - Enable motion detection when not home
-    description: Enable the camera surveillance when leaving home or at night
+    description: Enable the camera surveillance when leaving home, at night or when on vacation
     trigger:
       - platform: state
         entity_id: input_boolean.master_switch
         from: 'on'
         to: 'off'
+        for:
+          minutes: 2
+      - platform: state
+        entity_id: input_boolean.vacation
+        from: 'off'
+        to: 'on'
         for:
           minutes: 2
     action:
@@ -207,7 +218,7 @@ automation:
           data:
             sticky: true
             image: "http://192.168.0.16:8123/local/snap_hall.jpg"
-      - delay: 600  # do no spam me with notifications (and keep HA's cost low)
+      - delay: 3600  # do no spam me with notifications (and keep HA's cost low)
 
   - id: '8000000011006'
     alias: Camera - Take snapshot to media folder on motion

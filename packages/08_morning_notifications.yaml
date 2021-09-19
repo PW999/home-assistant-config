@@ -22,7 +22,10 @@ automation:
     condition:
       - condition: state
         entity_id: binary_sensor.workday_sensor
-        state:  'on'
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: 'off'
     action:
       - service: notify.mobile_app_mi_9t
         data:
@@ -44,6 +47,9 @@ automation:
       - condition: state
         entity_id: binary_sensor.workday_sensor
         state:  'off'
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: 'off'
     action:
       - service: notify.mobile_app_mi_9t
         data:

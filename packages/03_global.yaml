@@ -53,7 +53,7 @@ input_boolean:
 ##############################################
 # HOUSE-WIDE AUTOMATION (8000000003xxx)
 ##############################################
-#next = 13
+#next = 16
 automation:
   # MASTER SWITCH PRESENCE DETECTION #
   - id: '8000000003001'
@@ -288,3 +288,43 @@ automation:
     action:
     - service: scene.turn_on
       entity_id: scene.home_alone_scene
+
+  # WHEN ON VACATION, TURN ON MASTER SWITCH DURING DAY, LIGHTS WILL TURN ON AT SUNSET (AS USUAL) #
+  - id: '8000000003014'
+    alias: Vacation - Turn on lights in the evening
+    description: Make sure master switch is on in the evening
+    trigger:
+    - platform: time
+      at: '16:00:00'
+    condition:
+    - condition: state
+      entity_id: input_boolean.vacation
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'off'
+    action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.master_switch
+
+  # WHEN ON VACATION, TURN OFF THE MASTER SWITCH AFTER 3 HOURS OF LIGHT #
+  - id: '8000000003015'
+    alias: Vacation - Turn off lights in the evening
+    description: Turn off master switch 
+    trigger:
+    - entity_id: input_boolean.dusk_till_dawn
+      for: 03:00
+      platform: state
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.vacation
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.master_switch
+      state: 'on'
+    action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.master_switch
