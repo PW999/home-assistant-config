@@ -63,14 +63,14 @@ automation:
   ## Weekly reboot, if we don't reboot every week, how do we know a restart is a safe operation ? ##
   - id: '8000000000014'
     alias: System - Reboot
-    description: Reboots the system every week on Wednesday
+    description: Reboots the system every week on Saterday
     trigger:
     - platform: time
-      at: '02:00:00'
+      at: '04:00:00'
     condition:
     - condition: time
       weekday:
-        - wed
+        - sat
     action:
     - service: hassio.host_reboot
 
