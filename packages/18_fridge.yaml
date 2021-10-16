@@ -28,7 +28,7 @@ homeassistant:
       friendly_name: Fridge Voltage
     sensor.gosund_sp112_2_wattage:
       friendly_name: Fridge Power Consumption
-    sensor.gosund_sp112_3_consumption:
+    sensor.gosund_sp112_2_consumption:
       friendly_name: Fridge total energy consumption
 
 ##############################################
