@@ -98,10 +98,6 @@ device_tracker:
       pwnitrogen: 192.168.0.101
 #      hasspi: 192.168.0.16
 
-camera:
-  - platform: buienradar
-    country_code: BE
-
 roomba:
   - host: 192.168.0.40
     blid: !secret roomba_blid

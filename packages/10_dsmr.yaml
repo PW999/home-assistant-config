@@ -98,12 +98,6 @@ group:
       - input_number.electricity_last_yr_consumption_low
 
 sensor:
-  # FYI: HA will only read this once, afterwards it's only configurable through the UI
-  - platform: dsmr
-    host: 192.168.0.60
-    port: 23
-    reconnect_interval: 60
-    dsmr_version: 5B  # 5B for Belgian readers
 
   - platform: template
     sensors:
