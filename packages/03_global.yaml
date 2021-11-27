@@ -50,6 +50,11 @@ input_boolean:
     name: Vacation
     icon: mdi:palm-tree
 
+  # The summer mode switch completely disables the heating by preventing it from turning on
+  summer:
+    name: Summer mode
+    icon: mdi:beach-access
+
 ##############################################
 # HOUSE-WIDE AUTOMATION (8000000003xxx)
 ##############################################
@@ -295,7 +300,7 @@ automation:
     description: Make sure master switch is on in the evening
     trigger:
     - platform: time
-      at: '16:00:00'
+      at: '18:00:00'
     condition:
     - condition: state
       entity_id: input_boolean.vacation
@@ -311,10 +316,10 @@ automation:
   # WHEN ON VACATION, TURN OFF THE MASTER SWITCH AFTER 3 HOURS OF LIGHT #
   - id: '8000000003015'
     alias: Vacation - Turn off lights in the evening
-    description: Turn off master switch 
+    description: Turn off master switch
     trigger:
     - entity_id: input_boolean.dusk_till_dawn
-      for: 03:00
+      for: 04:20
       platform: state
       to: 'on'
     condition:

@@ -56,16 +56,17 @@ input_number:
 
 # Week programmes:
 # 1: normal day (weekends at 21°c, weekdays not during the day)
-# 2: all day at home day (always at 21°c except at night)
-# 3: away mode (always at 17°c)
+# 2: all day at home (always at 21°c except at night)
+# 3: away mode (always at 16°c)
 
 ##############################################
 # All related to the homematic thermostats (8000000019xxx)
 ##############################################
 # NEXT_ID 14
 automation:
-    # Turn off all the radiators when it's either warm outside or when the master switch is off (when I sleep or when I'm gone)
-    # Does not trigger when vacation mode is enabled
+    # Turn off all the radiators when it's either warm outside, when the master switch is off (when I sleep or when I'm gone)
+    # or when the summer mode is activated
+    # Does not trigger when vacation mode is enabled or when summer mode is enabled
   - id: '8000000019001'
     alias: 'Heating: Turn off all radiators'
     trigger:
@@ -81,6 +82,10 @@ automation:
         condition: state
         entity_id: input_boolean.vacation
         state: 'off'
+      - alias: 'Summer mode is disabled'
+        condition: state
+        entity_id: input_boolean.summer
+        state: 'off'
     action:
       - service: homematic.set_device_value # enable the away schedule
         data:
@@ -92,7 +97,7 @@ automation:
 
     # Sets the week schedule to one where the temperature is 21°c all day long. Can be usefull on holidays during the week.
     # Also triggers when I'm returning home (it should be on week schedule 3)
-    # Does not trigger when vacation mode is enabled or when it's warm outside (should stay on schedule 3)
+    # Does not trigger when vacation or summer mode is enabled or when it's warm outside (should stay on schedule 3)
   - id: '8000000019005'
     alias: 'Heating: Switch to all day on schedule'
     trigger:
@@ -117,6 +122,9 @@ automation:
         entity_id: weather.pw_casa
         value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
         below: 22
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: 'on'
     condition:
       - condition: numeric_state
         entity_id: weather.pw_casa
@@ -125,6 +133,10 @@ automation:
       - alias: 'Vacation mode is disabled'
         condition: state
         entity_id: input_boolean.vacation
+        state: 'off'
+      - alias: 'Summer mode is disabled'
+        condition: state
+        entity_id: input_boolean.summer
         state: 'off'
       - alias: It is not a workday
         condition: state
@@ -172,6 +184,9 @@ automation:
         entity_id: weather.pw_casa
         value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
         below: 22
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: 'on'
     condition:
       - condition: numeric_state
         entity_id: weather.pw_casa
@@ -180,6 +195,10 @@ automation:
       - alias: 'Vacation mode is disabled'
         condition: state
         entity_id: input_boolean.vacation
+        state: 'off'
+      - alias: 'Summer mode is disabled'
+        condition: state
+        entity_id: input_boolean.summer
         state: 'off'
       - condition: or
         conditions:
@@ -194,6 +213,11 @@ automation:
             - sat
             - sun
     action:
+      - service: climate.set_hvac_mode  # reset HA to auto schedule
+        target:
+          entity_id: climate.000a1709af6337
+        data:
+          hvac_mode: auto
       - service: homematic.set_device_value # enable the regular schedule
         data:
           address: 000A1709AF6337
