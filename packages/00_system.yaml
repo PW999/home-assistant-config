@@ -48,8 +48,8 @@ automation:
 
   ## weekly full snapshot ##
   - id: '8000000000012'
-    alias: System - Snapshot full
-    description: Takes a full snapshot every week on Monday
+    alias: System - Full backup
+    description: Takes a full backup every week on Monday
     trigger:
     - platform: time
       at: '04:00:00'
@@ -58,7 +58,7 @@ automation:
       weekday:
         - mon
     action:
-    - service: hassio.snapshot_full
+    - service: hassio.backup_full
 
   ## Weekly reboot, if we don't reboot every week, how do we know a restart is a safe operation ? ##
   - id: '8000000000014'
