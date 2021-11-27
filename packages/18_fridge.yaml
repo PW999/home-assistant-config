@@ -38,7 +38,7 @@ homeassistant:
 automation:
     # Just make sure that the power plug of the fridge is always on !
   - id: '8000000018001'
-    alias: Ensure fridge remains on
+    alias: Fridge - Always keep power on
     trigger:
       - platform: time_pattern
         minutes: '/10'

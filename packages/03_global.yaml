@@ -257,7 +257,7 @@ automation:
 
   # APPLY GLOBAL SCENES TO ALL LIGHTS AT NIGHT - Night scene has all lights off exception some very dim light in the living room for my cat #
   - id: '8000000003011'
-    alias: Home to night mode
+    alias: Global - Home to night mode
     description: If night switch is on (nobody home between sunset and sunrise), switch to nighs scene
     trigger:
     - entity_id: input_boolean.night
@@ -273,7 +273,7 @@ automation:
 
   # APPLY GLOBAL SCENES TO ALL LIGHTS WHEN I LEAVE #
   - id: '8000000003012'
-    alias: Home alone
+    alias: Global - Home alone
     description: If everybody left during the day, turn off all lights using the home_alone_scene
     trigger:
     - entity_id: input_boolean.master_switch

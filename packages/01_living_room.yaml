@@ -13,7 +13,7 @@
 # Next: 5
 automation:
   - id: '8000000001001'
-    alias: Living room evening mode
+    alias: Living room - turn on lights in the evening
     description: Turn on the living room lights in the evening based on sunset
     trigger:
     - entity_id: input_boolean.dusk_till_dawn
@@ -53,7 +53,7 @@ automation:
 
 
   - id: '8000000001002'
-    alias: Living room off at sunrise
+    alias: Living room - turn off ligts in the morning
     description: Turn off the living room lights in the morning
     trigger:
     - entity_id: input_boolean.dusk_till_dawn
@@ -89,7 +89,7 @@ automation:
 
 
   - id: '8000000001003'
-    alias: Living room dimmed evening mode
+    alias: Living room - dimm the lights later in the evening
     description: Slowly dimm the living room lights at fixed time
     trigger:
     - entity_id: input_boolean.dusk_till_dawn

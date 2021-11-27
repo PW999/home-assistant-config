@@ -68,7 +68,7 @@ automation:
     # or when the summer mode is activated
     # Does not trigger when vacation mode is enabled or when summer mode is enabled
   - id: '8000000019001'
-    alias: 'Heating: Turn off all radiators'
+    alias: Heating - Turn off all radiators
     trigger:
     - platform: state
       entity_id: input_boolean.master_switch
@@ -99,7 +99,7 @@ automation:
     # Also triggers when I'm returning home (it should be on week schedule 3)
     # Does not trigger when vacation or summer mode is enabled or when it's warm outside (should stay on schedule 3)
   - id: '8000000019005'
-    alias: 'Heating: Switch to all day on schedule'
+    alias: Heating - Switch to all day on schedule
     trigger:
       - platform: time
         at: '02:00:00'
@@ -161,7 +161,7 @@ automation:
           value_type: int
 
   - id: '8000000019006'
-    alias: 'Heating: Switch to regular schedule'
+    alias: Heating - Switch to regular schedule
     trigger:
       - platform: time
         at: '02:00:00'
@@ -230,7 +230,7 @@ automation:
 
     # Keeps the house at an okay temperature for the cat when I'm on holiday leave
   - id: '8000000019004'
-    alias: 'Heating: Set heating vacation mode'
+    alias: Heating - Set heating vacation mode
     trigger:
       - platform: state
         entity_id: input_boolean.vacation
@@ -276,7 +276,7 @@ automation:
   #           TEMPERATURE_OFFSET: -1.0
   #       - delay: 3600
   - id: '8000000019009'
-    alias: "Heating: Homematic Reconnect"
+    alias: Heating - Homematic Reconnect
     trigger:
       platform: state
       entity_id: binary_sensor.homematic_up
@@ -285,7 +285,7 @@ automation:
       service: homematic.reconnect
 
   - id: '8000000019010'
-    alias: 'Heating: Decrease living room offset'
+    alias: Heating - Decrease living room offset
     trigger:
       - platform: time_pattern
         hours: '*'
@@ -303,7 +303,7 @@ automation:
       entity_id: input_number.heating_offset_living_room
 
   - id: '8000000019011'
-    alias: 'Heating: Increase living room offset'
+    alias: Heating - Increase living room offset
     trigger:
       - platform: time_pattern
         hours: '*'
@@ -321,7 +321,7 @@ automation:
       entity_id: input_number.heating_offset_living_room
 
   - id: '8000000019012'
-    alias: 'Heating: reset offset'
+    alias: Heating - reset offset
     trigger:
       - platform: time_pattern
         hours: '*'
