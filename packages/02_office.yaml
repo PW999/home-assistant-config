@@ -41,6 +41,9 @@ automation:
     - entity_id: device_tracker.pwnitrogen
       platform: state
       to: home
+    - entity_id: device_tracker.pwzenbookux303
+      platform: state
+      to: home
     - entity_id: input_boolean.master_switch
       platform: state
       to: 'on'
@@ -58,6 +61,9 @@ automation:
         - condition: state
           entity_id: device_tracker.as_hq_lt_108
           state: home
+        - condition: state
+          entity_id: device_tracker.pwzenbookux303
+          state: home
     action:
     - service: scene.turn_on
       entity_id: scene.office_on_scene
@@ -72,12 +78,18 @@ automation:
     - entity_id: device_tracker.pwnitrogen
       platform: state
       to: not_home
+    - entity_id: device_tracker.pwzenbookux303
+      platform: state
+      to: not_home
     condition:
     - condition: state
       entity_id: device_tracker.as_hq_lt_108
       state: not_home
     - condition: state
       entity_id: device_tracker.pwnitrogen
+      state: not_home
+    - condition: state
+      entity_id: device_tracker.pwzenbookux303
       state: not_home
     action:
       # segments don't support fancy on-off transitions, but they do have brightness transititions
