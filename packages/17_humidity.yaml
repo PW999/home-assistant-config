@@ -289,19 +289,28 @@ automation:
       for: '00:10:00'
     - platform: state
       entity_id: sensor.terrace_2
+    - platform: state
+      entity_id: input_boolean.master_switch
+      to: 'on'
+      for: '00:05'
     condition:
-    - alias: Only if we cross the treshold
-      condition: template
-      # only if rising: {{ states(trigger.from_state) | float < states(trigger.to_state) | float  }}
-      value_template: >
-        {%  if trigger.entity_id != 'sensor.bedroom_2'  %}
-        false
-        {% else %}
-        {{ states(trigger.from_state) | float <= 65.0   }}
-        {% endif %}
     - condition: numeric_state
       entity_id: sensor.bedroom_2
       above: 65
+    - condition: or
+      conditions:
+        - alias: Trigger when I get home or wake up
+          condition: template
+          value_template: >
+            trigger.entity_id == 'input_boolean.master_switch'
+        - alias: Trigger when bedroom humidity rises from below to above threshold
+          condition: template
+          value_template: >
+            trigger.entity_id == 'sensor.bedroom_2' and (trigger.from_state.state | float) <= 65.0
+        - alias: Trigger when outside humidity lowers
+          condition: template
+          value_template: >
+            trigger.entity_id == 'sensor.terrace_2' and (trigger.from_state.state | float) > (trigger.to_state.state | float)
     - alias: If outside humidity is much lower than inside humidity
       condition: template
       value_template: >
