@@ -152,11 +152,11 @@ scene:
         effect: Palette
       light.living_room_big:
         color_temp: 370
-        brightness: 196
+        brightness: 220
         state: 'on'
       light.living_room_small:
         color_temp: 370
-        brightness: 196
+        brightness: 220
         state: 'on'
       switch.on_off_plug_1:
         state: 'on'
