@@ -92,6 +92,10 @@ automation:
       - service: input_boolean.toggle
         data:
           entity_id: input_boolean.dusk_till_dawn
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.dimm_lights
+
 
   - id: '8000000000016'
     alias: Button - Toggle dimmed lights
