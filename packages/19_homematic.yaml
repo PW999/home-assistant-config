@@ -44,8 +44,8 @@ input_number:
   heating_offset_living_room:
     name: Living room offset
     initial: 0.0
-    min: -2.0
-    max: 2.0
+    min: -2.5
+    max: 2.5
     step: 0.5
 
 # CONTROL MODES
@@ -62,7 +62,7 @@ input_number:
 ##############################################
 # All related to the homematic thermostats (8000000019xxx)
 ##############################################
-# NEXT_ID 14
+# NEXT_ID 15
 automation:
     # Turn off all the radiators when it's either warm outside, when the master switch is off (when I sleep or when I'm gone)
     # or when the summer mode is activated
@@ -289,7 +289,7 @@ automation:
     trigger:
       - platform: time_pattern
         hours: '*'
-        minutes: '/30'
+        minutes: '/15'
         seconds: '0'
     condition:
     - alias: 'If the temperature difference exceeds 0.5°C'
@@ -297,7 +297,7 @@ automation:
       value_template: "{{ ( state_attr('climate.000a1709af6337', 'current_temperature')  | float + states('input_number.heating_offset_living_room') | float - states('sensor.living_room') | float ) > 0.5  }}"
     - alias: 'If the we can assume the heating should be on'
       condition: template
-      value_template: "{{ ( state_attr('climate.000a1709af6337', 'current_temperature')  | float + states('input_number.heating_offset_living_room') | float ) >= 17.5 }}"
+      value_template: "{{ ( state_attr('climate.000a1709af6337', 'temperature')  | float + states('input_number.heating_offset_living_room') | float ) >= 17.5 }}"
     action:
       service: input_number.decrement
       entity_id: input_number.heating_offset_living_room
@@ -307,7 +307,7 @@ automation:
     trigger:
       - platform: time_pattern
         hours: '*'
-        minutes: '/30'
+        minutes: '/15'
         seconds: '0'
     condition:
     - alias: 'If the temperature difference exceeds 0.5°C'
@@ -315,7 +315,7 @@ automation:
       value_template: "{{ ( state_attr('climate.000a1709af6337', 'current_temperature')  | float + states('input_number.heating_offset_living_room') | float - states('sensor.living_room') | float ) < - 0.5  }}"
     - alias: 'If the we can assume the heating should be on'
       condition: template
-      value_template: "{{ ( state_attr('climate.000a1709af6337', 'current_temperature')  | float + states('input_number.heating_offset_living_room') | float ) >= 17.5 }}"
+      value_template: "{{ ( state_attr('climate.000a1709af6337', 'temperature')  | float + states('input_number.heating_offset_living_room') | float ) >= 17.5 }}"
     action:
       service: input_number.increment
       entity_id: input_number.heating_offset_living_room
@@ -330,7 +330,21 @@ automation:
     condition:
     - alias: 'If the we can assume the heating is off'
       condition: template
-      value_template: "{{ ( state_attr('climate.000a1709af6337', 'current_temperature')  | float + states('input_number.heating_offset_living_room') | float ) < 17.5 }}"
+      value_template: "{{ ( state_attr('climate.000a1709af6337', 'temperature')  | float + states('input_number.heating_offset_living_room') | float ) < 17.5 }}"
     action:
-      service: input_number.decrement
-      entity_id: input_number.heating_offset_living_room
+      service: input_number.set_value
+      data:
+        value: 0
+      target:
+        entity_id: input_number.heating_offset_living_room
+
+  - id: '8000000019014'
+    alias: Heating - apply offset
+    trigger:
+      - platform: state
+        entity_id: input_number.heating_offset_living_room
+    action:
+      service: system_log.write
+      data:
+        level: warning
+        message: "LivingRoom = {{ states('sensor.living_room') | float }} # HomeMatic = {{ state_attr('climate.000a1709af6337', 'temperature') }} # Offset before = {{ trigger.from_state.state | float }} # Offset after = {{ trigger.to_state.state | float }} # TT = {{ state_attr('climate.000a1709af6337', 'temperature') }} # NewTT = {{ state_attr('climate.000a1709af6337', 'temperature') - trigger.from_state.state | float + trigger.to_state.state | float }}"
