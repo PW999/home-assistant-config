@@ -162,7 +162,7 @@ automation:
         data:
           message: |
             Do not forget to empty the washing machine.
-          title: Waching machine ready
+          title: Washing machine ready
           data:
             actions:
               - action: 'WASHING_MACHINE_DISABLE_NOTIFICATION' # The key you are sending for the event
