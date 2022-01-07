@@ -7,13 +7,7 @@
     light.front_window:
       state: 'off'
     light.living_room_tv:
-      state: 'on'
-      rgb_color:
-      - 255
-      - 255
-      - 255
-      brightness: 16
-      effect: Wipe Random
+      state: 'off'
     light.living_room_big:
       state: 'on'
       brightness: 0
