@@ -81,6 +81,7 @@ automation:
     - entity_id: device_tracker.pwzenbookux303
       platform: state
       to: not_home
+      for: '00:10:00'
     condition:
     - condition: state
       entity_id: device_tracker.as_hq_lt_108
@@ -98,6 +99,29 @@ automation:
     - delay: 10
     - service: scene.turn_on
       entity_id: scene.office_off_scene
+
+  - id: '8000000002003'
+    alias: Notification - Office power still on
+    description: Send a notification when I leave or go to bed and the power to the amp on my desk is still on
+    mode: single
+    trigger:
+    - entity_id: input_boolean.master_switch
+      platform: state
+      to: 'off'
+    condition:
+    - alias: Stand-by usage is high
+      condition: numeric_state
+      entity_id: sensor.gosund_sp112_1_wattage
+      above: 12
+    action:
+    - service: notify.mobile_app_mi_9t
+      data:
+        message: |
+          Do not forget to turn of the power in the office. <br />
+          Power usage is {{ states('sensor.gosund_sp112_1_wattage') }}W, that's €{{ (24 * states('input_number.electricity_tarrif') | float * states('sensor.gosund_sp112_1_wattage') | float / 1000) | round(2) }}/day
+          or {{ (24 * states('sensor.gosund_sp112_1_wattage') |float * 270  / 1000) | round(0) }}g CO2:eq/day
+        title: Office power
+    - delay: 120
 
 scene:
   - id: '7000000002000'
