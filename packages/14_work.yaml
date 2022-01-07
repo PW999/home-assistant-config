@@ -6,24 +6,6 @@
 #   @url            :   https://github.com/PW999/home-assistant-config/
 ###############################################################################
 
-sensor:
-  # Avoiding toll, subscription
-  - platform: waze_travel_time
-    name: To work
-    origin: Kapellen, Antwerp, Belgium
-    destination: Hoboken, Antwerp, Belgium
-    region: 'EU'
-    avoid_toll_roads: true
-    avoid_subscription_roads: true
-  # Avoiding toll, subscription
-  - platform: waze_travel_time
-    name: To home
-    destination: Kapellen, Antwerp, Belgium
-    origin: Hoboken, Antwerp, Belgium
-    region: 'EU'
-    avoid_toll_roads: true
-    avoid_subscription_roads: true
-
 binary_sensor:
   - platform: workday
     country: BE
