@@ -157,6 +157,8 @@ automation:
     action:
     - service: scene.turn_on
       entity_id: scene.hall_25
+      data:
+        transition: 3
 
 
   - id: '8000000004004'
@@ -192,6 +194,8 @@ automation:
     action:
     - service: scene.turn_on
       entity_id: scene.hall_25
+      data:
+        transition: 3
 
   # This used to turn the hall lights off when it's sunny because the lights were of no much use,
   # but it kept confusing me because 'off' could also have meant that
@@ -357,7 +361,7 @@ scene:
         brightness: 64
         state: 'on'
       light.hall_2:
-        brightness: 64
+        brightness: 16
         state: 'on'
       light.hall_3:
         brightness: 64
@@ -389,7 +393,7 @@ scene:
         brightness: 26
       light.hall_2:
         state: 'on'
-        brightness: 26
+        brightness: 16
       light.hall_3:
         state: 'on'
         brightness: 26

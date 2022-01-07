@@ -49,7 +49,7 @@ automation:
     - service: scene.turn_on
       entity_id: scene.living_room_evening
       data:
-        transition: 5
+        transition: 3
 
 
   - id: '8000000001002'
@@ -85,7 +85,7 @@ automation:
     - service: scene.turn_on
       entity_id: scene.living_room_off
       data:
-        transition: 5
+        transition: 3
 
 
   - id: '8000000001003'
@@ -156,7 +156,7 @@ scene:
         state: 'on'
       light.living_room_small:
         color_temp: 370
-        brightness: 220
+        brightness: 196
         state: 'on'
       switch.on_off_plug_1:
         state: 'on'

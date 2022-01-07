@@ -6,6 +6,11 @@
 #   @url            :   https://github.com/PW999/home-assistant-config/
 ###############################################################################
 
+air_quality:
+  - platform: opensensemap
+    station_id: 5ca27578cbf9ae001a9aa4a8
+
+
 zone:
   # This will override the default home zone
   - name: Home
@@ -274,6 +279,8 @@ automation:
     action:
     - service: scene.turn_on
       entity_id: scene.home_night_scene
+      data:
+        transition: 2
 
   # APPLY GLOBAL SCENES TO ALL LIGHTS WHEN I LEAVE #
   - id: '8000000003012'
@@ -297,6 +304,8 @@ automation:
     action:
     - service: scene.turn_on
       entity_id: scene.home_alone_scene
+      data:
+        transition: 2
 
   # WHEN ON VACATION, TURN ON MASTER SWITCH DURING DAY, LIGHTS WILL TURN ON AT SUNSET (AS USUAL) #
   - id: '8000000003014'

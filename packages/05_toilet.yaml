@@ -32,6 +32,7 @@ automation:
       service: light.turn_on
       data_template:
         brightness: " {{ [16, (255 * ( cos(0.11* ( 13 - now().hour)) - 0.2 ) /0.8)] | max | round(0) }}"  # https://www.desmos.com/calculator
+        transition: 1
         entity_id:
           - light.toilet
 
@@ -46,5 +47,6 @@ automation:
     action:
       service: light.turn_off
       data:
+        transition: 4
         entity_id:
           - light.toilet
