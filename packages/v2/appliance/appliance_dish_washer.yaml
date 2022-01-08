@@ -1,18 +1,19 @@
-###############################################################################
+---
+
+# ##############################################################################
 #   @author         :   Phillip (P_W999)
-#   @date           :   02/05/2021
-#   @package        :   Dish Washer package
+#   @date           :   01/2022
+#   @package        :   Dish washer package
 #   @description    :   Monitor dish washer and notify so I don't forget to empty it
 #   @url            :   https://github.com/PW999/home-assistant-config/
 #   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
-###############################################################################
-
+#   @erb            :   ./appliance/appliance_dish_washer.erb
+# ##############################################################################
 
 homeassistant:
   customize:
     sensor.dish_washer_status:
       icon: mdi:dishwasher
-
     sensor.gosund_sp112_3_current:
       friendly_name: Dish washer Current
     switch.gosund_sp112_3_main_relay:
@@ -32,10 +33,11 @@ homeassistant:
     sensor.gosund_sp112_3_consumption:
       friendly_name: Dish washer total energy consumption
 
+
 input_boolean:
-  disable_dish_washer_notification:
+  dish_washer_disable_notification:
     name: Disable Dish washer Notification
-    initial: off
+    initial: 'off'
     icon: mdi:dishwasher
 
 input_select:
@@ -47,39 +49,34 @@ input_select:
       - Finished
 
 sensor:
-- platform: template
-  sensors:
-  # Dish washer Status
+  - platform: template
+    sensors:
+      # Dish washer Status
       dish_washer_status:
         value_template: '{{ states.input_select.dish_washer_status.state}}'
-        friendly_name: Dish washer Status
+        friendly_name: Dish washer status
         availability_template: >-
           {{ True if
               not is_state('input_select.dish_washer_status', 'unavailable')
               else False
           }}
 
-##############################################
-# Workday automation (8000000020xxx)
-##############################################
-# NEXT_ID 5
 automation:
 
-# When power is detected, and the Dish washer is not in
-# the Running state, change the status of the Dish washer
-# to Running.
-# The status check will ensure we don't try to put the state
-# to Running each time the power level changes, and we're already
-# in the Running state.
-
-  - id: '8000000020001'
+  # When power is detected, and the dish washer is not in
+  # the Running state, change the status of the dish washer
+  # to Running.
+  # The status check will ensure we don't try to put the state
+  # to Running each time the power level changes, and we're already
+  # in the Running state.
+  - id: appliance_dish_washer_switch_to_running
     alias: Dish washer - Set active when power detected
     trigger:
       - platform: numeric_state
         entity_id: sensor.gosund_sp112_3_wattage
         above: 10
         for:
-          minutes: 2
+          minutes: 1
     condition:
       condition: or
       conditions:
@@ -96,11 +93,10 @@ automation:
           option: Running
       - service: input_boolean.turn_off
         target:
-          entity_id: input_boolean.disable_dish_washer_notification
+          entity_id: input_boolean.dish_washer_disable_notification
 
-# When the power drops, move the state of the Dish washer to Finished.
-
-  - id: '8000000020002'
+  # When the power drops, move the state of the dish washer to Finished.
+  - id: appliance_dish_washer_switch_to_finished
     alias: Dish washer - Set finished when power drops
     trigger:
       - platform: numeric_state
@@ -120,11 +116,10 @@ automation:
           entity_id: input_select.dish_washer_status
           option: Finished
 
-
-    # As soon as I am home, send an actionable notification telling me to empty the dish washer.
-    # Will repeat until I click Finish on the notification.
-  - id: '8000000020003'
-    alias: Notification - Send alert when Dish washer is finished
+  # As soon as I am home, send an actionable notification telling me to empty the dish washer.
+  # Will repeat until I click Finish on the notification.
+  - id: appliance_dish_washer_notify_finished
+    alias: Notification - Send alert when dish washer is finished
     mode: single
     trigger:
       - platform: state
@@ -136,13 +131,13 @@ automation:
         for:
           minutes: 1
       - platform: time_pattern
-        minutes: '/30'
+        minutes: '/45'
     condition:
       condition: and
       conditions:
         - condition: time
-          before: '22:30:00'
-          after: '08:30:00'
+          before: '22:00:00'
+          after: '08:00:00'
         - condition: state
           entity_id: group.household_members
           state: home
@@ -150,7 +145,7 @@ automation:
           entity_id: input_select.dish_washer_status
           state: Finished
         - condition: state
-          entity_id: input_boolean.disable_dish_washer_notification
+          entity_id: input_boolean.dish_washer_disable_notification
           state: 'off'
         - condition: template
           value_template: >
@@ -164,16 +159,16 @@ automation:
       - service: notify.mobile_app_mi_9t
         data:
           message: |
-            Do not forget to empty the Dish washer.
+            Do not forget to empty the dish washer.
           title: Dish washer ready
           data:
             actions:
-              - action: 'DISH_WASHER_DISABLE_NOTIFICATION' # The key you are sending for the event
-                title: 'Finish' # The button title
+              - action: DISH_WASHER_DISABLE_NOTIFICATION   # The key you are sending for the event
+                title: 'Finish'   # The button title
       - delay: 600
 
-    # When clicked on the Finish button in the above notification, set the dish washer to Idle
-  - id: '8000000020004'
+  # When clicked on the Finish button in the above notification, set the dish washer to Idle
+  - id: appliance_dish_washer_confirm_notifcation
     alias: Dish washer - Emptied event
     trigger:
       - platform: event
@@ -187,4 +182,4 @@ automation:
           option: Idle
       - service: input_boolean.turn_on
         target:
-          entity_id: input_boolean.disable_dish_washer_notification
+          entity_id: input_boolean.dish_washer_disable_notification

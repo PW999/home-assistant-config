@@ -1,0 +1,6 @@
+SENSOR_BEDROOM='sensor.bedroom'
+SENSOR_OUTSIDE='sensor.terrace'
+SENSOR_BATHROOM='sensor.bathroom'
+SENSOR_KITCHEN='sensor.bathroom'
+SENSOR_OFFICE='sensor.bureau'
+SENSOR_LIVING_ROOM='sensor.living_room'

@@ -1,15 +1,14 @@
-###############################################################################
+---
+
+# ##############################################################################
 #   @author         :   Phillip (P_W999)
-#   @date           :   04/2021
+#   @date           :   01/2022
 #   @package        :   Fridge package
-#   @description    :   Management of the fridge's power plug
+#   @description    :   Monitor fridge and notify when it is turned off
 #   @url            :   https://github.com/PW999/home-assistant-config/
-#   @credit         :   https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/
-###############################################################################
-
-# TODO:
-# [ ] Also notify when the plug is unavailable ?
-
+#   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
+#   @erb            :   ./appliance/appliance_fridge.erb
+# ##############################################################################
 homeassistant:
   customize:
     sensor.gosund_sp112_2_current:
@@ -31,13 +30,9 @@ homeassistant:
     sensor.gosund_sp112_2_consumption:
       friendly_name: Fridge total energy consumption
 
-##############################################
-# All related to the fridge's power switch (8000000018xxx)
-##############################################
-# NEXT_ID 2
 automation:
-    # Just make sure that the power plug of the fridge is always on !
-  - id: '8000000018001'
+  # Just make sure that the power plug of the fridge is always on !
+  - id: appliance_fridge_keep_power_on
     alias: Fridge - Always keep power on
     trigger:
       - platform: time_pattern
@@ -45,6 +40,10 @@ automation:
       - platform: state
         entity_id: switch.gosund_sp112_2_main_relay
         to: 'off'
+      - platform: state
+        entity_id: switch.gosund_sp112_2_main_relay
+        to: 'unavailable'
+        for: '00:02:00'
     condition:
       - alias: Fridge power was off
         condition: state
@@ -59,4 +58,4 @@ automation:
         data:
           message: |
             Fridge power was off !
-          title: Fridge warning
+          title: Fridge alert

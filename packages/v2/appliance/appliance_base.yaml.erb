@@ -1,0 +1,167 @@
+---
+<%# THIS IS THE RUBY ERB TEMPLATE FILE FOR GENERATING THE HUMIDITY SENSORS AND AUTOMATIONS FOR DIFFERENT ROOMS %>
+# ##############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   <%= appliance_name %> package
+#   @description    :   Monitor <%= appliance_name.downcase() %> and notify so I don't forget to empty it
+#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
+#   @erb            :   <%= __FILE__ %>
+# ##############################################################################
+<% appliance_id = appliance_name.chomp('').gsub(' ', '_').downcase() %>
+homeassistant:
+  customize:
+    sensor.<%= appliance_id %>_status:
+      icon: <%= icon %>
+<%= ERB.new(File.read(File.expand_path('appliance_power_plug_customization_base.yaml.erb', __dir__)), nil, nil, eoutvar="_sub01").result(binding) %>
+
+input_boolean:
+  <%= appliance_id %>_disable_notification:
+    name: Disable <%= appliance_name %> Notification
+    initial: 'off'
+    icon: <%= icon %>
+
+input_select:
+  <%= appliance_id %>_status:
+    name: <%= appliance_name %> Status
+    options:
+      - Idle
+      - Running
+      - Finished
+
+sensor:
+  - platform: template
+    sensors:
+      # <%= appliance_name %> Status
+      <%= appliance_id %>_status:
+        value_template: '{{ states.input_select.<%= appliance_id %>_status.state}}'
+        friendly_name: <%= appliance_name %> status
+        availability_template: >-
+          {{ True if
+              not is_state('input_select.<%= appliance_id %>_status', 'unavailable')
+              else False
+          }}
+
+automation:
+
+  # When power is detected, and the <%= appliance_name.downcase() %> is not in
+  # the Running state, change the status of the <%= appliance_name.downcase() %>
+  # to Running.
+  # The status check will ensure we don't try to put the state
+  # to Running each time the power level changes, and we're already
+  # in the Running state.
+  - id: <%= "appliance_#{appliance_id}_switch_to_running" %>
+    alias: <%= appliance_name %> - Set active when power detected
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.<%= power_plug %>_wattage
+        above: 10
+        for:
+          minutes: 1
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.<%= appliance_id %>_status
+          state: Idle
+        - condition: state
+          entity_id: sensor.<%= appliance_id %>_status
+          state: Finished
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.<%= appliance_id %>_status
+          option: Running
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.<%= appliance_id %>_disable_notification
+
+  # When the power drops, move the state of the <%= appliance_name.downcase %> to Finished.
+  - id: <%= "appliance_#{appliance_id}_switch_to_finished" %>
+    alias: <%= appliance_name %> - Set finished when power drops
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.<%= power_plug %>_wattage
+        below: 5
+        for:
+          minutes: 20
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_select.<%= appliance_id %>_status
+          state: Running
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.<%= appliance_id %>_status
+          option: Finished
+
+  # As soon as I am home, send an actionable notification telling me to empty the <%= appliance_name.downcase() %>.
+  # Will repeat until I click Finish on the notification.
+  - id: <%= "appliance_#{appliance_id}_notify_finished" %>
+    alias: Notification - Send alert when <%= appliance_name.downcase() %> is finished
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: sensor.<%= appliance_id %>_status
+        to: Finished
+      - platform: state
+        entity_id: person.phillip
+        to: home
+        for:
+          minutes: 1
+      - platform: time_pattern
+        minutes: '/45'
+    condition:
+      condition: and
+      conditions:
+        - condition: time
+          before: '22:00:00'
+          after: '08:00:00'
+        - condition: state
+          entity_id: group.household_members
+          state: home
+        - condition: state
+          entity_id: input_select.<%= appliance_id %>_status
+          state: Finished
+        - condition: state
+          entity_id: input_boolean.<%= appliance_id %>_disable_notification
+          state: 'off'
+        - condition: template
+          value_template: >
+            {% if states.automation.notification_send_alert_when_<%= appliance_id %>_is_finished.last_triggered is not none %}
+              {% if as_timestamp(now()) | int   -  as_timestamp(states.automation.notification_send_alert_when_<%= appliance_id %>_is_finished.attributes.last_triggered) | int > 1800 %} true {% else %} false
+              {% endif %}
+            {% else %}
+            false
+            {% endif %}
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Do not forget to empty the <%= appliance_name.downcase() %>.
+          title: <%= appliance_name %> ready
+          data:
+            actions:
+              - action: <%= appliance_id.upcase() %>_DISABLE_NOTIFICATION   # The key you are sending for the event
+                title: 'Finish'   # The button title
+      - delay: 600
+
+  # When clicked on the Finish button in the above notification, set the <%= appliance_name.downcase() %> to Idle
+  - id: <%= "appliance_#{appliance_id}_confirm_notifcation" %>
+    alias: <%= appliance_name %> - Emptied event
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: <%= appliance_id.upcase() %>_DISABLE_NOTIFICATION
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.<%= appliance_id %>_status
+          option: Idle
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.<%= appliance_id %>_disable_notification

@@ -1,18 +1,19 @@
-###############################################################################
+---
+
+# ##############################################################################
 #   @author         :   Phillip (P_W999)
-#   @date           :   04/2021
+#   @date           :   01/2022
 #   @package        :   Washing machine package
 #   @description    :   Monitor washing machine and notify so I don't forget to empty it
 #   @url            :   https://github.com/PW999/home-assistant-config/
 #   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
-###############################################################################
-
+#   @erb            :   ./appliance/appliance_washing_machine.erb
+# ##############################################################################
 
 homeassistant:
   customize:
     sensor.washing_machine_status:
       icon: mdi:washing-machine
-
     sensor.gosund_sp1_2_current:
       friendly_name: Washing machine Current
     switch.gosund_sp1_2_main_relay:
@@ -32,24 +33,25 @@ homeassistant:
     sensor.gosund_sp1_2_consumption:
       friendly_name: Washing machine total energy consumption
 
+
 input_boolean:
-  disable_washing_machine_notification:
-    name: Disable Washing Machine Notification
-    initial: off
+  washing_machine_disable_notification:
+    name: Disable Washing machine Notification
+    initial: 'off'
     icon: mdi:washing-machine
 
 input_select:
   washing_machine_status:
-    name: Washing Machine Status
+    name: Washing machine Status
     options:
       - Idle
       - Running
       - Finished
 
 sensor:
-- platform: template
-  sensors:
-  # Washing Machine Status
+  - platform: template
+    sensors:
+      # Washing machine Status
       washing_machine_status:
         value_template: '{{ states.input_select.washing_machine_status.state}}'
         friendly_name: Washing machine status
@@ -59,26 +61,22 @@ sensor:
               else False
           }}
 
-##############################################
-# Workday automation (8000000015xxx)
-##############################################
-# NEXT_ID 5
 automation:
 
-    # When power is detected, and the washing machine is not in
-    # the Running state, change the status of the washing machine
-    # to Running.
-    # The status check will ensure we don't try to put the state
-    # to Running each time the power level changes, and we're already
-    # in the Running state.
-  - id: '8000000015001'
-    alias: Washing Machine - Set active when power detected
+  # When power is detected, and the washing machine is not in
+  # the Running state, change the status of the washing machine
+  # to Running.
+  # The status check will ensure we don't try to put the state
+  # to Running each time the power level changes, and we're already
+  # in the Running state.
+  - id: appliance_washing_machine_switch_to_running
+    alias: Washing machine - Set active when power detected
     trigger:
       - platform: numeric_state
         entity_id: sensor.gosund_sp1_2_wattage
         above: 10
         for:
-          minutes: 2
+          minutes: 1
     condition:
       condition: or
       conditions:
@@ -95,17 +93,17 @@ automation:
           option: Running
       - service: input_boolean.turn_off
         target:
-          entity_id: input_boolean.disable_washing_machine_notification
+          entity_id: input_boolean.washing_machine_disable_notification
 
-    # When the power drops, move the state of the washing machine to Finished.
-  - id: '8000000015002'
-    alias: Washing Machine - Set finished when power drops
+  # When the power drops, move the state of the washing machine to Finished.
+  - id: appliance_washing_machine_switch_to_finished
+    alias: Washing machine - Set finished when power drops
     trigger:
       - platform: numeric_state
         entity_id: sensor.gosund_sp1_2_wattage
-        below: 10
+        below: 5
         for:
-          minutes: 5
+          minutes: 20
     condition:
       condition: and
       conditions:
@@ -118,9 +116,9 @@ automation:
           entity_id: input_select.washing_machine_status
           option: Finished
 
-    # As soon as I am home, send an actionable notification telling me to empty the washing machine.
-    # Will repeat until I click Finish on the notification.
-  - id: '8000000015003'
+  # As soon as I am home, send an actionable notification telling me to empty the washing machine.
+  # Will repeat until I click Finish on the notification.
+  - id: appliance_washing_machine_notify_finished
     alias: Notification - Send alert when washing machine is finished
     mode: single
     trigger:
@@ -133,13 +131,13 @@ automation:
         for:
           minutes: 1
       - platform: time_pattern
-        minutes: '/30'
+        minutes: '/45'
     condition:
       condition: and
       conditions:
         - condition: time
-          before: '22:30:00'
-          after: '08:30:00'
+          before: '22:00:00'
+          after: '08:00:00'
         - condition: state
           entity_id: group.household_members
           state: home
@@ -147,7 +145,7 @@ automation:
           entity_id: input_select.washing_machine_status
           state: Finished
         - condition: state
-          entity_id: input_boolean.disable_washing_machine_notification
+          entity_id: input_boolean.washing_machine_disable_notification
           state: 'off'
         - condition: template
           value_template: >
@@ -165,13 +163,13 @@ automation:
           title: Washing machine ready
           data:
             actions:
-              - action: 'WASHING_MACHINE_DISABLE_NOTIFICATION' # The key you are sending for the event
-                title: 'Finish' # The button title
+              - action: WASHING_MACHINE_DISABLE_NOTIFICATION   # The key you are sending for the event
+                title: 'Finish'   # The button title
       - delay: 600
 
-    # When clicked on the Finish button in the above notification, set the washing machine to Idle
-  - id: '8000000015004'
-    alias: Washing Machine - Emptied event
+  # When clicked on the Finish button in the above notification, set the washing machine to Idle
+  - id: appliance_washing_machine_confirm_notifcation
+    alias: Washing machine - Emptied event
     trigger:
       - platform: event
         event_type: mobile_app_notification_action
@@ -184,4 +182,4 @@ automation:
           option: Idle
       - service: input_boolean.turn_on
         target:
-          entity_id: input_boolean.disable_washing_machine_notification
+          entity_id: input_boolean.washing_machine_disable_notification
