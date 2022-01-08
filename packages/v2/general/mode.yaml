@@ -65,7 +65,7 @@ automation:
 
   - id: general_mode_switch_to_morning
     alias: Mode - Switch to morning mode
-    description: Around sunrise, switch to day mode
+    description: Around sunrise, switch to morning mode
     trigger:
       - platform: sun
         event: sunrise
@@ -77,8 +77,8 @@ automation:
         after: sunrise
         after_offset: "-01:00:00"
       - condition: sun
-        after: sunrise
-        after_offset: "00:40:00"
+        before: sunrise
+        before_offset: "00:40:00"
     action:
       - service: input_select.select_option
         data:
@@ -87,7 +87,7 @@ automation:
 
 
   - id: general_mode_switch_to_day
-    alias: Mode - Switch to morning mode
+    alias: Mode - Switch to day mode
     description: Between sunrise and sunset, switch to day mode
     trigger:
       - platform: sun
