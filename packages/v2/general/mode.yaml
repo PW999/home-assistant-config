@@ -1,0 +1,109 @@
+
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Mode
+#   @description    :   Contains everything needed to set the home in a mode
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+input_select:
+  home_mode:
+    name: Modus
+    options:
+      - Day
+      - Morning
+      - Evening
+      - Night
+
+#       NIGHT    @       MORNING      @    DAY                                 @  EVENING              @   NIGHT
+# |--------------@----------|---------@----------------------------------------@--------|--------------@|-----------
+# midnight       -1h        sunrise   +40m                                     -40m     sunset          22:00
+
+automation:
+  - id: general_mode_switch_to_evening
+    alias: Mode - Switch to evening mode
+    description: Between sunset and 22:00, switch to evening mode
+    trigger:
+      - platform: sun
+        event: sunset
+        offset: "-00:40:00"
+      - platform: homeassistant
+        event: start
+    condition:
+      - condition: sun
+        after: sunset
+        after_offset: "-00:40:00"
+      - condition: time
+        before: "22:00:00"
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.home_mode
+          option: Evening
+
+  - id: general_mode_switch_to_night
+    alias: Mode - Switch to night mode
+    description: Between after 22:00 and before sunrise, switch to night mode
+    trigger:
+      - platform: time
+        at: "22:00:00"
+      - platform: homeassistant
+        event: start
+    condition:
+      - condition: or
+        conditions:
+        - condition: sun
+          before: sunrise
+          before_offset: "-01:00:00"
+        - condition: time
+          after: "22:00:00"
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.home_mode
+          option: Night
+
+  - id: general_mode_switch_to_morning
+    alias: Mode - Switch to morning mode
+    description: Around sunrise, switch to day mode
+    trigger:
+      - platform: sun
+        event: sunrise
+        offset: "-01:00:00"
+      - platform: homeassistant
+        event: start
+    condition:
+      - condition: sun
+        after: sunrise
+        after_offset: "-01:00:00"
+      - condition: sun
+        after: sunrise
+        after_offset: "00:40:00"
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.home_mode
+          option: Morning
+
+
+  - id: general_mode_switch_to_day
+    alias: Mode - Switch to morning mode
+    description: Between sunrise and sunset, switch to day mode
+    trigger:
+      - platform: sun
+        event: sunrise
+        offset: "00:40:00"
+      - platform: homeassistant
+        event: start
+    condition:
+      - condition: sun
+        after: sunrise
+        after_offset: "00:40:00"
+      - condition: sun
+        before: sunset
+        before_offset: "-00:40:00"
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.home_mode
+          option: Day
