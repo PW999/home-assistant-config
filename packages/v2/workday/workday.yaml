@@ -1,0 +1,86 @@
+---
+# ##############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Work package
+#   @description    :   Small work related actions
+#   @url            :   https://github.com/PW999/home-assistant-config/
+# ##############################################################################
+
+binary_sensor:
+  - platform: workday
+    country: BE
+
+input_boolean:
+  work_from_home:
+    name: Work from home
+    icon: mdi:home-city
+
+timer:
+  workday_countdown:
+    name: Workday countdown
+    duration: "08:00:00"
+
+automation:
+  - id: workday_timer_start
+    alias: Workday - Start at work timer
+    description: Starts timer when I arrive at work or start my work laptop
+    trigger:
+      - platform: zone
+        entity_id:
+          - person.phillip
+        zone: zone.work
+        event: enter
+      - platform: state
+        entity_id:
+          - device_tracker.as_hq_lt_108
+        to: home
+    condition:
+      - condition: state
+        entity_id: timer.workday_countdown
+        state: idle
+    action:
+      - delay: 300  # Zone is pretty big, gotta park my car and stuff
+      - service: timer.start
+        data:
+          entity_id: timer.workday_countdown
+
+  - id: workday_timer_cancel
+    alias: Workday - Stop at work timer
+    description: Stops the timer when I leave work or if my laptop is off
+    trigger:
+      - platform: zone
+        entity_id:
+          - person.phillip
+        zone: zone.work
+        event: leave
+      - platform: state
+        entity_id:
+          - device_tracker.as_hq_lt_108
+        to: away
+        for: "00:20:00"   # bluetooth tracking is not so accurate
+    condition:
+      - condition: state
+        entity_id: timer.workday_countdown
+        state: active
+    action:
+      - service: timer.cancel
+        data:
+          entity_id: timer.workday_countdown
+
+  - id: workday_timer_finished
+    alias: Workday - travel to home time notification
+    description: Send travel to home time when I'm at work for 8h
+    mode: single
+    trigger:
+      - platform: event
+        event_type: timer.finished
+        event_data:
+          entity_id: timer.workday_countdown
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Almost time to go home, travel time is {{ states('sensor.to_home') }} {{ state_attr('sensor.to_home', 'unit_of_measurement') }} via {{ state_attr('sensor.to_home', 'route') }}
+          title: Almost time to stop
+      - delay: 600
