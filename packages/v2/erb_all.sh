@@ -26,7 +26,7 @@ fi
 for file in $files
 do
   if [[ ! $file =~ .*base.yaml.erb.* ]]; then
-    yaml_name=${file//.erb/.yaml}
+    yaml_name=${file//.erb/_generated.yaml}
     echo "Generating file $yaml_name from template file $file"
     erb -T 2 -r "./constants" "$file" > "$yaml_name"
   fi
