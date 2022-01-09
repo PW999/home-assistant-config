@@ -36,19 +36,19 @@ automation:
     alias: Fridge - Always keep power on
     trigger:
       - platform: time_pattern
-        minutes: '/10'
+        minutes: /10
       - platform: state
         entity_id: switch.gosund_sp112_2_main_relay
-        to: 'off'
+        to: "off"
       - platform: state
         entity_id: switch.gosund_sp112_2_main_relay
-        to: 'unavailable'
-        for: '00:02:00'
+        to: unavailable
+        for: "00:02:00"
     condition:
       - alias: Fridge power was off
         condition: state
         entity_id: switch.gosund_sp112_2_main_relay
-        state: 'off'
+        state: "off"
     action:
       - alias: Turn on the fridge's power
         service: switch.turn_on

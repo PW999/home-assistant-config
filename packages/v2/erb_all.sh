@@ -1,6 +1,6 @@
 #!/bin/bash
 set -o pipefail
-
+YAML_LINT_CONFIG=../../.yamllint
 files=$(find . -type f -iname "*.erb")
 validation=0
 
@@ -8,7 +8,7 @@ for file in $files
 do
   if [[ ! $file =~ .*base.yaml.erb.* ]]; then
     echo "Checking $file"
-    erb -T 2 -r "./constants" "$file" | yamllint -
+    erb -T 2 -r "./constants" "$file" | yamllint -c $YAML_LINT_CONFIG -
     if [ $? -ne 0 ]; then
       validation=1
     fi

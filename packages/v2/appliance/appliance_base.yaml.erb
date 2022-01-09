@@ -19,7 +19,7 @@ homeassistant:
 input_boolean:
   <%= appliance_id %>_disable_notification:
     name: Disable <%= appliance_name %> Notification
-    initial: 'off'
+    initial: false
     icon: <%= icon %>
 
 input_select:
@@ -35,7 +35,7 @@ sensor:
     sensors:
       # <%= appliance_name %> Status
       <%= appliance_id %>_status:
-        value_template: '{{ states.input_select.<%= appliance_id %>_status.state}}'
+        value_template: "{{ states.input_select.<%= appliance_id %>_status.state}}"
         friendly_name: <%= appliance_name %> status
         availability_template: >-
           {{ True if
@@ -113,13 +113,13 @@ automation:
         for:
           minutes: 1
       - platform: time_pattern
-        minutes: '/45'
+        minutes: /45
     condition:
       condition: and
       conditions:
         - condition: time
-          before: '22:00:00'
-          after: '08:00:00'
+          before: "22:00:00"
+          after: "08:00:00"
         - condition: state
           entity_id: group.household_members
           state: home
@@ -128,7 +128,7 @@ automation:
           state: Finished
         - condition: state
           entity_id: input_boolean.<%= appliance_id %>_disable_notification
-          state: 'off'
+          state: "off"
         - condition: template
           value_template: >
             {% if states.automation.notification_send_alert_when_<%= appliance_id %>_is_finished.last_triggered is not none %}
@@ -146,7 +146,7 @@ automation:
           data:
             actions:
               - action: <%= appliance_id.upcase() %>_DISABLE_NOTIFICATION   # The key you are sending for the event
-                title: 'Finish'   # The button title
+                title: Finish   # The button title
       - delay: 600
 
   # When clicked on the Finish button in the above notification, set the <%= appliance_name.downcase() %> to Idle

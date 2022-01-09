@@ -37,7 +37,7 @@ homeassistant:
 input_boolean:
   dish_washer_disable_notification:
     name: Disable Dish washer Notification
-    initial: 'off'
+    initial: false
     icon: mdi:dishwasher
 
 input_select:
@@ -53,7 +53,7 @@ sensor:
     sensors:
       # Dish washer Status
       dish_washer_status:
-        value_template: '{{ states.input_select.dish_washer_status.state}}'
+        value_template: "{{ states.input_select.dish_washer_status.state}}"
         friendly_name: Dish washer status
         availability_template: >-
           {{ True if
@@ -131,13 +131,13 @@ automation:
         for:
           minutes: 1
       - platform: time_pattern
-        minutes: '/45'
+        minutes: /45
     condition:
       condition: and
       conditions:
         - condition: time
-          before: '22:00:00'
-          after: '08:00:00'
+          before: "22:00:00"
+          after: "08:00:00"
         - condition: state
           entity_id: group.household_members
           state: home
@@ -146,7 +146,7 @@ automation:
           state: Finished
         - condition: state
           entity_id: input_boolean.dish_washer_disable_notification
-          state: 'off'
+          state: "off"
         - condition: template
           value_template: >
             {% if states.automation.notification_send_alert_when_dish_washer_is_finished.last_triggered is not none %}
@@ -164,7 +164,7 @@ automation:
           data:
             actions:
               - action: DISH_WASHER_DISABLE_NOTIFICATION   # The key you are sending for the event
-                title: 'Finish'   # The button title
+                title: Finish   # The button title
       - delay: 600
 
   # When clicked on the Finish button in the above notification, set the dish washer to Idle

@@ -24,19 +24,19 @@ automation:
     alias: <%= appliance_name %> - Always keep power on
     trigger:
       - platform: time_pattern
-        minutes: '/10'
+        minutes: /10
       - platform: state
         entity_id: switch.<%= power_plug %>_main_relay
-        to: 'off'
+        to: "off"
       - platform: state
         entity_id: switch.<%= power_plug %>_main_relay
-        to: 'unavailable'
-        for: '00:02:00'
+        to: unavailable
+        for: "00:02:00"
     condition:
       - alias: <%= appliance_name %> power was off
         condition: state
         entity_id: switch.<%= power_plug %>_main_relay
-        state: 'off'
+        state: "off"
     action:
       - alias: Turn on the <%= appliance_name.downcase() %>'s power
         service: switch.turn_on

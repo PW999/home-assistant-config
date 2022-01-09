@@ -1,4 +1,4 @@
-
+---
 ###############################################################################
 #   @author         :   Phillip (P_W999)
 #   @date           :   01/2022
@@ -52,11 +52,11 @@ automation:
     condition:
       - condition: or
         conditions:
-        - condition: sun
-          before: sunrise
-          before_offset: "-01:00:00"
-        - condition: time
-          after: "22:00:00"
+          - condition: sun
+            before: sunrise
+            before_offset: "-01:00:00"
+          - condition: time
+            after: "22:00:00"
     action:
       - service: input_select.select_option
         data:

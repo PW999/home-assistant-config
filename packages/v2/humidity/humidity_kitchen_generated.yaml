@@ -22,7 +22,7 @@ sensor:
       kitchen_absolute_humidity:
         friendly_name: Kitchen absolute humidity
         unique_id: humidity_kitchen_sensor_absolute_humidity
-        icon_template: 'mdi:water'
+        icon_template: mdi:water
         availability_template: "{{ not ( is_state('sensor.bathroom', 'unavailable') or is_state('sensor.bathroom_2', 'unavailable') ) }}"
         value_template: >-
             {{
@@ -33,7 +33,7 @@ sensor:
       kitchen_humidity_at_20:
         friendly_name: Kitchen humidity at 20°c
         unique_id: humidity_kitchen_sensor_humidity_at_20
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         device_class: humidity
         availability_template: "{{ not is_state('sensor.kitchen_absolute_humidity', 'unavailable')  }}"
         value_template: "{{ (float(states('sensor.kitchen_absolute_humidity')) * 5.788 * 100.0) | round(0) }}"
@@ -47,20 +47,20 @@ automation:
       - platform: numeric_state
         entity_id: sensor.bathroom_2
         above: 70
-        for: '00:15:00'
+        for: "00:15:00"
       - platform: state
         entity_id: sensor.terrace_2
       - platform: state
         entity_id: input_boolean.master_switch
-        to: 'on'
-        for: '00:10'
+        to: "on"
+        for: "00:10:00"
     condition:
       - condition: numeric_state
         entity_id: sensor.bathroom_2
         above: 70
       - condition: state
         entity_id: input_boolean.master_switch
-        state: 'on'
+        state: "on"
       - condition: or
         conditions:
           - alias: Trigger when I get home or wake up
@@ -100,7 +100,7 @@ automation:
       - platform: numeric_state
         entity_id: sensor.bathroom_2
         below: 45
-        for: '00:30:00'
+        for: "00:30:00"
     condition:
       - alias: Only if we cross the treshold
         condition: template

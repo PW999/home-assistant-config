@@ -1,0 +1,19 @@
+---
+extends: default
+rules:
+  line-length:
+    max: 210
+    level: warning
+  empty-lines:
+    max: 2
+    max-start: 0
+    max-end: 1
+  new-lines:
+    type: dos
+  quoted-strings:
+    quote-type: double
+    required: only-when-needed
+    extra-required:
+      - ^-?[0-2][0-9]:[0-5][0-9](:[0-5][0-9])?
+    extra-allowed:
+      - \\{\\{.*\\}\\}
