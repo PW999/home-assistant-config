@@ -1,5 +1,7 @@
 # home-assistant-config
-This is the home-assistant configuration which I'm using in my little appartment. 
+This is the home-assistant configuration which I'm using in my little appartment.
+
+More documentation and automation will follow soon, but first I need to clean up and improve the manageability of my setup.
 
 # Hardware
 This is a very short list of the hardware I'm using:
@@ -13,7 +15,7 @@ This is a very short list of the hardware I'm using:
   * Osram Smart+ Light bulb
   * Osram Lightify wall socket
   * Philips Hue spots
-* HM-MOD-RPI-PCB (Homematic/Raspberrymatic) 
+* HM-MOD-RPI-PCB (Homematic/Raspberrymatic)
   * Homematic basic thermostat
 * ESPHome
   * GoSund SP-112 wifi power plug (replaced original firmware with ESPHome)
@@ -22,8 +24,8 @@ This is a very short list of the hardware I'm using:
   * ESP8266 running WLED + LED strips
   * Roomba 690
   * Foscam R2M Wifi camera
-  * Fluvius Smart meter with [SlimmeLezer](https://www.zuidwijk.com/slimmelezer-smartreader/) 
-* HP Touchpad with Evervolv ROM to run Wallpanel on (appdaemon dashboard)
+  * Fluvius Smart meter with [SlimmeLezer](https://www.zuidwijk.com/slimmelezer-smartreader/)
+* ~~HP Touchpad with Evervolv ROM to run Wallpanel on (appdaemon dashboard)~~ (dead again)
 
 # Installation
 I'm running Home Assistant Supervised on Raspbian 10. The following is a complete list of the containers running on my Pi (apart from the default HA containers)
