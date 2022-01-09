@@ -36,7 +36,14 @@ binary_sensor:
   - platform: template
     sensors:
       homematic_up:
-        friendly_name: 'Homematic is sending updates'
+        friendly_name: Homematic is sending updates
+        availability_template: >-
+          {{
+               not (
+                  is_state('sensor.hmip_000a1709af6337_valve', 'unavailable')
+                  or is_state('sensor.hmip_000a1709af6337_valve', 'unknown')
+              )
+          }}
         value_template: >-
           {{ as_timestamp(now()) - ( [as_timestamp(states.sensor.hmip_000a1709af6337_valve.last_changed), as_timestamp(states.sensor.hmip_000a1709af6337_rssi.last_changed)]  | max ) < 7200 }}
 
