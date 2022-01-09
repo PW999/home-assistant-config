@@ -127,6 +127,8 @@ scene:
   - id: '7000000002000'
     name: Office on scene
     entities:
+      light.bureau_wled_master:
+        state: "on"
       light.bureau_wled:
         state: 'on'
         brightness: 254
