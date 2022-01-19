@@ -65,11 +65,19 @@ influxdb:
     entities:
       - counter.dsmr_reconnect
       - weather.pw_casa
+      - device_tracker.mi_9t
     domains:
       - sensor
-      - device_tracker
       - climate
   exclude:
+    domains:
+      - camera
+      - binary_sensor
+      - persistent_notification
+      - zone
+      - switch
+      - scene
+      - device_tracker
     entities:
       - sensor.last_boot
       - sensor.washing_machine_status
