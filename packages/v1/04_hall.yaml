@@ -284,7 +284,7 @@ automation:
     - condition: time
       before: '23:00:00'
     - condition: time
-      after: '7:00:00'
+      after: '07:00:00'
     action:
       service: light.turn_on
       data:
@@ -305,7 +305,7 @@ automation:
       state: 'on'
     - condition: time
       after: '23:00:00'
-      before: '7:00:00'
+      before: '07:00:00'
     action:
       service: light.turn_on
       data:
@@ -358,13 +358,13 @@ scene:
     name: Hall 25%
     entities:
       light.hall_1:
-        brightness: 64
-        state: 'on'
-      light.hall_2:
         brightness: 16
         state: 'on'
-      light.hall_3:
+      light.hall_2:
         brightness: 64
+        state: 'on'
+      light.hall_3:
+        brightness: 16
         state: 'on'
   - id: '7000000004005'
     name: Hall 0%
@@ -390,10 +390,10 @@ scene:
     entities:
       light.hall_1:
         state: 'on'
-        brightness: 26
+        brightness: 16
       light.hall_2:
         state: 'on'
-        brightness: 16
+        brightness: 26
       light.hall_3:
         state: 'on'
-        brightness: 26
+        brightness: 16
