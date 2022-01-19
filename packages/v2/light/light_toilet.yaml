@@ -1,0 +1,39 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   General toilet light automation
+#   @description    :   Way to complex toilet light scheme for my toilet
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  - id: light_toilet_on
+    alias: Toilet light on
+    description: Turns the toilet light on when motion is detected
+    trigger:
+      - entity_id: binary_sensor.toilet_presence
+        platform: state
+        to: "on"
+    action:
+      - service: light.turn_on
+        data_template:
+          brightness: "{{ [16, (255 * ( cos(0.11* ( 13 - now().hour)) - 0.2 ) /0.8)] | max | round(0) }}"  # https://www.desmos.com/calculator
+          transition: 1
+          entity_id:
+            - light.toilet
+
+  - id: light_toilet_off
+    alias: Toilet light off
+    description: Turns the toilet light off when motion is not detected for 4 min
+    trigger:
+      - entity_id: binary_sensor.toilet_presence
+        platform: state
+        to: "off"
+        for: "00:04:00"
+    action:
+      - service: light.turn_off
+        data:
+          transition: 4
+          entity_id:
+            - light.toilet
