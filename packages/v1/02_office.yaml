@@ -6,27 +6,6 @@
 #   @url            :   https://github.com/PW999/home-assistant-config/
 ###############################################################################
 
-homeassistant:
-  customize:
-    sensor.gosund_sp112_1_current:
-      friendly_name: Desktop Current
-    switch.gosund_sp112_1_main_relay:
-      friendly_name: Desktop Switch
-    switch.gosund_sp112_1_usb:
-      friendly_name: Desktop Usb Switch
-    sensor.gosund_sp112_1_rrsi:
-      friendly_name: Desktop RSSI
-    sensor.gosund_sp112_1_total_daily_energy_consumption:
-      friendly_name: Desktop today's energy consumption
-    sensor.gosund_sp112_1_uptime:
-      friendly_name: Desktop Uptime
-    sensor.gosund_sp112_1_voltage:
-      friendly_name: Desktop Voltage
-    sensor.gosund_sp112_1_wattage:
-      friendly_name: Desktop Power Consumption
-    sensor.gosund_sp112_1_consumption:
-      friendly_name: Desktop total energy consumption
-
 automation:
   ##############################################
   # OFFICE AUTOMATION (8000000002xxx)

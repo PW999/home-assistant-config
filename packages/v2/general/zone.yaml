@@ -1,0 +1,16 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Zone
+#   @description    :   Configures the home zone
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+zone:
+  # This will override the default home zone
+  - name: Home
+    latitude: !secret home_lat
+    longitude: !secret home_lon
+    radius: 283
+    icon: mdi:account-multiple

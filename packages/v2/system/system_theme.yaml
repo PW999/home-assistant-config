@@ -1,0 +1,20 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   General System Configuration
+#   @description    :   Sets the default theme on startup
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  - id: system_set_theme_on_startup
+    alias: System - Set Custom Theme at Startup
+    description: Set the default theme for all users on startup
+    trigger:
+      platform: homeassistant
+      event: start
+    action:
+      service: frontend.set_theme
+      data:
+        name: ios-light-mode-orange-alternative

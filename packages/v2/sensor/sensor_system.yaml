@@ -1,0 +1,32 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   System sensors
+#   @description    :   Contains system related sensors
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+sensor:
+  - platform: command_line
+    name: CPU Temperature
+    command: cat /sys/class/thermal/thermal_zone0/temp
+    # If errors occur, make sure configuration file is encoded as UTF-8
+    unit_of_measurement: °C
+    value_template: "{{ value | multiply(0.001) | round(0) }}"
+
+  - platform: command_line
+    name: GPU Temperature
+    command: /opt/vc/bin/vcgencmd measure_temp | sed 's/temp=//g' | sed \"s/'C//g\"
+    # If errors occur, make sure configuration file is encoded as UTF-8
+    unit_of_measurement: °C
+    value_template: "{{ value | float | round(0) }}"
+
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /
+      - type: disk_use_percent
+        arg: /config
+      - type: processor_use
+      - type: last_boot

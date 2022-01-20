@@ -1,0 +1,23 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   General System Configuration
+#   @description    :   Reboot the system once a week
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  ## Weekly reboot, if we don't reboot every week, how do we know a restart is a safe operation ?
+  - id: system_automatic_reboot
+    alias: System - Reboot
+    description: Reboots the system every week on Saterday
+    trigger:
+      - platform: time
+        at: "04:00:00"
+    condition:
+      - condition: time
+        weekday:
+          - sat
+    action:
+      - service: hassio.host_reboot
