@@ -1,0 +1,33 @@
+# First create a bunch of sensors with the absolute humidity based on the relative humidity and the temperature.
+# For simplicity sake, the current air pressure is ignored (it should be less than 1% off the actual value, I think)
+# Then create a sensor which calculate the relative humidity if it were 20°c. Relative humidity is more
+# "human readable" and this value allows us to check of the relative humidity changed due to temperature changes
+# (so the amount of water in the air doesn't change) or if we really had a change in the amount of moisture in the air.
+sensor:
+  - platform: template
+    sensors:
+      <%= location_id %>_absolute_humidity:
+        friendly_name: <%= location_name %> absolute humidity
+        unique_id: <%= "humidity_#{location_id}_sensor_absolute_humidity" %>
+        icon_template: mdi:water
+        availability_template: >-
+            {{ not (
+                  is_state('<%= sensor_id %>', 'unavailable')
+                  or is_state('<%= sensor_id %>_2', 'unavailable')
+                  or is_state('<%= sensor_id %>', 'unknown')
+                  or is_state('<%= sensor_id %>_2', 'unknown')
+                )
+            }}
+        value_template: >-
+            {{
+            ( float(6.112) * e**( (( float(17.67) * float(states('<%= sensor_id %>')) )/(  float(states('<%= sensor_id %>')) + float(243.5) ))) * ( float(states('<%= sensor_id %>_2')) / 100 ) * float(18.02)  )
+            /
+            ( ( float(states('<%= sensor_id %>')) + 273.5) * float(100.0) * float(0.08314) )
+            }}
+      <%= location_id %>_humidity_at_20:
+        friendly_name: <%= location_name %> humidity at 20°c
+        unique_id: <%= "humidity_#{location_id}_sensor_humidity_at_20" %>
+        unit_of_measurement: "%"
+        device_class: humidity
+        availability_template: "{{ not is_state('sensor.<%= location_name.downcase %>_absolute_humidity', 'unavailable') and is_number(states('sensor.<%= location_name.downcase %>_absolute_humidity')) }}"
+        value_template: "{{ (float(states('sensor.<%= location_name.downcase %>_absolute_humidity')) * 5.788 * 100.0) | round(0) }}"

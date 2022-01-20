@@ -3,7 +3,7 @@
   power_plug = 'gosund_sp112_3'
   icon = 'mdi:dishwasher'
 
-  erb = ERB.new(File.read(File.expand_path('appliance_base.yaml.erb', __dir__)))
+  erb = ERB.new(File.read(File.expand_path('template_appliance.yaml.erb', __dir__)))
   erb.filename = __FILE__
 %>
 <%= erb.result(binding) %>
