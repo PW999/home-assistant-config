@@ -17,7 +17,7 @@ sensor:
 
   - platform: command_line
     name: GPU Temperature
-    command: /opt/vc/bin/vcgencmd measure_temp | sed 's/temp=//g' | sed \"s/'C//g\"
+    command: /opt/vc/bin/vcgencmd measure_temp | sed 's/temp=//g' | sed "s/'C//g"
     # If errors occur, make sure configuration file is encoded as UTF-8
     unit_of_measurement: °C
     value_template: "{{ value | float | round(0) }}"
