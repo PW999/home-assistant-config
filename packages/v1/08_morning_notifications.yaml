@@ -32,7 +32,7 @@ automation:
           message: |
             Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
             Travel time is {{ states('sensor.to_work') }} {{ state_attr('sensor.to_work', 'unit_of_measurement') }}<br />
-            Today will be {{ states('input_text.forecast_weather') }} at {{ states('input_number.forecast_min_temp') }} - {{ states('input_number.forecast_temp') }}°C with {{ states('input_number.forecast_precip') }}mm rain.
+            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') }} - {{ states('input_number.forecast_temp') }}°C with {{ states('input_number.forecast_precip') }}mm rain.
           title: Good morning
       - delay: 600
 
@@ -55,6 +55,6 @@ automation:
         data:
           message: |
             Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
-            Today will be {{ states('input_text.forecast_weather') }} at {{ states('input_number.forecast_min_temp') }} - {{ states('input_number.forecast_temp') }}°C with {{ states('input_number.forecast_precip') }}mm rain.
+            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') }} - {{ states('input_number.forecast_temp') }}°C with {{ states('input_number.forecast_precip') }}mm rain.
           title: Good morning
       - delay: 600
