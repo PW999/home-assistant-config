@@ -110,6 +110,8 @@ sensor:
           {{ True if
               not is_state('sensor.energy_consumption_tarif_1', 'unavailable')
               and not is_state('sensor.energy_consumption_tarif_2', 'unavailable')
+              and not is_state('sensor.energy_consumption_tarif_1', 'unknown')
+              and not is_state('sensor.energy_consumption_tarif_2', 'unknown')
               else False
           }}
         value_template: >-
@@ -132,6 +134,8 @@ sensor:
           {{ True if
               not is_state('sensor.energy_consumption_tarif_1', 'unavailable')
               and not is_state('sensor.energy_consumption_tarif_2', 'unavailable')
+              and not is_state('sensor.energy_consumption_tarif_1', 'unknown')
+              and not is_state('sensor.energy_consumption_tarif_2', 'unknown')
               else False
           }}
         value_template: >-
@@ -153,6 +157,7 @@ sensor:
         availability_template: >-
           {{ True if
               not is_state('sensor.energy_daily_consumption', 'unavailable')
+              and not is_state('sensor.energy_daily_consumption', 'unknown')
               else False
           }}
         value_template: >-
@@ -172,6 +177,7 @@ sensor:
         availability_template: >-
           {{ True if
               not is_state('sensor.energy_yearly_consumption', 'unavailable')
+              and not is_state('sensor.energy_yearly_consumption', 'unknown')
               else False
           }}
         value_template: >-
