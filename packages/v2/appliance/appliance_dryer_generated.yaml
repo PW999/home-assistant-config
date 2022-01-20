@@ -7,7 +7,7 @@
 #   @description    :   Monitor dryer and notify so I don't forget to empty it
 #   @url            :   https://github.com/PW999/home-assistant-config/
 #   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
-#   @erb            :   ./appliance/appliance_dryer.erb
+#   @erb            :   ./appliance/template/appliance_dryer.erb
 # ##############################################################################
 
 homeassistant:

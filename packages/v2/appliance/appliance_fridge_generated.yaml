@@ -7,7 +7,7 @@
 #   @description    :   Monitor fridge and notify when it is turned off
 #   @url            :   https://github.com/PW999/home-assistant-config/
 #   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
-#   @erb            :   ./appliance/appliance_fridge.erb
+#   @erb            :   ./appliance/template/appliance_fridge.erb
 # ##############################################################################
 homeassistant:
   customize:
