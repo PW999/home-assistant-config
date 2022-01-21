@@ -1,0 +1,69 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Front door camera on motion
+#   @description    :   Triggers some camera related actions on motion
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+
+  - id: camera_front_door_on_motion_detected
+    alias: Camera - Notify on motion
+    mode: single
+    description: Take snapshot from camera and notify in case of motion
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.front_door_presence
+        to: "on"
+    action:
+      - service: camera.snapshot
+        alias: Take snapshot for notification
+        data:
+          filename: /config/www/snap_hall.jpg
+        target:
+          entity_id: camera.foscam_r2m_one
+      - service: camera.record
+        target:
+          entity_id: camera.foscam_r2m_one
+        data:
+          duration: 30
+          filename: >-
+            /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M')
+            }}.mp4
+      - delay: 5  # make sure the file is properly written
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            It is {{ as_timestamp(now()) | timestamp_custom('%a %B %-m, %I:%M %p') }}
+          title: Motion detected in hallway
+          data:
+            sticky: true
+            image: http://192.168.0.16:8123/local/snap_hall.jpg
+      - delay: 3600  # do no spam me with notifications (and keep HA's cost low)
+
+  - id: camera_front_door_on_motion_detected_snapshot_loop
+    alias: Camera - Take snapshots to media folder on motion
+    mode: single
+    description: Take snapshot from camera and store in media folder (can run more frequently)
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.front_door_presence
+        to: "on"
+    condition:
+      - alias: Only run it when motion is detected (steps out of the loop)
+        condition: state
+        entity_id: binary_sensor.front_door_presence
+        state: "on"
+    action:
+      - service: camera.snapshot
+        alias: Take a snapshot for storage
+        data:
+          filename: /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M') }}.jpg
+        target:
+          entity_id: camera.foscam_r2m_one
+      - delay: 7
+      - service: automation.trigger   # (loop)
+        target:
+          entity_id: automation.camera_take_snapshots_to_media_folder_on_motion

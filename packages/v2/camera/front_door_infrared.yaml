@@ -1,0 +1,72 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Foscam camera integration
+#   @description    :   Foscam infrared control
+#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @credit         :   TODO
+###############################################################################
+
+# TODO:
+# [ ] Site source (find it first, should have noted it when I used it)
+
+homeassistant:
+  customize:
+    switch.foscam_r2m_one_infrared:
+      icon: mdi:cctv
+
+switch:
+  - platform: command_line
+    switches:
+      foscam_r2m_one_infrared:
+        friendly_name: Foscam R2M-1 Infrared
+        command_on: !secret foscam_r2m_one_infrared_on_url
+        command_off: !secret foscam_r2m_one_infrared_off_url
+        command_state: !secret foscam_r2m_one_infrared_state_url
+        value_template: "{{ value == \"1\" }}"
+
+automation:
+  - id: camera_front_door_enable_infrared
+    alias: Camera - Infrared on
+    description: Enable camera infrared when it's getting dark and motion detection is active
+    trigger:
+      - platform: state
+        entity_id: switch.foscam_r2m_one_motion
+        to: "on"
+      - platform: state
+        entity_id: input_select.home_mode
+    condition:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: input_select.home_mode
+            state: Day
+      - condition: state
+        entity_id: switch.foscam_r2m_one_motion
+        state: "on"
+    action:
+      - service: switch.turn_on
+        entity_id: switch.foscam_r2m_one_infrared
+
+  - id: camera_front_door_disable_infrared
+    alias: Camera - Infrared off
+    description: Disable camera infrared when it's light or motion detection is disabled
+    trigger:
+      - platform: state
+        entity_id: switch.foscam_r2m_one_motion
+        to: "off"
+      - platform: state
+        entity_id: input_select.home_mode
+    condition:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_select.home_mode
+            state: Day
+          - condition: state
+            entity_id: switch.foscam_r2m_one_motion
+            state: "off"
+    action:
+      - service: switch.turn_off
+        entity_id: switch.foscam_r2m_one_infrared
