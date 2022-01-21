@@ -1,0 +1,12 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Opensensemap
+#   @description    :   Adds opensensemap integration
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+air_quality:
+  - platform: opensensemap
+    station_id: 5ca27578cbf9ae001a9aa4a8

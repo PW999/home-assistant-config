@@ -1,6 +1,7 @@
+---
 ###############################################################################
 #   @author         :   Phillip (P_W999)
-#   @date           :   02/05/2021
+#   @date           :   01/2022
 #   @package        :   Roomba automation
 #   @description    :   Presence based automation for Roomba
 #   @url            :   https://github.com/PW999/home-assistant-config/
@@ -16,7 +17,7 @@ timer:
   #   for: '00:15:00'
   roomba_countdown:
     name: Delays starting Roomba after leaving home
-    duration: 00:05:00
+    duration: "00:05:00"
 
 input_datetime:
   roomba_last_clean:
@@ -24,12 +25,8 @@ input_datetime:
     has_date: true
     has_time: true
 
-##############################################
-# More intelligent roomba automation (8000000009xxx)
-##############################################
-# NEXT_ID 8
 automation:
-  - id: '8000000009001'
+  - id: roomba_last_clean_timestamp
     alias: Roomba - Update last clean timestamp
     description: Update input with the last time Roomba started cleaning even if started from app
     trigger:
@@ -42,7 +39,8 @@ automation:
           entity_id: input_datetime.roomba_last_clean
           datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
 
-  # - id: '8000000009002'
+  # No longer using this since roomba always gets stuck on my cat's touys, keeping it just in case
+  # - id: roomba_start_countdown
   #   alias: Roomba - Start countdown
   #   description: Start the countdown once I leave home (but only during the day)
   #   trigger:
@@ -53,14 +51,14 @@ automation:
   #       event: leave
   #   condition:
   #     - condition: time
-  #       after: '07:00:00'
-  #       before: '19:30:00'
+  #       after: "07:00:00"
+  #       before: "19:30:00"
   #   action:
   #     service: timer.start
   #     data:
   #       entity_id: timer.roomba_countdown
 
-  - id: '8000000009003'
+  - id: roomba_automatic_stop
     alias: Roomba - Stop
     description: Makes Roomba return if I get home or if I am closer to home (or stop the timer)
     trigger:
@@ -75,7 +73,7 @@ automation:
           - person.phillip
         event: enter
       - platform: zone
-        zone: zone.mama # I live close to my mom, but if I'm there, there's usually time enough for Roomba to clean
+        zone: zone.mama   # I live close to my mom, but if I'm there, there's usually time enough for Roomba to clean
         entity_id:
           - person.phillip
         event: leave
@@ -85,7 +83,7 @@ automation:
           - person.phillip
         event: leave
       - platform: time
-        at: '21:00:00'
+        at: "21:00:00"
     condition:
       - alias: Only when it's running  # return_to_base when already returning stops it
         condition: state
@@ -99,9 +97,9 @@ automation:
         data:
           entity_id: vacuum.pwroomba
 
-  - id: '8000000009004'
+  - id: roomba_start_after_timer
     alias: Roomba - Start clean
-    description: Starts cleaning after timer expired
+    description: Starts cleaning after timer expired except if it already ran today
     trigger:
       platform: event
       event_type: timer.finished
@@ -116,89 +114,7 @@ automation:
             {% set last_triggered_at = strptime(states('input_datetime.roomba_last_clean'), "%Y-%m-%d %H:%M:%S") %}
             {% set already_triggered_today =  timeslot_begin <= last_triggered_at < timeslot_end %}
             {{ not already_triggered_today }}
-      # - condition: or
-      #   conditions:
-      #     - condition: zone
-      #       entity_id:
-      #         - person.phillip
-      #       zone:
-      #         - zone.mama
-      #     - condition: not
-      #       conditions:
-      #         - condition: zone
-      #           entity_id:
-      #             - person.phillip
-      #           zone:
-      #             - zone.5km_from_home
     action:
       service: vacuum.start
       data:
         entity_id: vacuum.pwroomba
-
-  # - id: '8000000009005'
-  #   alias: Notification - Roomba
-  #   description: Send a message when Roomba started
-  #   mode: single  # single + delay => make sure it can only send it once every 600s
-  #   trigger:
-  #     - platform: state
-  #       entity_id: vacuum.pwroomba
-  #       from: docked
-  #       to: cleaning
-  #   action:
-  #     - service: notify.mobile_app_mi_9t
-  #       data:
-  #         message: |
-  #           Roomba started a clean job at {{ now() }}
-  #         title: Roomba
-  #     - delay: 600
-
-  # ZIGBEE BUTTON INTEGRATION - lightify_switch_mini_26 is located in the hallway#
-  - id: '8000000009006'
-    alias: Button - Leave and start Roomba
-    description: Use down button of Osram Mini to turn off master switch and schedule a Roomba start
-    mode: single
-    trigger:
-      - platform: event
-        event_type: deconz_event
-        event_data:
-          id: 'lightify_switch_mini_26'
-          event: 2002 # short button press
-    condition:
-      - condition: state
-        entity_id: input_boolean.master_switch
-        state:  'on'
-    action:
-      - service: light.toggle
-        data:
-          entity_id: light.hall_2
-          flash: long
-      - service: timer.start
-        data:
-          entity_id: timer.roomba_countdown
-      - delay: 120
-      - service: input_boolean.turn_off
-        data:
-          entity_id: input_boolean.master_switch
-
-  # ZIGBEE BUTTON INTEGRATION - lightify_switch_mini_26 is located in the hallway#
-  - id: '8000000009007'
-    alias: Button - Cancel Roomba
-    description: Use down button of Osram Mini to cancel timer and/or return Roomba to it's base
-    mode: single
-    trigger:
-      - platform: event
-        event_type: deconz_event
-        event_data:
-          id: 'lightify_switch_mini_26'
-          event: 2003 # long button press (release)
-    action:
-      - service: light.toggle
-        data:
-          entity_id: light.hall_2
-          flash: long
-      - service: timer.cancel
-        data:
-          entity_id: timer.roomba_countdown
-      - service: vacuum.return_to_base
-        data:
-          entity_id: vacuum.pwroomba

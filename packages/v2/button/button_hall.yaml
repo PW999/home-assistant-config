@@ -1,0 +1,100 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Hallway button configuration
+#   @description    :   Automation at the press of a button
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  - id: button_hall_master_switch_on
+    alias: Button - Toggle master switch on
+    description: Use center button of Osram Mini to turn on the master switch immediately
+    trigger:
+      - platform: event
+        event_type: deconz_event
+        event_data:
+          id: lightify_switch_mini_26
+          event: 3002
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "off"
+    action:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.master_switch
+
+  - id: button_hall_master_switch_off
+    alias: Button - Toggle master switch off
+    description: Use center button of Osram Mini to turn off the master switch after 15s (blink hall light to confirm action)
+    mode: single  # make sure a double press doesn't do strange things
+    trigger:
+      - platform: event
+        event_type: deconz_event
+        event_data:
+          id: lightify_switch_mini_26
+          event: 3002
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "on"
+    action:
+      - service: light.toggle
+        data:
+          entity_id: light.hall_2
+          flash: short
+      - delay: 15
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.master_switch
+
+  - id: button_hall_leave_and_roomba
+    alias: Button - Leave and start Roomba
+    description: Use down button of Osram Mini to turn off master switch and schedule a Roomba start
+    mode: single
+    trigger:
+      - platform: event
+        event_type: deconz_event
+        event_data:
+          id: lightify_switch_mini_26
+          event: 2002   # short button press
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "on"
+    action:
+      - service: light.toggle
+        data:
+          entity_id: light.hall_2
+          flash: long
+      - service: timer.start
+        data:
+          entity_id: timer.roomba_countdown
+      - delay: 120
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.master_switch
+
+  - id: button_hall_cancel_roomba_timer
+    alias: Button - Cancel Roomba
+    description: Use down button of Osram Mini to cancel timer and/or return Roomba to it's base
+    mode: single
+    trigger:
+      - platform: event
+        event_type: deconz_event
+        event_data:
+          id: lightify_switch_mini_26
+          event: 2003   # long button press (release)
+    action:
+      - service: light.toggle
+        data:
+          entity_id: light.hall_2
+          flash: long
+      - service: timer.cancel
+        data:
+          entity_id: timer.roomba_countdown
+      - service: vacuum.return_to_base
+        data:
+          entity_id: vacuum.pwroomba

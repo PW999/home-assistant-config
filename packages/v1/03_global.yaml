@@ -6,10 +6,6 @@
 #   @url            :   https://github.com/PW999/home-assistant-config/
 ###############################################################################
 
-air_quality:
-  - platform: opensensemap
-    station_id: 5ca27578cbf9ae001a9aa4a8
-
 input_boolean:
   # The master switch acts as a sort of home/not-home switch.
   # It decouples zones/presence from automations.
@@ -211,49 +207,6 @@ automation:
     - service: input_boolean.turn_off
       data:
         entity_id: input_boolean.night
-
-  # ZIGBEE BUTTON INTEGRATION - lightify_switch_mini_26 is located in the hallway#
-  - id: '8000000003009'
-    alias: Button - Toggle master switch on
-    description: Use center button of Osram Mini to turn on the master switch immediately
-    trigger:
-      - platform: event
-        event_type: deconz_event
-        event_data:
-          id: 'lightify_switch_mini_26'
-          event: 3002
-    condition:
-      - condition: state
-        entity_id: input_boolean.master_switch
-        state:  'off'
-    action:
-      - service: input_boolean.turn_on
-        data:
-          entity_id: input_boolean.master_switch
-
-  - id: '8000000003010'
-    alias: Button - Toggle master switch off
-    description: Use center button of Osram Mini to turn off the master switch after 15s (blink hall light to confirm action)
-    mode: single  # make sure a double press doesn't do strange things
-    trigger:
-      - platform: event
-        event_type: deconz_event
-        event_data:
-          id: 'lightify_switch_mini_26'
-          event: 3002
-    condition:
-      - condition: state
-        entity_id: input_boolean.master_switch
-        state:  'on'
-    action:
-      - service: light.toggle
-        data:
-          entity_id: light.hall_2
-          flash: short
-      - delay: 15
-      - service: input_boolean.turn_off
-        data:
-          entity_id: input_boolean.master_switch
 
   # APPLY GLOBAL SCENES TO ALL LIGHTS AT NIGHT - Night scene has all lights off exception some very dim light in the living room for my cat #
   - id: '8000000003011'

@@ -1,3 +1,4 @@
+---
 ###############################################################################
 #   @author         :   Phillip (P_W999)
 #   @date           :   04/2021
@@ -31,7 +32,7 @@ input_number:
   # How much is paid per kWh
   electricity_tarrif:
     name: Hourly tarrif
-    initial: 0.2403
+    initial: 0.2683
     min: 0.2
     max: 0.3
     unit_of_measurement: EUR/kWh
@@ -98,12 +99,11 @@ group:
       - input_number.electricity_last_yr_consumption_low
 
 sensor:
-
   - platform: template
     sensors:
       energy_daily_consumption:
         friendly_name: Today's energy consumption
-        unique_id: '9000000010001'
+        unique_id: sensor_dsmr_todays_energy_consumption
         device_class: energy
         unit_of_measurement: kWh
         availability_template: >-
@@ -127,7 +127,7 @@ sensor:
     sensors:
       energy_yearly_consumption:
         friendly_name: This year's energy consumption
-        unique_id: '9000000010002'
+        unique_id: sensor_dsmr_this_year_energy_consumption
         device_class: energy
         unit_of_measurement: kWh
         availability_template: >-
@@ -151,7 +151,7 @@ sensor:
     sensors:
       energy_daily_cost:
         friendly_name: Today's energy cost
-        unique_id: '9000000010003'
+        unique_id: sensor_dsmr_todays_energy_cost
         unit_of_measurement: €
         icon_template: mdi:currency-eur
         availability_template: >-
@@ -171,7 +171,7 @@ sensor:
     sensors:
       energy_yearly_cost:
         friendly_name: This year's energy cost
-        unique_id: '9000000010004'
+        unique_id: sensor_dsmr_this_year_energy_cost
         unit_of_measurement: €
         icon_template: mdi:currency-eur
         availability_template: >-
@@ -192,6 +192,7 @@ sensor:
     name: P1 Reader RSSI
     resource: http://192.168.0.60/wifi/info
     timeout: 30
+    scan_interval: 120
     value_template: "{{ value_json.rssi | replace('dB', '') | float }}"
     device_class: signal_strength
     unit_of_measurement: dB
@@ -202,12 +203,12 @@ sensor:
 ##############################################
 # NEXT_ID 4
 automation:
-  - id: '8000000010001'
+  - id: dsmr_save_yesterday_consumption
     alias: DSMR - Record yesterday consumption
     description: Set yesterday's high and low consumption in a variable
     trigger:
       - platform: time
-        at: '00:00:00'
+        at: "00:00:00"
     action:
       - service: input_number.set_value
         data:
@@ -218,9 +219,8 @@ automation:
           entity_id: input_number.electricity_previous_consumption_low
           value: "{{ states('sensor.energy_consumption_tarif_2') }}"
 
-
   # https://github.com/home-assistant/core/issues/40595
-  - id : '8000000010003'
+  - id: dsmr_reconnect_workaround
     alias: DSMR - Reconnect
     description: Workaround for old bug, force DSMR integration reload if the P1 reader disconnected
     mode: single
