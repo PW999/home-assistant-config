@@ -11,6 +11,7 @@ do
     erb -T 2 -r "./constants" "$file" | yamllint -c $YAML_LINT_CONFIG -
     if [ $? -ne 0 ]; then
       validation=1
+      erb -T 2 -r "./constants" "$file" | cat --number
     fi
   else
     echo -e "\e[1;36mIgnoring template file $file\e[0m"
