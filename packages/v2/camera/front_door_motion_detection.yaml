@@ -15,19 +15,23 @@
 # Command lines used in this template to get data from the camera using the XML API
 # I do not have motion detection enabled in all area's
 # foscam_r2m_one_motion_on_url: 'curl -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=1&snapInterval=3&sensitivity=3&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&area0=960&area1=960&area2=960&area3=960&area4=960&area5=960&area6=992&area7=1016&area8=1020&area9=1023&linkage=12&usr=ADMIN&pwd=PASSWD"'
-# foscam_r2m_one_motion_off_url: 'curl -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=0&usr=ADMIN&pwd=PASSWD"'
-# foscam_r2m_one_motion_state_url:  'curl -k --silent --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getMotionDetectConfig&usr=ADMIN&pwd=PASSWD" | grep "isEnable" | cut -b 15'
-# foscam_r2m_one_motion_detected_url: curl -k --silent --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ADMIN&pwd=PASSWD" | grep "motionDetectAlarm" | cut -b 24
+# foscam_r2m_one_motion_off_url: 'curl -k --tls-max 1.2 \
+#  "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=0&usr=ADMIN&pwd=PASSWD"'
+#
+# foscam_r2m_one_motion_state_url:  'curl -k --silent --tls-max 1.2 \
+#  "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getMotionDetectConfig&usr=ADMIN&pwd=PASSWD" | grep "isEnable" | cut -b 15'
+#
+# foscam_r2m_one_motion_detected_url: curl -k --silent --tls-max 1.2 \
+#  "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ADMIN&pwd=PASSWD" | grep "motionDetectAlarm" | cut -b 24
 #
 # foscam_r2m_one_infrared_off_url: 'curl -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=closeInfraLed&usr=ADMIN&pwd=PASSWD"'
 # foscam_r2m_one_infrared_on_url: 'curl -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=openInfraLed&usr=ADMIN&pwd=PASSWD"'
-# foscam_r2m_one_infrared_state_url: 'curl -k --silent --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ADMIN&pwd=PASSWD" | grep "infraLedState" | cut -b 20'
+# foscam_r2m_one_infrared_state_url: 'curl -k --silent --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getDevState&usr=ADMIN&pwd=PASSWD" | \
+#  grep "infraLedState" | cut -b 20'
 #
 # Gets the log events and translates the event id's to something more human readable
-# foscam_r2m_one_log_0: curl -s -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getLog&usr=ADMIN&pwd=PASSWD" | sed 's/%2B/ /g' | grep log0 | sed 's/<\/*log[0-9]>//g' | awk '{split($0,a); b = strftime("%d/%m/%Y %H:%M:%S", a[1], 1); c = a[4]; if (c == "1") { c="Motion"}; if (c == "3") { c = "Login " a[2] }; if (c == "4") { c="Logout " a[2]}; print b " " c; }'
-# foscam_r2m_one_log_1: curl -s -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getLog&usr=ADMIN&pwd=PASSWD" | sed 's/%2B/ /g' | grep log1 | sed 's/<\/*log[0-9]>//g' | awk '{split($0,a); b = strftime("%d/%m/%Y %H:%M:%S", a[1], 1); c = a[4]; if (c == "1") { c="Motion"}; if (c == "3") { c = "Login " a[2] }; if (c == "4") { c="Logout " a[2]}; print b " " c; }'
-# foscam_r2m_one_log_2: curl -s -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getLog&usr=ADMIN&pwd=PASSWD" | sed 's/%2B/ /g' | grep log2 | sed 's/<\/*log[0-9]>//g' | awk '{split($0,a); b = strftime("%d/%m/%Y %H:%M:%S", a[1], 1); c = a[4]; if (c == "1") { c="Motion"}; if (c == "3") { c = "Login " a[2] }; if (c == "4") { c="Logout " a[2]}; print b " " c; }'
-# foscam_r2m_one_log_3: curl -s -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getLog&usr=ADMIN&pwd=PASSWD" | sed 's/%2B/ /g' | grep log3 | sed 's/<\/*log[0-9]>//g' | awk '{split($0,a); b = strftime("%d/%m/%Y %H:%M:%S", a[1], 1); c = a[4]; if (c == "1") { c="Motion"}; if (c == "3") { c = "Login " a[2] }; if (c == "4") { c="Logout " a[2]}; print b " " c; }'
+# foscam_r2m_one_log_0: curl -s -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=getLog&usr=ADMIN&pwd=PASSWD" | sed 's/%2B/ /g' | grep log0 | sed 's/<\/*log[0-9]>//g' | \
+#  awk '{split($0,a); b = strftime("%d/%m/%Y %H:%M:%S", a[1], 1); c = a[4]; if (c == "1") { c="Motion"}; if (c == "3") { c = "Login " a[2] }; if (c == "4") { c="Logout " a[2]}; print b " " c; }'
 
 homeassistant:
   customize:
