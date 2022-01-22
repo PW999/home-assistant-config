@@ -1,0 +1,218 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   08/05/2021
+#   @package        :   Homematic package
+#   @description    :   Manages the different modes depending on presence
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+# CONTROL MODES
+# 0: AUTO
+# 1: MANU
+# 2: ?
+# 3: ?
+
+# Week programmes:
+# 1: normal day (weekends at 21°c, weekdays not during the day)
+# 2: all day at home (always at 21°c except at night)
+# 3: away mode (always at 16°c)
+
+sensor:
+  - platform: template
+    sensors:
+      hmip_000a1709af6337_valve:
+        friendly_name: 000a1709af6337 valve
+        unit_of_measurement: "%"
+        availability_template: "{{ not is_state('climate.000a1709af6337', 'unavailable')  }}"
+        value_template: "{{ state_attr('climate.000a1709af6337', 'level') * 100 | round(0) | int }}"
+      hmip_000a1709af6337_rssi:
+        friendly_name: 000a1709af6337 rssi
+        device_class: signal_strength
+        availability_template: "{{ not is_state('climate.000a1709af6337', 'unavailable')  }}"
+        value_template: "{{ state_attr('climate.000a1709af6337', 'rssi_device') }}"
+
+automation:
+  # Turn off all the radiators when it's either warm outside, when the master switch is off (when I sleep or when I'm gone)
+  # or when the summer mode is activated
+  # Does not trigger when vacation mode is enabled or when summer mode is enabled
+  - id: climate_living_room_modes_off
+    alias: Heating - Turn off all radiators
+    trigger:
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: "off"
+      - platform: numeric_state
+        entity_id: weather.pw_casa
+        value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
+        above: 22
+    condition:
+      - alias: Vacation mode is disabled
+        condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
+      - alias: Summer mode is disabled
+        condition: state
+        entity_id: input_boolean.summer
+        state: "off"
+    action:
+      - service: homematic.set_device_value   # enable the away schedule
+        data:
+          address: 000A1709AF6337
+          channel: 1
+          param: ACTIVE_PROFILE
+          value: 3
+          value_type: int
+
+  # Sets the week schedule to one where the temperature is 21°c all day long. Can be usefull on holidays during the week.
+  # Also triggers when I'm returning home (it should be on week schedule 3)
+  # Does not trigger when vacation or summer mode is enabled or when it's warm outside (should stay on schedule 3)
+  - id: climate_living_room_modes_all_day_on
+    alias: Heating - Switch to all day on schedule
+    trigger:
+      - platform: time
+        at: "02:00:00"
+      - platform: zone
+        zone: zone.5km_from_home  # FYI, I shrunk it to 4km but the zone is still called zone.5km_from_home, don't name your zones like this
+        entity_id:
+          - person.phillip
+        event: enter
+      - platform: zone
+        zone: zone.mama   # I live close to my mom
+        entity_id:
+          - person.phillip
+        event: leave
+      - platform: zone
+        zone: zone.work
+        entity_id:
+          - person.phillip
+        event: leave
+      - platform: numeric_state
+        entity_id: weather.pw_casa
+        value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
+        below: 22
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: "on"
+    condition:
+      - condition: numeric_state
+        entity_id: weather.pw_casa
+        value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
+        below: 22
+      - alias: Vacation mode is disabled
+        condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
+      - alias: Summer mode is disabled
+        condition: state
+        entity_id: input_boolean.summer
+        state: "off"
+      - alias: It is not a workday
+        condition: state
+        entity_id: binary_sensor.workday_sensor
+        state: "off"
+      - alias: Only on weekdays   # a weekday + not workday == public holiday, so I'll probably be at home
+        condition: time
+        before: "23:59:00"
+        weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+    action:
+      - service: homematic.set_device_value   # enable the all day long heating schedule
+        data:
+          address: 000A1709AF6337
+          channel: 1
+          param: ACTIVE_PROFILE
+          value: 2
+          value_type: int
+
+  - id: climate_living_room_modes_regular_schedule
+    alias: Heating - Switch to regular schedule
+    trigger:
+      - platform: time
+        at: "02:00:00"
+      - platform: zone
+        zone: zone.5km_from_home  # FYI, I shrunk it to 4km but the zone is still called zone.5km_from_home, don't name your zones like this
+        entity_id:
+          - person.phillip
+        event: enter
+      - platform: zone
+        zone: zone.mama   # I live close to my mom
+        entity_id:
+          - person.phillip
+        event: leave
+      - platform: zone
+        zone: zone.work
+        entity_id:
+          - person.phillip
+        event: leave
+      - platform: numeric_state
+        entity_id: weather.pw_casa
+        value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
+        below: 22
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: "on"
+    condition:
+      - condition: numeric_state
+        entity_id: weather.pw_casa
+        value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
+        below: 22
+      - alias: Vacation mode is disabled
+        condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
+      - alias: Summer mode is disabled
+        condition: state
+        entity_id: input_boolean.summer
+        state: "off"
+      - condition: or
+        conditions:
+          - alias: It is a workday
+            condition: state
+            entity_id: binary_sensor.workday_sensor
+            state: "on"
+          - alias: It's weekend
+            condition: time
+            before: "23:59:00"
+            weekday:
+              - sat
+              - sun
+    action:
+      - service: climate.set_hvac_mode  # reset HA to auto schedule
+        target:
+          entity_id: climate.000a1709af6337
+        data:
+          hvac_mode: auto
+      - service: homematic.set_device_value   # enable the regular schedule
+        data:
+          address: 000A1709AF6337
+          channel: 1
+          param: ACTIVE_PROFILE
+          value: 1
+          value_type: int
+
+  # Keeps the house at an okay temperature for the cat when I'm on holiday leave
+  - id: climate_living_room_modes_vacation
+    alias: Heating - Set heating vacation mode
+    trigger:
+      - platform: state
+        entity_id: input_boolean.vacation
+        to: "on"
+    action:
+      - service: homematic.set_device_value
+        data:
+          address: 000A1709AF6337
+          channel: 1
+          param: CONTROL_MODE
+          value: 1  # MANU
+      - delay: 5
+      - service: homematic.set_device_value
+        data:
+          address: 000A1709AF6337
+          channel: 1
+          param: SET_POINT_TEMPERATURE
+          value: 17

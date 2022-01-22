@@ -1,0 +1,42 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Homematic package
+#   @description    :   Integrates local running RaspberryMatic and regulates thermostat
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+homematic:
+  interfaces:
+    ip:
+      host: 192.168.0.16
+      port: 2010
+      resolvenames: json
+      username: !secret homematic_user
+      password: !secret homematic_password
+
+binary_sensor:
+  - platform: template
+    sensors:
+      homematic_up:
+        friendly_name: Homematic is sending updates
+        availability_template: >-
+          {{
+               not (
+                  is_state('sensor.hmip_000a1709af6337_valve', 'unavailable')
+                  or is_state('sensor.hmip_000a1709af6337_valve', 'unknown')
+              )
+          }}
+        value_template: >-
+          {{ as_timestamp(now()) - ( [as_timestamp(states.sensor.hmip_000a1709af6337_valve.last_changed), as_timestamp(states.sensor.hmip_000a1709af6337_rssi.last_changed)]  | max ) < 7200 }}
+
+automation:
+  - id: climate_homematic_auto_reconnect
+    alias: Heating - Homematic Reconnect
+    trigger:
+      platform: state
+      entity_id: binary_sensor.homematic_up
+      to: "off"
+    action:
+      service: homematic.reconnect

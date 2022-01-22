@@ -1,0 +1,16 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Global switches
+#   @description    :   The master switch
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+input_boolean:
+  # The master switch acts as a sort of home/not-home switch.
+  # It decouples zones/presence from automations.
+  # If it's off, then most automations won't do anything.
+  # If it's turned off, it still needs a scene to turn off the lights.
+  master_switch:
+    name: Master switch
+    icon: mdi:light-switch

@@ -1,0 +1,14 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Global switches
+#   @description    :   The vacation switch
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+input_boolean:
+  # The vacation switch can provide alternative behaviour when on vacation.
+  # E.g. prevent the thermostat from turning on, activate lights while away, ...
+  vacation:
+    name: Vacation
+    icon: mdi:palm-tree

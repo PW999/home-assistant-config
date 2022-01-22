@@ -7,14 +7,6 @@
 ###############################################################################
 
 input_boolean:
-  # The master switch acts as a sort of home/not-home switch.
-  # It decouples zones/presence from automations.
-  # If it's off, then most automations won't do anything.
-  # If it's turned off, it still needs a scene to turn off the lights.
-  master_switch:
-    name: Master switch
-    icon: mdi:light-switch
-
   # Dusk till dawn switch is active between sunset and sunrise (with some extra padding)
   # It's more or less an evening mode switch (but it's on untill sunrise, which is technically night/morning)
   # It decouples the sun events from automations.
@@ -35,17 +27,6 @@ input_boolean:
   night:
     name: Too dark for bright light
     icon: mdi:brightness-3
-
-  # The vacation switch can provide alternative behaviour when on vacation.
-  # E.g. prevent the thermostat from turning on, activate lights while away, ...
-  vacation:
-    name: Vacation
-    icon: mdi:palm-tree
-
-  # The summer mode switch completely disables the heating by preventing it from turning on
-  summer:
-    name: Summer mode
-    icon: mdi:beach-access
 
 ##############################################
 # HOUSE-WIDE AUTOMATION (8000000003xxx)

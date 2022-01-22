@@ -1,0 +1,109 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   05/05/2021
+#   @package        :   Office light automation
+#   @description    :   Automates the WLED strip behind my desk
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  - id: light_office_wled_turn_on
+    alias: Office - turn LEDs on
+    description: Turn the lights behind the desk on when I turn on my computer(s)
+    trigger:
+      - entity_id: group.office_members
+        platform: state
+        to: home
+      - entity_id: input_boolean.master_switch
+        platform: state
+        to: "on"
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "on"
+      - condition: state
+        entity_id: group.office_members
+        state: home
+    action:
+      - service: scene.turn_on
+        entity_id: scene.office_on_scene
+
+  - id: light_office_wled_turn_off
+    alias: Office - turn LEDs off
+    description: Turn the lights behind the desk off when I turn off my computer(s)
+    trigger:
+      - entity_id: group.office_members
+        platform: state
+        to: not_home
+      - entity_id: input_boolean.master_switch
+        platform: state
+        to: "off"
+    condition:
+      - condition: state
+        entity_id: group.office_members
+        state: not_home
+    action:
+      - service: scene.turn_on
+        entity_id: scene.office_off_scene
+
+scene:
+  - id: light_office_wled_scene_on
+    name: Office on scene
+    entities:
+      light.bureau_wled_master:
+        state: "on"
+      light.bureau_wled:
+        state: "on"
+        brightness: 254
+        effect: Solid
+        rgb_color:
+          - 255
+          - 50
+          - 50
+      light.bureau_wled_segment_1:
+        state: "on"
+        brightness: 254
+        effect: Solid
+        rgb_color:
+          - 222
+          - 222
+          - 255
+      light.bureau_wled_segment_2:
+        state: "on"
+        brightness: 254
+        effect: Solid
+        rgb_color:
+          - 255
+          - 50
+          - 50
+  # Keep the segments on
+  - id: light_office_wled_scene_off
+    name: Office off scene
+    entities:
+      light.bureau_wled_master:
+        state: "off"
+      light.bureau_wled:
+        state: "on"
+        brightness: 254
+        effect: Solid
+        rgb_color:
+          - 255
+          - 50
+          - 50
+      light.bureau_wled_segment_1:
+        state: "on"
+        brightness: 254
+        effect: Solid
+        rgb_color:
+          - 222
+          - 222
+          - 255
+      light.bureau_wled_segment_2:
+        state: "on"
+        brightness: 254
+        effect: Solid
+        rgb_color:
+          - 255
+          - 50
+          - 50

@@ -1,0 +1,14 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Household members group
+#   @description    :   List of all trackers
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+group:
+  household_members:
+    name: Casa's members
+    entities:
+      - person.phillip
