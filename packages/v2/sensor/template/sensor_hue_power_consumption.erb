@@ -1,0 +1,31 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Temperature offset
+#   @description    :   Fix temp difference between Aqara and Osram sensor
+#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @template:      :   <%= __FILE__ %>
+###############################################################################
+<%
+  hue_lights = %w(light.toilet light.hall_1 light.hall_2 light.hall_3)
+%>
+sensor:
+<% hue_lights.each do |hue_light| %>
+<% id = hue_light.gsub('.', '_').downcase %>
+<% name = hue_light.gsub('light.', '').gsub('_', ' ') %>
+<% name[0] = name[0].upcase %>
+  - platform: template
+    sensors:
+      <%= id %>_wattage:
+        friendly_name: <%= name %> Light Power Consumption
+        unit_of_measurement: W
+        device_class: power
+        availability_template: "{{ not is_state('<%= hue_light %>', 'unavailable') and not is_state('<%= hue_light %>', 'unknown')  }}"
+        value_template: "{{ 0.45 + (4.75*(float(state_attr('<%= hue_light %>', 'brightness'), 0)/256) * (1-(sin(8+(float(state_attr('<%= hue_light %>', 'brightness'), 0)/256))-0.42))) | round(1) }}"
+  - platform: integration
+    source: sensor.<%= id %>_wattage
+    name: <%= name %> light total energy consumption
+    round: 1
+    method: left
+<% end %>

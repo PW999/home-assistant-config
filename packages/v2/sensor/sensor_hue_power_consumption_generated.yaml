@@ -1,0 +1,63 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Temperature offset
+#   @description    :   Fix temp difference between Aqara and Osram sensor
+#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @template:      :   ./sensor/template/sensor_hue_power_consumption.erb
+###############################################################################
+
+sensor:
+  - platform: template
+    sensors:
+      light_toilet_wattage:
+        friendly_name: Toilet Light Power Consumption
+        unit_of_measurement: W
+        device_class: power
+        availability_template: "{{ not is_state('light.toilet', 'unavailable') and not is_state('light.toilet', 'unknown')  }}"
+        value_template: "{{ 0.45 + (4.75*(float(state_attr('light.toilet', 'brightness'), 0)/256) * (1-(sin(8+(float(state_attr('light.toilet', 'brightness'), 0)/256))-0.42))) | round(1) }}"
+  - platform: integration
+    source: sensor.light_toilet_wattage
+    name: Toilet light total energy consumption
+    round: 1
+    method: left
+  - platform: template
+    sensors:
+      light_hall_1_wattage:
+        friendly_name: Hall 1 Light Power Consumption
+        unit_of_measurement: W
+        device_class: power
+        availability_template: "{{ not is_state('light.hall_1', 'unavailable') and not is_state('light.hall_1', 'unknown')  }}"
+        value_template: "{{ 0.45 + (4.75*(float(state_attr('light.hall_1', 'brightness'), 0)/256) * (1-(sin(8+(float(state_attr('light.hall_1', 'brightness'), 0)/256))-0.42))) | round(1) }}"
+  - platform: integration
+    source: sensor.light_hall_1_wattage
+    name: Hall 1 light total energy consumption
+    round: 1
+    method: left
+  - platform: template
+    sensors:
+      light_hall_2_wattage:
+        friendly_name: Hall 2 Light Power Consumption
+        unit_of_measurement: W
+        device_class: power
+        availability_template: "{{ not is_state('light.hall_2', 'unavailable') and not is_state('light.hall_2', 'unknown')  }}"
+        value_template: "{{ 0.45 + (4.75*(float(state_attr('light.hall_2', 'brightness'), 0)/256) * (1-(sin(8+(float(state_attr('light.hall_2', 'brightness'), 0)/256))-0.42))) | round(1) }}"
+  - platform: integration
+    source: sensor.light_hall_2_wattage
+    name: Hall 2 light total energy consumption
+    round: 1
+    method: left
+  - platform: template
+    sensors:
+      light_hall_3_wattage:
+        friendly_name: Hall 3 Light Power Consumption
+        unit_of_measurement: W
+        device_class: power
+        availability_template: "{{ not is_state('light.hall_3', 'unavailable') and not is_state('light.hall_3', 'unknown')  }}"
+        value_template: "{{ 0.45 + (4.75*(float(state_attr('light.hall_3', 'brightness'), 0)/256) * (1-(sin(8+(float(state_attr('light.hall_3', 'brightness'), 0)/256))-0.42))) | round(1) }}"
+  - platform: integration
+    source: sensor.light_hall_3_wattage
+    name: Hall 3 light total energy consumption
+    round: 1
+    method: left
