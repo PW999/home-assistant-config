@@ -8,7 +8,6 @@
 ###############################################################################
 
 automation:
-
   - id: camera_front_door_on_motion_detected
     alias: Camera - Notify on motion
     mode: single
@@ -17,13 +16,11 @@ automation:
       - platform: state
         entity_id: binary_sensor.front_door_presence
         to: "on"
+    condition:
+      - condition: state
+        entity_id: switch.foscam_r2m_one_motion
+        state: "on"
     action:
-      - service: camera.snapshot
-        alias: Take snapshot for notification
-        data:
-          filename: /config/www/snap_hall.jpg
-        target:
-          entity_id: camera.foscam_r2m_one
       - service: camera.record
         target:
           entity_id: camera.foscam_r2m_one
@@ -32,6 +29,12 @@ automation:
           filename: >-
             /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M')
             }}.mp4
+      - service: camera.snapshot
+        alias: Take snapshot for notification
+        data:
+          filename: /config/www/snap_hall.jpg
+        target:
+          entity_id: camera.foscam_r2m_one
       - delay: 5  # make sure the file is properly written
       - service: notify.mobile_app_mi_9t
         data:
@@ -45,13 +48,15 @@ automation:
 
   - id: camera_front_door_on_motion_detected_snapshot_loop
     alias: Camera - Take snapshots to media folder on motion
-    mode: single
     description: Take snapshot from camera and store in media folder (can run more frequently)
     trigger:
       - platform: state
         entity_id: binary_sensor.front_door_presence
         to: "on"
     condition:
+      - condition: state
+        entity_id: switch.foscam_r2m_one_motion
+        state: "on"
       - alias: Only run it when motion is detected (steps out of the loop)
         condition: state
         entity_id: binary_sensor.front_door_presence
