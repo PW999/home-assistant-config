@@ -1,4 +1,0 @@
-household_members:
-  name: Casa's members
-  entities:
-   - device_tracker.mi_9t

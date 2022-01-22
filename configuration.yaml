@@ -14,12 +14,9 @@ python_script:
 tts:
   - platform: google_translate
 
-group: !include groups.yaml
 automation: !include_dir_merge_list automations/
-script: !include scripts.yaml
 scene: !include_dir_merge_list scenes/
 frontend: !include themes.yaml
-sensor: !include_dir_merge_list sensors/
 
 
 recorder:
@@ -111,11 +108,3 @@ roomba:
     blid: !secret roomba_blid
     password: !secret roomba_password
     continuous: true
-
-
-
-#shell_command:
-  #Created a preset point in Foscam Web Interface named Off which essentially points the camera down and away
-  #foscam_r2m_one_turn_off: !secret foscam_r2m_one_off_url
-  #Created a preset point in Foscam Web Interface named Main which points in the direction I would like to record
-  #foscam_r2m_one_turn_on: !secret foscam_r2m_one_on_url
