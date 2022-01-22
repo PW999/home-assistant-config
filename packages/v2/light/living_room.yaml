@@ -1,0 +1,163 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   General Living room light automation
+#   @description    :   Contains living room light
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  - id: light_living_room_evening_turn_on
+    alias: Living room - turn on lights in the evening
+    description: Turn on the living room lights in the evening based on sunset
+    trigger:
+      - entity_id: input_select.home_mode
+        platform: state
+        to: Evening
+      - entity_id: input_select.home_mode
+        platform: state
+        to: Morning
+      - entity_id: input_boolean.master_switch
+        platform: state
+        from: "off"
+        to: "on"
+    condition:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_boolean.home_mode
+            state: Evening
+          - condition: state
+            entity_id: input_boolean.home_mode
+            state: Morning
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "on"
+    action:
+      - service: scene.turn_on
+        entity_id: scene.living_room_evening
+        data:
+          transition: 3
+
+
+  - id: light_living_room_morning_turn_off
+    alias: Living room - turn off ligts in the morning
+    description: Turn off the living room lights in the morning
+    trigger:
+      - entity_id: input_select.home_mode
+        platform: state
+        to: Day
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "on"
+      - condition: state
+        entity_id: input_select.home_mode
+        state: Day
+    action:
+      - service: scene.turn_on
+        entity_id: scene.living_room_off
+        data:
+          transition: 3
+
+  - id: light_living_room_dimm_lights
+    alias: Living room - dimm the lights later in the evening
+    description: Slowly dimm the living room lights at night
+    trigger:
+      - entity_id: input_select.home_mode
+        platform: state
+        to: Night
+      - entity_id: input_boolean.master_switch
+        platform: state
+        from: "off"
+        to: "on"
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "on"
+      - condition: state
+        entity_id: input_select.home_mode
+        state: Night
+    action:
+      - service: scene.turn_on
+        entity_id: scene.living_room_evening_dimmed
+        data:
+          transition: 60
+
+scene:
+  - id: light_living_room_scene_evening
+    name: Living Room Evening
+    entities:
+      light.front_window:
+        intensity: 97
+        speed: 35
+        state: "on"
+        brightness: 254
+        effect: Candle Multi
+        rgb_color:
+          - 255
+          - 0
+          - 0
+      light.living_room_tv:
+        intensity: 166
+        speed: 25
+        state: "on"
+        brightness: 254
+        effect: Palette
+      light.living_room_big:
+        color_temp: 370
+        brightness: 220
+        state: "on"
+      light.living_room_small:
+        color_temp: 370
+        brightness: 196
+        state: "on"
+      switch.on_off_plug_1:
+        state: "on"
+  - id: light_living_room_scene_off
+    name: Living Room off
+    entities:
+      light.front_window:
+        state: "off"
+      light.living_room_tv:
+        state: "off"
+      light.living_room_big:
+        state: "on"
+        brightness: 0
+        color_temp: 370
+      light.living_room_small:
+        state: "on"
+        brightness: 0
+        color_temp: 370
+      switch.on_off_plug_1:
+        state: "off"
+  - id: light_living_room_scene_dimmed
+    name: Living Room Evening Dimmed
+    entities:
+      light.front_window:
+        intensity: 97
+        speed: 35
+        state: "on"
+        brightness: 128
+        effect: Candle Multi
+        rgb_color:
+          - 255
+          - 0
+          - 0
+      light.living_room_tv:
+        intensity: 166
+        speed: 25
+        state: "on"
+        brightness: 128
+        effect: Palette
+      light.living_room_big:
+        color_temp: 370
+        brightness: 96
+        state: "on"
+      light.living_room_small:
+        color_temp: 370
+        brightness: 64
+        state: "on"
+      switch.on_off_plug_1:
+        state: "on"
