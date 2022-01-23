@@ -101,9 +101,3 @@ device_tracker:
     hosts:
       pwnitrogen: 192.168.0.101
 #      hasspi: 192.168.0.16
-
-roomba:
-  - host: 192.168.0.40
-    blid: !secret roomba_blid
-    password: !secret roomba_password
-    continuous: true
