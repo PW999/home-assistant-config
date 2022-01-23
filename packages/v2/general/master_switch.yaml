@@ -14,3 +14,28 @@ input_boolean:
   master_switch:
     name: Master switch
     icon: mdi:light-switch
+
+automation:
+  - id: general_master_switch_turn_on
+    alias: Switches - Master switch on
+    description: Turn on the master switch when somebody from the household members comes home
+    trigger:
+      - platform: state
+        entity_id: group.household_members
+        to: home
+    action:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.master_switch
+
+  - id: general_master_switch_turn_off
+    alias: Switches - Master switch off
+    description: Turn off the master switch when everybody from the household members left
+    trigger:
+      - platform: state
+        entity_id: group.household_members
+        to: not_home
+    action:
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.master_switch

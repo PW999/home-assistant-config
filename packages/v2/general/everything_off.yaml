@@ -1,0 +1,107 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2021
+#   @package        :   Everything off
+#   @description    :   Turns everything off in one action
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  # APPLY GLOBAL SCENES TO ALL LIGHTS AT NIGHT - Night scene has all lights off exception some very dim light in the living room for my cat #
+  - id: general_everything_off_night
+    alias: Global - Home to night mode
+    description: If master switch is turned of in the night
+    trigger:
+      - entity_id: input_boolean.master_switch
+        platform: state
+        to: "off"
+      - entity_id: input_select.home_mode
+        platform: state
+        to: Night
+    condition:
+      - condition: state
+        entity_id: input_select.home_mode
+        state: Night
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "off"
+    action:
+      - service: scene.turn_on
+        entity_id: scene.home_off_night
+        data:
+          transition: 4
+
+  # APPLY GLOBAL SCENES TO ALL LIGHTS WHEN I LEAVE #
+  - id: general_everything_off_day
+    alias: Global - Home alone
+    description: If everybody left during the day, turn off all lights using the home off scene
+    trigger:
+      - entity_id: input_boolean.master_switch
+        for: "00:01:00"
+        platform: state
+        to: "off"
+      - entity_id: input_select.home_mode
+        platform: state
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "off"
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: input_select.home_mode
+            state: Night
+    action:
+      - service: scene.turn_on
+        entity_id: scene.home_off
+        data:
+          transition: 4
+
+scene:
+  - id: general_everything_off_scene_night
+    name: Home Off Night
+    entities:
+      light.front_window:
+        state: "off"
+      light.living_room_tv:
+        state: "off"
+      light.living_room_big:
+        state: "on"
+        brightness: 0
+      light.living_room_small:
+        state: "on"
+        brightness: 12
+        color_temp: 280
+      light.bureau_wled_master:
+        state: "off"
+      light.hall_1:
+        state: "off"
+      light.hall_2:
+        state: "off"
+      light.hall_3:
+        state: "off"
+      switch.on_off_plug_1:
+        state: "off"
+
+  - id: general_everything_off_scene
+    name: Home Off
+    entities:
+      light.front_window:
+        state: "off"
+      light.living_room_tv:
+        state: "off"
+      light.living_room_big:
+        state: "off"
+      light.living_room_small:
+        state: "off"
+      light.bureau_wled_master:
+        state: "off"
+      light.hall_1:
+        state: "off"
+      light.hall_2:
+        state: "off"
+      light.hall_3:
+        state: "off"
+      switch.on_off_plug_1:
+        state: "off"

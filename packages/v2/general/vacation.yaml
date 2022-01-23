@@ -1,0 +1,55 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Global switches
+#   @description    :   The vacation switch
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+input_boolean:
+  # The vacation switch can provide alternative behaviour when on vacation.
+  # E.g. prevent the thermostat from turning on, activate lights while away, ...
+  vacation:
+    name: Vacation
+    icon: mdi:palm-tree
+
+automation:
+  # WHEN ON VACATION, TURN ON MASTER SWITCH DURING DAY, LIGHTS WILL TURN ON AT SUNSET (AS USUAL) #
+  - id: general_vacation_turn_on_master_switch
+    alias: Vacation - Turn on lights in the evening
+    description: Make sure master switch is on in the evening
+    trigger:
+      - platform: time
+        at: "18:00:00"
+    condition:
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "off"
+    action:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.master_switch
+
+  # WHEN ON VACATION, TURN OFF THE MASTER SWITCH AFTER 3 HOURS OF LIGHT #
+  - id: general_vacation_turn_off_master_switch
+    alias: Vacation - Turn off lights in the evening
+    description: Turn off master switch
+    trigger:
+      - entity_id: input_boolean.dusk_till_dawn
+        for: "04:20:00"
+        platform: state
+        to: "on"
+    condition:
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "on"
+    action:
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.master_switch
