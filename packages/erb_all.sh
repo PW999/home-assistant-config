@@ -1,6 +1,6 @@
 #!/bin/bash
 set -o pipefail
-YAML_LINT_CONFIG=../../.yamllint
+YAML_LINT_CONFIG=../.yamllint
 files=$(find . -type f -iname "*.erb")
 validation=0
 
