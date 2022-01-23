@@ -6,7 +6,7 @@
 #   @package        :   Desktop package
 #   @description    :   Customizations for desktop power plug
 #   @url            :   https://github.com/PW999/home-assistant-config/
-#   @erb            :   ./appliance/template/desktop.erb
+#   @erb            :   ./appliance/template/appliance_desktop.erb
 # ##############################################################################
 homeassistant:
   customize:

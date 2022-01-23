@@ -7,7 +7,7 @@
 #   @description    :   Create absolute humidity sensors and alert in case of too dry/humid
 #   @url            :   https://github.com/PW999/home-assistant-config/
 #   @credit         :   https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/
-#   @erb            :   ./humidity/template/office.erb
+#   @erb            :   ./humidity/template/humidity_bedroom.erb
 # ##############################################################################
 
 
@@ -19,40 +19,40 @@
 sensor:
   - platform: template
     sensors:
-      office_absolute_humidity:
-        friendly_name: Office absolute humidity
-        unique_id: humidity_office_sensor_absolute_humidity
+      bedroom_absolute_humidity:
+        friendly_name: Bedroom absolute humidity
+        unique_id: humidity_bedroom_sensor_absolute_humidity
         icon_template: mdi:water
         availability_template: >-
             {{ not (
-                  is_state('sensor.bureau', 'unavailable')
-                  or is_state('sensor.bureau_2', 'unavailable')
-                  or is_state('sensor.bureau', 'unknown')
-                  or is_state('sensor.bureau_2', 'unknown')
+                  is_state('sensor.bedroom', 'unavailable')
+                  or is_state('sensor.bedroom_2', 'unavailable')
+                  or is_state('sensor.bedroom', 'unknown')
+                  or is_state('sensor.bedroom_2', 'unknown')
                 )
             }}
         value_template: >-
             {{
-            ( float(6.112) * e**( (( float(17.67) * float(states('sensor.bureau')) )/(  float(states('sensor.bureau')) + float(243.5) ))) * ( float(states('sensor.bureau_2')) / 100 ) * float(18.02)  )
+            ( float(6.112) * e**( (( float(17.67) * float(states('sensor.bedroom')) )/(  float(states('sensor.bedroom')) + float(243.5) ))) * ( float(states('sensor.bedroom_2')) / 100 ) * float(18.02)  )
             /
-            ( ( float(states('sensor.bureau')) + 273.5) * float(100.0) * float(0.08314) )
+            ( ( float(states('sensor.bedroom')) + 273.5) * float(100.0) * float(0.08314) )
             }}
-      office_humidity_at_20:
-        friendly_name: Office humidity at 20°c
-        unique_id: humidity_office_sensor_humidity_at_20
+      bedroom_humidity_at_20:
+        friendly_name: Bedroom humidity at 20°c
+        unique_id: humidity_bedroom_sensor_humidity_at_20
         unit_of_measurement: "%"
         device_class: humidity
-        availability_template: "{{ not is_state('sensor.office_absolute_humidity', 'unavailable') and is_number(states('sensor.office_absolute_humidity')) }}"
-        value_template: "{{ (float(states('sensor.office_absolute_humidity')) * 5.788 * 100.0) | round(0) }}"
+        availability_template: "{{ not is_state('sensor.bedroom_absolute_humidity', 'unavailable') and is_number(states('sensor.bedroom_absolute_humidity')) }}"
+        value_template: "{{ (float(states('sensor.bedroom_absolute_humidity')) * 5.788 * 100.0) | round(0) }}"
 
 
 automation:
-  - id: humidity_office_automation_humidity_too_high
-    alias: Notification - Office humidity too high
+  - id: humidity_bedroom_automation_humidity_too_high
+    alias: Notification - Bedroom humidity too high
     mode: single
     trigger:
       - platform: numeric_state
-        entity_id: sensor.bureau_2
+        entity_id: sensor.bedroom_2
         above: 65
         for: "00:15:00"
       - platform: state
@@ -63,7 +63,7 @@ automation:
         for: "00:10:00"
     condition:
       - condition: numeric_state
-        entity_id: sensor.bureau_2
+        entity_id: sensor.bedroom_2
         above: 65
       - condition: state
         entity_id: input_boolean.master_switch
@@ -75,15 +75,15 @@ automation:
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
           - alias: Trigger when bedroom humidity rises from below to above threshold
             condition: template
-            value_template: "{{ trigger.entity_id == 'sensor.bureau_2' and (trigger.from_state.state | float) <= 65.0 }}"
+            value_template: "{{ trigger.entity_id == 'sensor.bedroom_2' and (trigger.from_state.state | float) <= 65.0 }}"
           - alias: Trigger when outside humidity lowers
             condition: template
             value_template: "{{ trigger.entity_id == 'sensor.terrace_2' and (trigger.from_state.state | float) > (trigger.to_state.state | float) }}"
       - alias: If outside humidity is much lower than inside humidity
         condition: template
         value_template: >
-          {% set current_humidity = float(states('sensor.bureau_2')) %}
-          {% set current_temperature = float(states('sensor.bureau')) %}
+          {% set current_humidity = float(states('sensor.bedroom_2')) %}
+          {% set current_temperature = float(states('sensor.bedroom')) %}
           {% set terrace_absolute_humidity = float(states('sensor.terrace_absolute_humidity')) %}
           {% set inside_out_humidity = (
             100 * ( terrace_absolute_humidity * ( ( current_temperature + 273.5) * float(100.0) * float(0.08314) ) )
@@ -95,35 +95,35 @@ automation:
       - service: notify.mobile_app_mi_9t
         data:
           message: |
-            Relative humidity is {{ float(states('sensor.bureau_2')) }}%, consider opening a window.
-          title: Office humidity warning
+            Relative humidity is {{ float(states('sensor.bedroom_2')) }}%, consider opening a window.
+          title: Bedroom humidity warning
       - delay: 7200
 
 
-  - id: humidity_office_automation_humidity_too_low
-    alias: Notification - Office humidity too low
+  - id: humidity_bedroom_automation_humidity_too_low
+    alias: Notification - Bedroom humidity too low
     mode: single
     trigger:
       - platform: numeric_state
-        entity_id: sensor.bureau_2
+        entity_id: sensor.bedroom_2
         below: 45
         for: "00:30:00"
     condition:
       - alias: Only if we cross the treshold
         condition: template
         value_template: >
-          {%  if trigger.entity_id != 'sensor.bureau_2'  %}
+          {%  if trigger.entity_id != 'sensor.bedroom_2'  %}
           false
           {% else %}
           {{ states(trigger.from_state) | float >= 45.0   }}
           {% endif %}
       - condition: numeric_state
-        entity_id: sensor.bureau_2
+        entity_id: sensor.bedroom_2
         below: 45
     action:
       - service: notify.mobile_app_mi_9t
         data:
           message: |
-            Relative humidity is at {{ float(states('sensor.bureau_2')) }}% !
-          title: Office humidity warning
+            Relative humidity is at {{ float(states('sensor.bedroom_2')) }}% !
+          title: Bedroom humidity warning
       - delay: 7200
