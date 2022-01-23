@@ -91,27 +91,14 @@ automation:
       - condition: state
         entity_id: binary_sensor.hall_presence
         state: "on"
-      - condition: or
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "off"
+      - condition: not
         conditions:
           - condition: state
             entity_id: input_select.home_mode
-            state: Night
-          - condition: and
-            conditions:
-              - condition: state
-                entity_id: input_select.home_mode
-                state: Evening
-              - condition: state
-                entity_id: input_select.master_switch
-                state: "on"
-          - condition: and
-            conditions:
-              - condition: state
-                entity_id: input_select.home_mode
-                state: Morning
-              - condition: state
-                entity_id: input_select.master_switch
-                state: "on"
+            state: Day
     action:
       - service: scene.turn_on
         entity_id: scene.hall_night
