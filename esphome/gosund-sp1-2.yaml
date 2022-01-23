@@ -1,4 +1,5 @@
 ---
+# washing machine
 substitutions:
   plug_name: gosund-sp1-2
   plug_id: gosund_sp1_2
@@ -18,7 +19,7 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   fast_connect: true
-  reboot_timeout: 2h
+  reboot_timeout: 6h
   power_save_mode: high
   manual_ip:
     static_ip: ${ip}
@@ -42,7 +43,7 @@ logger:
     
 # Enable Home Assistant API
 api:
-  reboot_timeout: 1h
+  reboot_timeout: 8h
   encryption:
     key: !secret encryption_key
 
