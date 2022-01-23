@@ -1,0 +1,64 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2022
+#   @package        :   Living room button configuration
+#   @description    :   Automation at the press of a button
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+# down: 2002
+# center: 3002
+# up: 1002
+# down long: 2001
+# center long: 3001
+# up long: 1001
+# down long release: 2003
+# center long release: 3003
+# up long release: 1003
+
+automation:
+  - id: button_living_room_lights_on
+    alias: Button - Turn on living room lights (up)
+    description: Use up button to turn on living room lights
+    trigger:
+      - platform: event
+        event_type: deconz_event
+        event_data:
+          id: lightify_switch_mini_27
+          event: 1002
+    action:
+      - service: scene.turn_on
+        entity_id: scene.living_room_evening
+        data:
+          transition: 3
+
+  - id: button_living_room_lights_dimmed
+    alias: Button - Dimmed the living room lights (down)
+    description: Use down button to dimm the living room lights
+    trigger:
+      - platform: event
+        event_type: deconz_event
+        event_data:
+          id: lightify_switch_mini_27
+          event: 2002
+    action:
+      - service: scene.turn_on
+        entity_id: scene.living_room_evening_dimmed
+        data:
+          transition: 3
+
+  - id: button_living_room_lights_off
+    alias: Button - Turn of the living room lights (center)
+    description: Use down button to dimm the living room lights
+    trigger:
+      - platform: event
+        event_type: deconz_event
+        event_data:
+          id: lightify_switch_mini_27
+          event: 3002
+    action:
+      - service: scene.turn_on
+        entity_id: scene.living_room_off
+        data:
+          transition: 3

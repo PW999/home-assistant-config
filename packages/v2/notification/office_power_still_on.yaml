@@ -1,0 +1,33 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   05/05/2021
+#   @package        :   Office light automation
+#   @description    :   Automates the WLED strip behind my desk
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  - id: notification_office_power_still_on
+    alias: Notification - Office power still on
+    description: Send a notification when I leave or go to bed and the power to the amp on my desk is still on
+    mode: single
+    trigger:
+      - entity_id: input_boolean.master_switch
+        platform: state
+        to: "off"
+    condition:
+      - alias: Stand-by usage is high
+        condition: numeric_state
+        entity_id: sensor.gosund_sp112_1_wattage
+        above: 20
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Do not forget to turn of the power in the office. <br />
+            Power usage is {{ states('sensor.gosund_sp112_1_wattage') }}W,
+            that's €{{ (24 * states('input_number.electricity_tarrif') | float * states('sensor.gosund_sp112_1_wattage') | float / 1000) | round(2) }}/day
+            or {{ (24 * states('sensor.gosund_sp112_1_wattage') |float * states('sensor.be_co2_intensity') |float  / 1000) | round(0) }}g CO2:eq/day
+          title: Office power
+      - delay: 120
