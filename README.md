@@ -7,8 +7,6 @@
 
 This is the home-assistant configuration which I'm using in my little appartment.
 
-More documentation and automation will follow soon, I'm currently in the process of re-organizing my whole configuration, soo bear with me.
-
 # Hardware
 This is a very short list of the hardware I'm using:
 

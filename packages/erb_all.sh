@@ -1,9 +1,12 @@
 #!/bin/bash
 set -o pipefail
+
 YAML_LINT_CONFIG=../.yamllint
 files=$(find . -type f -iname "*.erb")
+# Set to 1 if the yaml validation failed, will prevent the system from writing to disk
 validation=0
 
+# First run: generate YAML and validate using yamllint
 for file in $files
 do
   if [[ ! $file =~ \/template_.* ]]; then
@@ -24,6 +27,7 @@ if [ $validation -eq 1 ]; then
   exit 1
 fi
 
+# Second run: generate YAML and write to disk
 for file in $files
 do
   if [[ ! $file =~ \/template_.* ]]; then
