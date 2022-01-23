@@ -5,15 +5,15 @@
 #   @package        :   Temperature offset
 #   @description    :   Fix temp difference between Aqara and Osram sensor
 #   @url            :   https://github.com/PW999/home-assistant-config/
-#   @template:      :   ./sensor/template/sensor_pantry_temperature.erb
+#   @template:      :   ./sensor/template/hall_temperature.erb
 ###############################################################################
 
 sensor:
   - platform: template
     sensors:
-      pantry_temperature_corrected:
-        friendly_name: Pantry temperature
+      hall_temperature_corrected:
+        friendly_name: Hall temperature
         unit_of_measurement: °C
         device_class: temperature
-        availability_template: "{{ not is_state('sensor.pantry_presence', 'unavailable')  }}"
-        value_template: "{{ (float(states('sensor.pantry_presence')) + 0.7) | round(1) }}"
+        availability_template: "{{ not is_state('sensor.hall_presence', 'unavailable')  }}"
+        value_template: "{{ (float(states('sensor.hall_presence')) + 0.7) | round(1) }}"

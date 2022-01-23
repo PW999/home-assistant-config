@@ -7,7 +7,7 @@
 #   @description    :   Create additional humidity related sensors
 #   @url            :   https://github.com/PW999/home-assistant-config/
 #   @credit         :   https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/
-#   @erb            :   ./humidity/template/humidity_terrace.erb
+#   @erb            :   ./humidity/template/terrace.erb
 # ##############################################################################
 
 # First create a bunch of sensors with the absolute humidity based on the relative humidity and the temperature.

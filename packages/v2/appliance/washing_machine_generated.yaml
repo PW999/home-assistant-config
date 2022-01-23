@@ -7,7 +7,7 @@
 #   @description    :   Monitor washing machine and notify so I don't forget to empty it
 #   @url            :   https://github.com/PW999/home-assistant-config/
 #   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
-#   @erb            :   ./appliance/template/appliance_washing_machine.erb
+#   @erb            :   ./appliance/template/washing_machine.erb
 # ##############################################################################
 
 homeassistant:

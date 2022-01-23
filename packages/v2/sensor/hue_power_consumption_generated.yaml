@@ -5,7 +5,7 @@
 #   @package        :   Temperature offset
 #   @description    :   Fix temp difference between Aqara and Osram sensor
 #   @url            :   https://github.com/PW999/home-assistant-config/
-#   @template:      :   ./sensor/template/sensor_hue_power_consumption.erb
+#   @template:      :   ./sensor/template/hue_power_consumption.erb
 ###############################################################################
 
 sensor:
