@@ -60,7 +60,7 @@ automation:
         minutes: /15
         seconds: 0
     condition:
-      - alias: If the we can assume the heating is off
+      - alias: If we can assume the heating is off
         condition: template
         value_template: "{{ ( state_attr('climate.000a1709af6337', 'temperature')  | float + states('input_number.heating_offset_living_room') | float ) < 17.5 }}"
     action:
@@ -85,4 +85,10 @@ automation:
             # Offset before = {{ trigger.from_state.state | float }}
             # Offset after = {{ trigger.to_state.state | float }}
             # TT = {{ state_attr('climate.000a1709af6337', 'temperature') }}
-            # NewTT = {{ state_attr('climate.000a1709af6337', 'temperature') - trigger.from_state.state | float + trigger.to_state.state | float }}
+            # NewTT = {{ state_attr('climate.000a1709af6337', 'temperature') + trigger.from_state.state | float - trigger.to_state.state | float }}
+      - service: homematic.set_device_value
+        data:
+          address: 000A1709AF6337
+          channel: 1
+          param: SET_POINT_TEMPERATURE
+          value: "{{ state_attr('climate.000a1709af6337', 'temperature') + trigger.from_state.state | float - trigger.to_state.state | float }}"
