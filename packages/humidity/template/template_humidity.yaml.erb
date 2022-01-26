@@ -27,7 +27,7 @@ automation:
       - platform: state
         entity_id: input_boolean.master_switch
         to: "on"
-        for: "00:10:00"
+        for: "00:15:00"
     condition:
       - condition: numeric_state
         entity_id: <%= sensor_id %>_2
