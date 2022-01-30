@@ -80,13 +80,13 @@ automation:
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
           - condition: and
             conditions:
-            - alias: Check if the trigger is the house mode
-              condition: template
-              value_template: "{{ trigger.entity_id == 'input_select.home_mode' }}"
-            - alias: Check if the lights are still on (should be on because of Evening mode)
-              condition: state
-              entity_id: light.living_room_big
-              state: "on"
+              - alias: Check if the trigger is the house mode
+                condition: template
+                value_template: "{{ trigger.entity_id == 'input_select.home_mode' }}"
+              - alias: Check if the lights are still on (should be on because of Evening mode)
+                condition: state
+                entity_id: light.living_room_big
+                state: "on"
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
