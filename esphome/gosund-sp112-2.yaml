@@ -12,7 +12,6 @@ substitutions:
 esphome:
   name: ${plug_name}
   platform: ESP8266
-  arduino_version: 2.7.4
   board: esp01_1m
   on_boot:
     then:
@@ -24,6 +23,7 @@ wifi:
   password: !secret wifi_password
   fast_connect: true
   reboot_timeout: 0s
+  power_save_mode: light
   manual_ip:
     static_ip: ${ip}
     gateway: 192.168.0.2
@@ -35,7 +35,7 @@ wifi:
     password: !secret ap_password
     ap_timeout: 15min
 
-captive_portal:
+# captive_portal:
 
 # Enable logging
 logger:
@@ -47,6 +47,8 @@ logger:
 # Enable Home Assistant API
 api:
   reboot_timeout: 0s
+  encryption:
+    key: !secret encryption_key
 
 ota:
   password: !secret ota_password
@@ -56,8 +58,8 @@ time:
     id: homeassistant_time
 
 # Enable Web server
-web_server:
-  port: 80
+# web_server:
+#   port: 80
 
 status_led:
   pin:
