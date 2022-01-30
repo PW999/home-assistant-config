@@ -21,30 +21,7 @@ automation:
         entity_id: switch.foscam_r2m_one_motion
         state: "on"
     action:
-      - service: camera.record
-        target:
-          entity_id: camera.foscam_r2m_one
-        data:
-          duration: 30
-          filename: >-
-            /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M')
-            }}.mp4
-      - service: camera.snapshot
-        alias: Take snapshot for notification
-        data:
-          filename: /config/www/snap_hall.jpg
-        target:
-          entity_id: camera.foscam_r2m_one
-      - delay: 5  # make sure the file is properly written
-      - service: notify.mobile_app_mi_9t
-        data:
-          message: |
-            It is {{ as_timestamp(now()) | timestamp_custom('%a %B %-m, %I:%M %p') }}
-          title: Motion detected in hallway
-          data:
-            sticky: true
-            image: http://192.168.0.16:8123/local/snap_hall.jpg
-      - delay: 3600  # do no spam me with notifications (and keep HA's cost low)
+      - service: script.camera_front_door_on_motion_detected_script
 
   - id: camera_front_door_on_motion_detected_snapshot_loop
     alias: Camera - Take snapshots to media folder on motion
@@ -62,13 +39,69 @@ automation:
         entity_id: binary_sensor.front_door_presence
         state: "on"
     action:
-      - service: camera.snapshot
-        alias: Take a snapshot for storage
-        data:
-          filename: /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M') }}.jpg
+      - service: script.camera_front_door_on_motion_detected_snapshot_loop_script
+
+script:
+  camera_front_door_on_motion_detected_script:
+    description: Captures hall camera when motion is detected and notify if not home in 5 min
+    mode: single
+    sequence:
+      - service: camera.record
         target:
           entity_id: camera.foscam_r2m_one
-      - delay: 7
-      - service: automation.trigger   # (loop)
+        data:
+          duration: 45
+          filename: >-
+            /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M')
+            }}.mp4
+      - service: camera.snapshot
+        alias: Take snapshot for notification
+        data:
+          filename: /config/www/snap_hall.jpg
         target:
-          entity_id: automation.camera_take_snapshots_to_media_folder_on_motion
+          entity_id: camera.foscam_r2m_one
+      - wait_for_trigger:
+          - platform: state
+            entity_id: group.household_members
+            to: home
+        timeout: "00:05:00"
+        continue_on_timeout: true
+      - condition: state
+        alias: Check if nobody is home
+        entity_id: group.household_members
+        state: not_home
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            It is {{ as_timestamp(now()) | timestamp_custom('%a %B %-m, %I:%M %p') }}
+          title: Motion detected in hallway
+          data:
+            sticky: true
+            image: http://192.168.0.16:8123/local/snap_hall.jpg
+      - delay: 1800  # do no spam me with notifications (and keep HA's cost low)
+
+  camera_front_door_on_motion_detected_snapshot_loop_script:
+    description: Make multiple captures when motion is detected
+    mode: single
+    sequence:
+      repeat:
+        sequence:
+          - service: camera.snapshot
+            alias: Take a snapshot for storage
+            data:
+              filename: /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M') }}.jpg
+            target:
+              entity_id: camera.foscam_r2m_one
+          - delay: 7
+        until:
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: group.household_members
+                state: home
+              - condition: state
+                entity_id: input_boolean.master_switch
+                state: "on"
+              - condition: state
+                entity_id: binary_sensor.front_door_presence
+                state: "off"
