@@ -21,9 +21,13 @@ automation:
     trigger:
       - platform: time_pattern
         hours: "*"
-        minutes: /15
+        minutes: /20
         seconds: 0
     condition:
+      - alias: If the measured temperature is below 20°c
+        condition: numeric_state
+        entity_id: sensor.living_room
+        below: 20
       - alias: If the temperature difference exceeds 0.5°C
         condition: template
         value_template: "{{ ( state_attr('climate.000a1709af6337', 'current_temperature')  | float + states('input_number.heating_offset_living_room') | float - states('sensor.living_room') | float ) > 0.5  }}"
@@ -39,7 +43,7 @@ automation:
     trigger:
       - platform: time_pattern
         hours: "*"
-        minutes: /15
+        minutes: /30
         seconds: 0
     condition:
       - alias: If the temperature difference exceeds 0.5°C
@@ -57,7 +61,7 @@ automation:
     trigger:
       - platform: time_pattern
         hours: "*"
-        minutes: /15
+        minutes: /30
         seconds: 0
     condition:
       - alias: If we can assume the heating is off
@@ -75,6 +79,10 @@ automation:
     trigger:
       - platform: state
         entity_id: input_number.heating_offset_living_room
+    condition:
+      - alias: If we can assume the heating is on
+        condition: template
+        value_template: "{{ ( state_attr('climate.000a1709af6337', 'temperature') >= 17.5 }}"
     action:
       - service: system_log.write
         data:

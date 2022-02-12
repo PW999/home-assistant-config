@@ -14,8 +14,8 @@
 # 3: ?
 
 # Week programmes:
-# 1: normal day (weekends at 21°c, weekdays not during the day)
-# 2: all day at home (always at 21°c except at night)
+# 1: normal day (weekends at 19.5°c, weekdays not during the day)
+# 2: all day at home (always at 19.5°c except at night)
 # 3: away mode (always at 16°c)
 
 sensor:
@@ -64,7 +64,7 @@ automation:
           value: 3
           value_type: int
 
-  # Sets the week schedule to one where the temperature is 21°c all day long. Can be usefull on holidays during the week.
+  # Sets the week schedule to one where the temperature is 19.5°c all day long. Can be usefull on holidays during the week.
   # Also triggers when I'm returning home (it should be on week schedule 3)
   # Does not trigger when vacation or summer mode is enabled or when it's warm outside (should stay on schedule 3)
   - id: climate_living_room_modes_all_day_on
