@@ -12,7 +12,7 @@ automation:
     alias: Office - turn LEDs on
     description: Turn the lights behind the desk on when I turn on my computer(s)
     trigger:
-      - entity_id: group.office_members
+      - entity_id: group.office_members   # computers/laptops that might be in the office
         platform: state
         to: home
       - entity_id: input_boolean.master_switch
