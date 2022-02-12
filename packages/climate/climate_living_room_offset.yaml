@@ -82,7 +82,7 @@ automation:
     condition:
       - alias: If we can assume the heating is on
         condition: template
-        value_template: "{{ ( state_attr('climate.000a1709af6337', 'temperature') >= 17.5 }}"
+        value_template: "{{ state_attr('climate.000a1709af6337', 'temperature') >= 17.5 }}"
     action:
       - service: system_log.write
         data:
