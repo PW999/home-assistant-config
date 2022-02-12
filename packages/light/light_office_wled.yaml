@@ -18,6 +18,9 @@ automation:
       - entity_id: input_boolean.master_switch
         platform: state
         to: "on"
+      - entity_id: binary_sensor.office_presence
+        platform: state
+        to: "on"
     condition:
       - condition: state
         entity_id: input_boolean.master_switch
@@ -39,10 +42,19 @@ automation:
       - entity_id: input_boolean.master_switch
         platform: state
         to: "off"
+      - entity_id: binary_sensor.office_presence
+        platform: state
+        to: "off"
+        for: "00:07:00"
     condition:
-      - condition: state
-        entity_id: group.office_members
-        state: not_home
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: group.office_members
+            state: not_home
+          - condition: state
+            entity_id: binary_sensor.office_presence
+            state: "off"
     action:
       - service: scene.turn_on
         entity_id: scene.office_off_scene
