@@ -15,7 +15,7 @@ homeassistant:
 automation:
   - id: humidity_bathroom_fan_on
     alias: Bathroom fan - turn on
-    description: Turn the bathroom fan on it is too humid in the house or if dryer is on
+    description: Turn the bathroom fan on if is too humid in the house or if dryer is on
     trigger:
       - entity_id: sensor.bathroom_2
         platform: numeric_state
@@ -29,7 +29,7 @@ automation:
       - platform: state
         entity_id: sensor.dryer_status
         to: Running
-        for: "00:15:00"
+        for: "00:15:00"   # do not turn it on immediately, humidity won't rise this fast
     action:
       - service: switch.turn_on
         data:
@@ -37,7 +37,7 @@ automation:
 
   - id: humidity_bathroom_fan_off
     alias: Bathroom fan - turn off
-    description: Turn the bathroom fan off if humidity has dropped or after running for half an hour
+    description: Turn the bathroom fan off base on humidity, dryer state of after a time-out
     trigger:
       - entity_id: sensor.bathroom_2
         platform: numeric_state
@@ -55,6 +55,17 @@ automation:
         platform: state
         to: "on"
         for: "00:30:00"
+      - platform: state
+        entity_id: sensor.dryer_status
+        from: Running
+        for: "00:20:00"   # give it some de-bounce time and after run time
+    condition:
+      - condition: not
+        conditions:
+          - alias: Keep the fan on while the dryer is on
+            condition: state
+            entity_id: sensor.dryer_status
+            state: Running
     action:
       - service: switch.turn_off
         data:
