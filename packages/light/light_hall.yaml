@@ -15,7 +15,7 @@ automation:
       - entity_id: binary_sensor.hall_presence
         platform: state
         to: "on"
-      - entity_id: binary_sensor.pantry_presence
+      - entity_id: binary_sensor.pantry_door
         platform: state
         to: "off"
       - entity_id: input_boolean.master_switch
@@ -45,7 +45,7 @@ automation:
       - entity_id: binary_sensor.hall_presence
         platform: state
         to: "on"
-      - entity_id: binary_sensor.pantry_presence
+      - entity_id: binary_sensor.pantry_door
         platform: state
         to: "off"
       - entity_id: input_boolean.master_switch
@@ -75,7 +75,7 @@ automation:
       - entity_id: binary_sensor.hall_presence
         platform: state
         to: "on"
-      - entity_id: binary_sensor.pantry_presence
+      - entity_id: binary_sensor.pantry_door
         platform: state
         to: "off"
     condition:
@@ -110,7 +110,7 @@ automation:
       - entity_id: input_boolean.master_switch
         platform: state
         to: "on"
-      - entity_id: binary_sensor.pantry_presence
+      - entity_id: binary_sensor.pantry_door
         platform: state
         to: "off"
       - platform: state
@@ -147,7 +147,7 @@ automation:
       - entity_id: input_boolean.master_switch
         platform: state
         to: "on"
-      - entity_id: binary_sensor.pantry_presence
+      - entity_id: binary_sensor.pantry_door
         platform: state
         to: "off"
       - platform: state
@@ -184,7 +184,7 @@ automation:
       - entity_id: input_boolean.master_switch
         platform: state
         to: "on"
-      - entity_id: binary_sensor.pantry_presence
+      - entity_id: binary_sensor.pantry_door
         platform: state
         to: "off"
       - entity_id: sensor.very_sunny
@@ -212,7 +212,7 @@ automation:
       - entity_id: binary_sensor.hall_presence
         platform: state
         to: "off"
-      - entity_id: binary_sensor.pantry_presence
+      - entity_id: binary_sensor.pantry_door
         platform: state
         to: "off"
       - entity_id: input_boolean.master_switch
@@ -237,12 +237,12 @@ automation:
     alias: Pantry open day
     description: Turn on the hall light closest to the pantry to get some extra pantry light
     trigger:
-      - entity_id: binary_sensor.pantry_presence
+      - entity_id: binary_sensor.pantry_door
         platform: state
         to: "on"
     condition:
       - condition: state
-        entity_id: binary_sensor.pantry_presence
+        entity_id: binary_sensor.pantry_door
         state: "on"
       - condition: not
         conditions:
@@ -260,12 +260,12 @@ automation:
     alias: Pantry open night
     description: Turn on the hall light closest to the pantry to get some extra pantry light (but less bright because it's night time)
     trigger:
-      - entity_id: binary_sensor.pantry_presence
+      - entity_id: binary_sensor.pantry_door
         platform: state
         to: "on"
     condition:
       - condition: state
-        entity_id: binary_sensor.pantry_presence
+        entity_id: binary_sensor.pantry_door
         state: "on"
       - condition: state
         entity_id: input_select.home_mode

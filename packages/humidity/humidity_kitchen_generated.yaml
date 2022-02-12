@@ -25,17 +25,17 @@ sensor:
         icon_template: mdi:water
         availability_template: >-
             {{ not (
-                  is_state('sensor.bathroom', 'unavailable')
-                  or is_state('sensor.bathroom_2', 'unavailable')
-                  or is_state('sensor.bathroom', 'unknown')
-                  or is_state('sensor.bathroom_2', 'unknown')
+                  is_state('sensor.kitchen', 'unavailable')
+                  or is_state('sensor.kitchen_2', 'unavailable')
+                  or is_state('sensor.kitchen', 'unknown')
+                  or is_state('sensor.kitchen_2', 'unknown')
                 )
             }}
         value_template: >-
             {{
-            ( float(6.112) * e**( (( float(17.67) * float(states('sensor.bathroom')) )/(  float(states('sensor.bathroom')) + float(243.5) ))) * ( float(states('sensor.bathroom_2')) / 100 ) * float(18.02)  )
+            ( float(6.112) * e**( (( float(17.67) * float(states('sensor.kitchen')) )/(  float(states('sensor.kitchen')) + float(243.5) ))) * ( float(states('sensor.kitchen_2')) / 100 ) * float(18.02)  )
             /
-            ( ( float(states('sensor.bathroom')) + 273.5) * float(100.0) * float(0.08314) )
+            ( ( float(states('sensor.kitchen')) + 273.5) * float(100.0) * float(0.08314) )
             }}
       kitchen_humidity_at_20:
         friendly_name: Kitchen humidity at 20°c
@@ -52,7 +52,7 @@ automation:
     mode: single
     trigger:
       - platform: numeric_state
-        entity_id: sensor.bathroom_2
+        entity_id: sensor.kitchen_2
         above: 70
         for: "00:15:00"
       - platform: state
@@ -63,7 +63,7 @@ automation:
         for: "00:15:00"
     condition:
       - condition: numeric_state
-        entity_id: sensor.bathroom_2
+        entity_id: sensor.kitchen_2
         above: 70
       - condition: state
         entity_id: input_boolean.master_switch
@@ -75,15 +75,15 @@ automation:
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
           - alias: Trigger when bedroom humidity rises from below to above threshold
             condition: template
-            value_template: "{{ trigger.entity_id == 'sensor.bathroom_2' and (trigger.from_state.state | float) <= 70.0 }}"
+            value_template: "{{ trigger.entity_id == 'sensor.kitchen_2' and (trigger.from_state.state | float) <= 70.0 }}"
           - alias: Trigger when outside humidity lowers
             condition: template
             value_template: "{{ trigger.entity_id == 'sensor.terrace_2' and (trigger.from_state.state | float) > (trigger.to_state.state | float) }}"
       - alias: If outside humidity is much lower than inside humidity
         condition: template
         value_template: >
-          {% set current_humidity = float(states('sensor.bathroom_2')) %}
-          {% set current_temperature = float(states('sensor.bathroom')) %}
+          {% set current_humidity = float(states('sensor.kitchen_2')) %}
+          {% set current_temperature = float(states('sensor.kitchen')) %}
           {% set terrace_absolute_humidity = float(states('sensor.terrace_absolute_humidity')) %}
           {% set inside_out_humidity = (
             100 * ( terrace_absolute_humidity * ( ( current_temperature + 273.5) * float(100.0) * float(0.08314) ) )
@@ -95,7 +95,7 @@ automation:
       - service: notify.mobile_app_mi_9t
         data:
           message: |
-            Relative humidity is {{ float(states('sensor.bathroom_2')) }}%, consider opening a window.
+            Relative humidity is {{ float(states('sensor.kitchen_2')) }}%, consider opening a window.
           title: Kitchen humidity warning
       - delay: 7200
 
@@ -105,25 +105,25 @@ automation:
     mode: single
     trigger:
       - platform: numeric_state
-        entity_id: sensor.bathroom_2
+        entity_id: sensor.kitchen_2
         below: 45
         for: "00:30:00"
     condition:
       - alias: Only if we cross the treshold
         condition: template
         value_template: >
-          {%  if trigger.entity_id != 'sensor.bathroom_2'  %}
+          {%  if trigger.entity_id != 'sensor.kitchen_2'  %}
           false
           {% else %}
           {{ states(trigger.from_state) | float >= 45.0   }}
           {% endif %}
       - condition: numeric_state
-        entity_id: sensor.bathroom_2
+        entity_id: sensor.kitchen_2
         below: 45
     action:
       - service: notify.mobile_app_mi_9t
         data:
           message: |
-            Relative humidity is at {{ float(states('sensor.bathroom_2')) }}% !
+            Relative humidity is at {{ float(states('sensor.kitchen_2')) }}% !
           title: Kitchen humidity warning
       - delay: 7200

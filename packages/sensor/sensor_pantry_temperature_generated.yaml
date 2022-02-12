@@ -15,5 +15,5 @@ sensor:
         friendly_name: Pantry temperature
         unit_of_measurement: °C
         device_class: temperature
-        availability_template: "{{ not is_state('sensor.pantry_presence', 'unavailable')  }}"
-        value_template: "{{ (float(states('sensor.pantry_presence')) + 0.7) | round(1) }}"
+        availability_template: "{{ not is_state('binary_sensor.pantry_door', 'unavailable')  }}"
+        value_template: "{{ (float(states('binary_sensor.pantry_door')) - 2.5) | round(1) }}"
