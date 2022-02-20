@@ -63,6 +63,10 @@ automation:
           param: ACTIVE_PROFILE
           value: 3
           value_type: int
+      - service: persistent_notification.create
+        data:
+          message: Homematic change to profile 3
+          title: "Heating: radiators off"
 
   # Sets the week schedule to one where the temperature is 19.5°c all day long. Can be usefull on holidays during the week.
   # Also triggers when I'm returning home (it should be on week schedule 3)
@@ -128,6 +132,10 @@ automation:
           param: ACTIVE_PROFILE
           value: 2
           value_type: int
+      - service: persistent_notification.create
+        data:
+          message: Homematic change to profile 2
+          title: "Heating: all day mode"
 
   - id: climate_living_room_modes_regular_schedule
     alias: Heating - Switch to regular schedule
@@ -194,6 +202,10 @@ automation:
           param: ACTIVE_PROFILE
           value: 1
           value_type: int
+      - service: persistent_notification.create
+        data:
+          message: Homematic change to profile 1
+          title: "Heating: regular"
 
   # Keeps the house at an okay temperature for the cat when I'm on holiday leave
   - id: climate_living_room_modes_vacation
@@ -216,3 +228,7 @@ automation:
           channel: 1
           param: SET_POINT_TEMPERATURE
           value: 17
+      - service: persistent_notification.create
+        data:
+          message: Homematic change manual 17
+          title: "Heating: radiators vacation"

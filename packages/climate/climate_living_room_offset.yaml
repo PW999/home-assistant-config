@@ -11,7 +11,7 @@ input_number:
   heating_offset_living_room:
     name: Living room offset
     initial: 0.0
-    min: -2.5
+    min: -1.5
     max: 2.5
     step: 0.5
 
@@ -22,7 +22,7 @@ automation:
       - platform: time_pattern
         hours: "*"
         minutes: /20
-        seconds: 0
+        seconds: 30
     condition:
       - alias: If the measured temperature is below 20°c
         condition: numeric_state
@@ -44,7 +44,7 @@ automation:
       - platform: time_pattern
         hours: "*"
         minutes: /30
-        seconds: 0
+        seconds: 15
     condition:
       - alias: If the temperature difference exceeds 0.5°C
         condition: template
@@ -63,16 +63,28 @@ automation:
         hours: "*"
         minutes: /30
         seconds: 0
+      - platform: state
+        entity_id: climate.000a1709af6337
+        attribute: temperature
     condition:
       - alias: If we can assume the heating is off
         condition: template
         value_template: "{{ ( state_attr('climate.000a1709af6337', 'temperature')  | float + states('input_number.heating_offset_living_room') | float ) < 17.5 }}"
+      - alias: If the target temperature change is larger than 1°c (so no offset change)
+        condition: template
+        value_template: "{{ trigger.entity_id == 'climate.000a1709af6337' and (trigger.old_state.temperature | float - trigger.new_state.temperature | float) | abs >= 1.0  }}"
     action:
       - service: input_number.set_value
         data:
           value: 0
         target:
           entity_id: input_number.heating_offset_living_room
+      - service: persistent_notification.create
+        data:
+          message: >-
+            Trigger: {{ trigger }}
+          title: "Heating: offset reset"
+          notification_id: climate_living_room_offset_reset_pn
 
   - id: climate_living_room_offset_apply
     alias: Heating - apply offset
@@ -83,6 +95,9 @@ automation:
       - alias: If we can assume the heating is on
         condition: template
         value_template: "{{ state_attr('climate.000a1709af6337', 'temperature') >= 17.5 }}"
+      - alias: Do not apply on a reset
+        condition: template
+        value_template: "{{ (trigger.from_state.state | float - trigger.to_state.state | float) | abs > 0.5 }}"
     action:
       - service: system_log.write
         data:
@@ -100,3 +115,14 @@ automation:
           channel: 1
           param: SET_POINT_TEMPERATURE
           value: "{{ state_attr('climate.000a1709af6337', 'temperature') + trigger.from_state.state | float - trigger.to_state.state | float }}"
+      - service: persistent_notification.create
+        data:
+          message: >-
+            LivingRoom = {{ states('sensor.living_room') | float }}
+            # HomeMatic = {{ state_attr('climate.000a1709af6337', 'temperature') }}
+            # Offset before = {{ trigger.from_state.state | float }}
+            # Offset after = {{ trigger.to_state.state | float }}
+            # TT = {{ state_attr('climate.000a1709af6337', 'temperature') }}
+            # NewTT = {{ state_attr('climate.000a1709af6337', 'temperature') + trigger.from_state.state | float - trigger.to_state.state | float }}
+          title: "Heating: offset applied"
+          notification_id: climate_living_room_offset_apply_pn
