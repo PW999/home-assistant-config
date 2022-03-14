@@ -214,6 +214,11 @@ automation:
       - platform: state
         entity_id: input_boolean.vacation
         to: "on"
+    condition:
+      - alias: Vacation mode is disabled
+        condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
     action:
       - service: homematic.set_device_value
         data:
@@ -232,3 +237,29 @@ automation:
         data:
           message: Homematic change manual 17
           title: "Heating: radiators vacation"
+
+  # Keeps the house at an okay temperature for the cat when I'm on holiday leave
+  - id: climate_living_room_modes_summer
+    alias: Heating - Set heating summer mode
+    trigger:
+      - platform: state
+        entity_id: input_boolean.summer
+        to: "on"
+    action:
+      - service: homematic.set_device_value
+        data:
+          address: 000A1709AF6337
+          channel: 1
+          param: CONTROL_MODE
+          value: 1  # MANU
+      - delay: 5
+      - service: homematic.set_device_value
+        data:
+          address: 000A1709AF6337
+          channel: 1
+          param: SET_POINT_TEMPERATURE
+          value: 15
+      - service: persistent_notification.create
+        data:
+          message: Homematic change manual 14
+          title: "Heating: radiators summer"

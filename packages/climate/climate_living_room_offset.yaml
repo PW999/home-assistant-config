@@ -24,6 +24,10 @@ automation:
         minutes: /20
         seconds: 30
     condition:
+      - alias: Summer mode is disabled
+        condition: state
+        entity_id: input_boolean.summer
+        state: "off"
       - alias: If the measured temperature is below 20°c
         condition: numeric_state
         entity_id: sensor.living_room
@@ -46,6 +50,10 @@ automation:
         minutes: /30
         seconds: 15
     condition:
+      - alias: Summer mode is disabled
+        condition: state
+        entity_id: input_boolean.summer
+        state: "on"
       - alias: If the temperature difference exceeds 0.5°C
         condition: template
         value_template: "{{ ( state_attr('climate.000a1709af6337', 'current_temperature') | float + states('input_number.heating_offset_living_room') | float - states('sensor.living_room') | float ) < -0.5  }}"
@@ -67,6 +75,10 @@ automation:
         entity_id: climate.000a1709af6337
         attribute: temperature
     condition:
+      - alias: Summer mode is disabled
+        condition: state
+        entity_id: input_boolean.summer
+        state: "off"
       - alias: If we can assume the heating is off
         condition: template
         value_template: "{{ ( state_attr('climate.000a1709af6337', 'temperature')  | float + states('input_number.heating_offset_living_room') | float ) < 17.5 }}"
@@ -92,6 +104,10 @@ automation:
       - platform: state
         entity_id: input_number.heating_offset_living_room
     condition:
+      - alias: Summer mode is disabled
+        condition: state
+        entity_id: input_boolean.summer
+        state: "off"
       - alias: If we can assume the heating is on
         condition: template
         value_template: "{{ state_attr('climate.000a1709af6337', 'temperature') >= 17.5 }}"
