@@ -12,7 +12,6 @@ substitutions:
 esphome:
   name: ${plug_name}
   platform: ESP8266
-  arduino_version: 2.7.4
   board: esp01_1m
 
 # WiFi connection
