@@ -105,15 +105,16 @@ automation:
       event_type: timer.finished
       event_data:
         entity_id: timer.roomba_countdown
-    condition:
-      - condition: template
-        value_template: >
-            {% set current_date = now().strftime("%Y-%m-%d") %}
-            {% set timeslot_begin = strptime(current_date + " 07:00:00", "%Y-%m-%d %H:%M:%S") %}
-            {% set timeslot_end = strptime(current_date + " 20:00:00", "%Y-%m-%d %H:%M:%S") %}
-            {% set last_triggered_at = strptime(states('input_datetime.roomba_last_clean'), "%Y-%m-%d %H:%M:%S") %}
-            {% set already_triggered_today =  timeslot_begin <= last_triggered_at < timeslot_end %}
-            {{ not already_triggered_today }}
+    # No longer using this condition. Timer is started manually, don't care if it's the second time it runs in a day.
+    # condition:
+    #   - condition: template
+    #     value_template: >
+    #         {% set current_date = now().strftime("%Y-%m-%d") %}
+    #         {% set timeslot_begin = strptime(current_date + " 07:00:00", "%Y-%m-%d %H:%M:%S") %}
+    #         {% set timeslot_end = strptime(current_date + " 20:00:00", "%Y-%m-%d %H:%M:%S") %}
+    #         {% set last_triggered_at = strptime(states('input_datetime.roomba_last_clean'), "%Y-%m-%d %H:%M:%S") %}
+    #         {% set already_triggered_today =  timeslot_begin <= last_triggered_at < timeslot_end %}
+    #         {{ not already_triggered_today }}
     action:
       service: vacuum.start
       data:
