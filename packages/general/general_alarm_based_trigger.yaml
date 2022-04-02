@@ -1,0 +1,51 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   04/2022
+#   @package        :   Android alarm trigger
+#   @description    :   Triggers the master switch on next companion alarm
+#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @credit         :   https://community.home-assistant.io/t/how-to-use-next-alarm-sensor/221686/14
+###############################################################################
+input_datetime:
+  wakeup_alarm:
+    name: Wakeup Alarm Time
+    has_time: true
+    has_date: true
+    icon: mdi:android
+
+automation:
+  - id: general_wakeup_delay_set_wakeup_alarm_time
+    alias: Wakeup - Delay set wakeup alarm time
+    trigger:
+      platform: state
+      entity_id: sensor.mi_9t_next_alarm
+    mode: restart
+    condition:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: sensor.mi_9t_next_alarm
+            state:
+              - unavailable
+              - unknown
+    action:
+      - delay: 00:01:00
+      - service: input_datetime.set_datetime
+        entity_id: input_datetime.wakeup_alarm
+        data_template:
+          datetime: "{{ ((state_attr('sensor.mi_9t_next_alarm', 'Time in Milliseconds') | int / 1000) + 3600) | timestamp_custom('%Y-%m-%d %H:%M:00') }}"
+
+  - id: general_wakeup_turn_on_master_switch
+    alias: Wakeup - Turn on master switch
+    trigger:
+      platform: time
+      at: input_datetime.wakeup_alarm
+    condition:
+      - condition: state
+        entity_id: input_select.home_mode
+        state: Morning
+    action:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.master_switch
