@@ -19,7 +19,7 @@ input_boolean:
 timer:
   workday_countdown:
     name: Workday countdown
-    duration: "08:00:00"
+    duration: "07:30:00"
 
 automation:
   - id: workday_timer_start
