@@ -45,6 +45,9 @@ automation:
       - condition: state
         entity_id: input_select.home_mode
         state: Morning
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
     action:
       - service: input_boolean.turn_on
         data:
