@@ -16,8 +16,8 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.power_consumption
-        above: 2500
-        for: "00:01:00"
+        above: 2.5
+        for: "00:02:00"
     action:
       - service: notify.mobile_app_mi_9t
         data:
