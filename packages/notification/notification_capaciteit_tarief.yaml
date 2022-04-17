@@ -1,0 +1,27 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   17/04/2022
+#   @package        :   Capacity tarif notification
+#   @description    :   When over 2.5kWh for 15 min, we have to pay more
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+
+automation:
+  - id: morning_notification_capaciteit_tarief
+    alias: Notification - Capaciteit tarief
+    description: Send a notification when using more than the 'basic' 2.5kWh
+    mode: single
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.power_consumption
+        above: 2500
+        for: "00:01:00"
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Power consumption is {{ states('sensor.power_consumption') }}.
+          title: Capaciteits tarief
+      - delay: 900  # cheap trick to only send it once every 15 min
