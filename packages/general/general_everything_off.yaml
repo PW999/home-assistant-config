@@ -83,6 +83,8 @@ scene:
         state: "off"
       switch.on_off_plug_1:
         state: "off"
+      switch.switch.fan_switch:
+        state: "off"
 
   - id: general_everything_off_scene
     name: Home Off
@@ -104,4 +106,6 @@ scene:
       light.hall_3:
         state: "off"
       switch.on_off_plug_1:
+        state: "off"
+      switch.switch.fan_switch:
         state: "off"
