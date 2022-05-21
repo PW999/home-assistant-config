@@ -45,7 +45,7 @@ automation:
       - entity_id: binary_sensor.office_presence
         platform: state
         to: "off"
-        for: "00:07:00"
+        for: "00:10:00"
     condition:
       - condition: or
         conditions:
