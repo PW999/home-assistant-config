@@ -22,6 +22,9 @@ automation:
         platform: state
         from: "off"
         to: "on"
+      - entity_id: binary_sensor.living_room_presence
+        platform: state
+        to: "on"
     condition:
       - condition: or
         conditions:
@@ -39,6 +42,47 @@ automation:
         entity_id: scene.living_room_evening
         data:
           transition: 3
+
+  - id: light_living_room_off_no_presence
+    alias: Living room - turn off WLED strips if no presence detected
+    description: Turn of power hungry WLED strips when I am not in the living
+    trigger:
+      - entity_id: binary_sensor.living_room_presence
+        platform: state
+        to: "off"
+        for: "00:10:00"
+      - entity_id: light.living_room_tv # handles the case where the lights go on but I'm not in the living for the next couple of hours
+        platform: state
+        to: "on"
+        for: "00:10:00"
+    condition:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_select.home_mode
+            state: Evening
+          - condition: state
+            entity_id: input_select.home_mode
+            state: Night
+          - condition: state
+            entity_id: input_select.home_mode
+            state: Morning
+      - condition: state  # for the tv light trigger
+        entity_id: binary_sensor.living_room_presence
+        state: "off"
+        for: "00:10:00"
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "on"
+    action:
+      service: scene.apply
+      data:
+        transition: 4
+        entities:
+          light.front_window:
+            state: "off"
+          light.living_room_tv:
+            state: "off"
 
 
   - id: light_living_room_morning_turn_off
@@ -72,6 +116,9 @@ automation:
         platform: state
         from: "off"
         to: "on"
+      - entity_id: binary_sensor.living_room_presence
+        platform: state
+        to: "on"
     condition:
       - condition: or
         conditions:
@@ -84,6 +131,15 @@ automation:
                 condition: template
                 value_template: "{{ trigger.entity_id == 'input_select.home_mode' }}"
               - alias: Check if the lights are still on (should be on because of Evening mode)
+                condition: state
+                entity_id: light.living_room_big
+                state: "on"
+          - condition: and
+            conditions:
+              - alias: Check if the trigger is the motion sensor
+                condition: template
+                value_template: "{{ trigger.entity_id == 'binary_sensor.living_room_presence' }}"
+              - alias: Check if the lights are still on
                 condition: state
                 entity_id: light.living_room_big
                 state: "on"
