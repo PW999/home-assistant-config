@@ -202,7 +202,7 @@ automation:
         state: Day
     action:
       - service: scene.turn_on
-        entity_id: scene.hall_10
+        entity_id: scene.hall_low
 
 
   - id: light_hall_off_night
