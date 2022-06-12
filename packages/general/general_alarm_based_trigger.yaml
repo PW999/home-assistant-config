@@ -34,7 +34,7 @@ automation:
       - service: input_datetime.set_datetime
         entity_id: input_datetime.wakeup_alarm
         data_template:
-          datetime: "{{ ((state_attr('sensor.mi_9t_next_alarm', 'Time in Milliseconds') | int / 1000) + (600)) | timestamp_custom('%Y-%m-%d %H:%M:00') }}"
+          datetime: "{{ ((state_attr('sensor.mi_9t_next_alarm', 'Time in Milliseconds') | int / 1000) - (600)) | timestamp_custom('%Y-%m-%d %H:%M:00') }}"
 
   - id: general_wakeup_turn_on_master_switch
     alias: Wakeup - Turn on master switch
