@@ -28,6 +28,10 @@ automation:
       - entity_id: binary_sensor.bathroom_presence
         platform: state
         to: "on"
+    condition:
+      - condition: state
+        entity_id: light.bathroom_light
+        state: "off"
     action:
       - if:
           - condition: state
@@ -36,7 +40,6 @@ automation:
         then:
           - service: light.turn_on
             data:
-              transition: 1
               color_temp: 330
               brightness: 255
             target:
@@ -46,10 +49,12 @@ automation:
               - condition: state
                 entity_id: input_select.home_mode
                 state: Night
+              - condition: state
+                entity_id: input_boolean.master_switch
+                state: "on"
             then:
               - service: light.turn_on
                 data:
-                  transition: 4
                   color_temp: 450
                   brightness: 64
                 target:
@@ -57,12 +62,10 @@ automation:
             else:
               - service: light.turn_on
                 data:
-                  transition: 2
                   color_temp: 330
                   brightness: 192
                 target:
                       entity_id: light.bathroom_light
-
 
   - id: light_bathroom_turn_off
     alias: Bathroom - turn light off
@@ -71,7 +74,7 @@ automation:
       - entity_id: binary_sensor.bathroom_presence
         platform: state
         to: "off"
-        for: "00:02:00"
+        for: "00:01:30"
       - entity_id: timer.bathroom_light_extended_time
         platform: state
         to: idle
@@ -81,8 +84,6 @@ automation:
         state: idle
     action:
       - service: light.turn_off
-        data:
-          transition: 4
         target:
           entity_id: light.bathroom_light
 
@@ -189,7 +190,7 @@ automation:
                 target:
                   entity_id: light.bathroom_light
                 data:
-                  brightness_step: 4
+                  brightness_step: 2
       else: # kind of implies that the decrease boolean is on
         - repeat:
             until:
@@ -201,4 +202,4 @@ automation:
                 target:
                   entity_id: light.bathroom_light
                 data:
-                  brightness_step: 4
+                  brightness_step: -2
