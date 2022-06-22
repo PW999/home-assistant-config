@@ -81,6 +81,8 @@ scene:
         state: "off"
       light.hall_3:
         state: "off"
+      light.bathroom_light:
+        state: "off"
       switch.on_off_plug_1:
         state: "off"
       switch.fan_switch:
@@ -104,6 +106,8 @@ scene:
       light.hall_2:
         state: "off"
       light.hall_3:
+        state: "off"
+      light.bathroom_light:
         state: "off"
       switch.on_off_plug_1:
         state: "off"

@@ -51,12 +51,12 @@ automation:
                 state: Night
               - condition: state
                 entity_id: input_boolean.master_switch
-                state: "on"
+                state: "off"
             then:
               - service: light.turn_on
                 data:
-                  color_temp: 450
-                  brightness: 64
+                  color_temp: 400
+                  brightness: 96
                 target:
                   entity_id: light.bathroom_light
             else:
