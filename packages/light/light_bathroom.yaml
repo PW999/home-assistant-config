@@ -33,10 +33,13 @@ automation:
         entity_id: light.bathroom_light
         state: "off"
     action:
-      - if:
+      - if: # during the day when master is on
           - condition: state
             entity_id: input_select.home_mode
             state: Day
+          - condition: state
+            entity_id: input_boolean.master_switch
+            state: "on"
         then:
           - service: light.turn_on
             data:
@@ -45,7 +48,7 @@ automation:
             target:
                   entity_id: light.bathroom_light
         else:
-          - if:
+          - if: # at night when the master is off (I'm asleep)
               - condition: state
                 entity_id: input_select.home_mode
                 state: Night
@@ -55,17 +58,22 @@ automation:
             then:
               - service: light.turn_on
                 data:
-                  color_temp: 400
+                  color_temp: 380
                   brightness: 96
                 target:
                   entity_id: light.bathroom_light
             else:
-              - service: light.turn_on
-                data:
-                  color_temp: 330
-                  brightness: 192
-                target:
-                      entity_id: light.bathroom_light
+              - if: # morning/evening when I'm home
+                - condition: state
+                  entity_id: input_boolean.master_switch
+                  state: "on"
+                then:
+                  - service: light.turn_on
+                    data:
+                      color_temp: 330
+                      brightness: 192
+                    target:
+                          entity_id: light.bathroom_light
 
   - id: light_bathroom_turn_off
     alias: Bathroom - turn light off
@@ -203,3 +211,22 @@ automation:
                   entity_id: light.bathroom_light
                 data:
                   brightness_step: -2
+
+  - id: switch_bathroom_auto_reset
+    alias: Bathroom - Reset continuous on booleans
+    trigger:
+      - entity_id: input_boolean.bathroom_light_increase_brightness
+        platform: state
+        to: "on"
+        for: "00:01:00"
+      - entity_id: input_boolean.bathroom_light_decrease_brightness
+        platform: state
+        to: "on"
+        for: "00:01:00"
+    action:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.bathroom_light_decrease_brightness
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.bathroom_light_increase_brightness
