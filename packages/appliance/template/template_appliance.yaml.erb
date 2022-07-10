@@ -85,7 +85,7 @@ automation:
         entity_id: sensor.<%= power_plug %>_wattage
         below: 5
         for:
-          minutes: 20
+          minutes: <%= appliance_off_time_minutes %>
     condition:
       condition: and
       conditions:

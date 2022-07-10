@@ -2,6 +2,7 @@
   appliance_name = 'Washing machine'
   power_plug = 'gosund_sp1_2'
   icon = 'mdi:washing-machine'
+  appliance_off_time_minutes = 20
 
   erb = ERB.new(File.read(File.expand_path('template_appliance.yaml.erb', __dir__)))
   erb.filename = __FILE__
