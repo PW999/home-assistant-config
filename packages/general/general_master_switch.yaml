@@ -23,6 +23,10 @@ automation:
       - platform: state
         entity_id: group.household_members
         to: home
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: TURN_MASTER_SWITCH_ON
     action:
       - service: input_boolean.turn_on
         data:

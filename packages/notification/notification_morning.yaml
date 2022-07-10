@@ -27,11 +27,15 @@ automation:
     action:
       - service: notify.mobile_app_mi_9t
         data:
-          message: |
+          data:
+            actions:
+              - action: TURN_MASTER_SWITCH_ON
+                title: Turn master on
+          message: >
             Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
             Travel time is {{ states('sensor.to_work') }} {{ state_attr('sensor.to_work', 'unit_of_measurement') }}<br />
-            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') }}
-            - {{ states('input_number.forecast_temp') }}°C with {{ states('input_number.forecast_precip') }}mm rain.
+            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') | trim }}
+            - {{ states('input_number.forecast_temp') | trim }}°C with {{ states('input_number.forecast_precip') | trim }}mm rain.
           title: Good morning
       - delay: 600
 
@@ -52,9 +56,13 @@ automation:
     action:
       - service: notify.mobile_app_mi_9t
         data:
-          message: |
+          data:
+            actions:
+              - action: TURN_MASTER_SWITCH_ON
+                title: Turn master on
+          message: >
             Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
-            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') }}
-             - {{ states('input_number.forecast_temp') }}°C with {{ states('input_number.forecast_precip') }}mm rain.
+            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') | trim }}
+             - {{ states('input_number.forecast_temp') | trim }}°C with {{ states('input_number.forecast_precip') | trim }}mm rain.
           title: Good morning
       - delay: 600
