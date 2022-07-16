@@ -332,6 +332,12 @@ scene:
   - id: light_hall_low
     name: Hall low
     entities:
-      light.hall_lights:
-        brightness: 16
+      light.hall_1:
+        brightness: 32
+        state: "on"
+      light.hall_2:
+        brightness: 32
+        state: "on"
+      light.hall_3:
+        brightness: 32
         state: "on"
