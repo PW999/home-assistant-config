@@ -51,7 +51,7 @@ recorder:
 
 
 influxdb:
-  host: 192.168.0.116
+  host: 192.168.0.17
   port: 8086
   database: homeassistant
   username: !secret influx_user
