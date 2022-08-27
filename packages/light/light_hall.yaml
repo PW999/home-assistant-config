@@ -250,11 +250,8 @@ automation:
             entity_id: input_select.home_mode
             state: Night
     action:
-      - service: light.turn_on
-        data:
-          brightness: 255
-          entity_id:
-            - light.hall_3
+      - service: scene.turn_on
+        entity_id: scene.pantry_day
 
   - id: light_hall_pantry_on_night
     alias: Pantry open night
@@ -271,11 +268,8 @@ automation:
         entity_id: input_select.home_mode
         state: Night
     action:
-      - service: light.turn_on
-        data:
-          brightness: 96
-          entity_id:
-            - light.hall_3
+      - service: scene.turn_on
+        entity_id: scene.pantry_night
 
 scene:
   - id: light_hall_100
@@ -340,4 +334,18 @@ scene:
         state: "on"
       light.hall_3:
         brightness: 32
+        state: "on"
+
+  - id: light_pantry_day
+    name: Pantry day
+    entities:
+      light.hall_3:
+        brightness: 255
+        state: "on"
+
+  - id: light_pantry_night
+    name: Pantry night
+    entities:
+      light.hall_3:
+        brightness: 96
         state: "on"
