@@ -48,7 +48,7 @@ script:
     sequence:
       - service: camera.record
         target:
-          entity_id: camera.foscam_r2m_one
+          entity_id: camera.r2m_1_onvif_prof0_name
         data:
           duration: 45
           filename: >-
@@ -59,7 +59,7 @@ script:
         data:
           filename: /config/www/snap_hall.jpg
         target:
-          entity_id: camera.foscam_r2m_one
+          entity_id: camera.r2m_1_onvif_prof0_name
       - wait_for_trigger:
           - platform: state
             entity_id: group.household_members
@@ -91,7 +91,7 @@ script:
             data:
               filename: /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M') }}.jpg
             target:
-              entity_id: camera.foscam_r2m_one
+              entity_id: camera.r2m_1_onvif_prof0_name
           - delay: 7
         until:
           - condition: or
