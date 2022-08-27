@@ -95,7 +95,7 @@ influxdb:
 
 
 device_tracker:
-  - platform: bluetooth_tracker
+  - platform: bluetooth_le_tracker
     interval_seconds: 30
     consider_home: 240
     new_device_defaults:
