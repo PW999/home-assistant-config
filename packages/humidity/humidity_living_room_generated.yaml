@@ -42,8 +42,8 @@ sensor:
         unique_id: humidity_living_room_sensor_humidity_at_20
         unit_of_measurement: "%"
         device_class: humidity
-        availability_template: "{{ not is_state('sensor.living room_absolute_humidity', 'unavailable') and is_number(states('sensor.living room_absolute_humidity')) }}"
-        value_template: "{{ (float(states('sensor.living room_absolute_humidity')) * 5.788 * 100.0) | round(0) }}"
+        availability_template: "{{ not is_state('sensor.living_room_absolute_humidity', 'unavailable') and is_number(states('sensor.living_room_absolute_humidity')) }}"
+        value_template: "{{ (float(states('sensor.living_room_absolute_humidity')) * 5.788 * 100.0) | round(0) }}"
 
 
 automation:

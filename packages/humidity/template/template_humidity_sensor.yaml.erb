@@ -29,5 +29,5 @@ sensor:
         unique_id: <%= "humidity_#{location_id}_sensor_humidity_at_20" %>
         unit_of_measurement: "%"
         device_class: humidity
-        availability_template: "{{ not is_state('sensor.<%= location_name.downcase %>_absolute_humidity', 'unavailable') and is_number(states('sensor.<%= location_name.downcase %>_absolute_humidity')) }}"
-        value_template: "{{ (float(states('sensor.<%= location_name.downcase %>_absolute_humidity')) * 5.788 * 100.0) | round(0) }}"
+        availability_template: "{{ not is_state('sensor.<%= location_id %>_absolute_humidity', 'unavailable') and is_number(states('sensor.<%= location_id %>_absolute_humidity')) }}"
+        value_template: "{{ (float(states('sensor.<%= location_id %>_absolute_humidity')) * 5.788 * 100.0) | round(0) }}"
