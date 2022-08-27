@@ -21,7 +21,7 @@ template:
             {% set ignore_seconds = 3600 %}
             {% set ignored = state_attr('group.ignored_unavailable_entities','entity_id') %}
             {% set ignore_ts = (now().timestamp() - ignore_seconds)|as_datetime %}
-            {% set entities = states|rejectattr('domain','eq','group')
+            {% set entities = states|rejectattr('domain','in',['group','button','number', 'select', 'input_boolean', 'scene', 'input_boolean'])
                 |rejectattr('last_changed','ge',ignore_ts)
                 |selectattr('state','in',['unavailable','unknown']) %}
             {% if ignored != none %}
@@ -31,10 +31,11 @@ template:
 
 # OPTIONAL - Uncomment and add entities you want to ignore to this group.
 
-# group:
-#   ignored_unavailable_entities:
-#     entities:
-#       - sensor.my_ignored_sensor
+group:
+  ignored_unavailable_entities:
+    entities:
+      - sensor.gas_consumption_2
+      - binary_sensor.updater
 
 # OPTIONAL Example automation to demonstrate how you can utilize this sensor
 automation:
