@@ -53,9 +53,10 @@ recorder:
 influxdb:
   host: 192.168.0.17
   port: 8086
-  database: homeassistant
-  username: !secret influx_user
-  password: !secret influx_pass
+  api_version: 2
+  token: !secret influx_token
+  organization: homeassistant
+  bucket: homeassistant/hass_1y
   ssl: false
   verify_ssl: false
   max_retries: 5
