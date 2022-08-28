@@ -59,10 +59,9 @@ RaspberryPi 3B + Debian 10 installed on a Western Digital Elements 500GB USB HDD
 # Installation
 I'm running Home Assistant Supervised on Raspbian 10. The following is a complete list of the containers running on my Pi (apart from the default HA containers)
 
-* ghcr.io/hassio-addons/appdaemon/armv7
 * esphome/esphome-hassio-armv7
 * homeassistant/armhf-addon-deconz
-* grafana/grafana
-* influxdb
 * ghcr.io/jens-maus/raspberrymatic
 * gists/samba-server
+
+The databases (Postgres and InfluxDB2) are running on another, much faster server. One day I'll also migrate HA to it.
