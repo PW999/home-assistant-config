@@ -28,5 +28,8 @@ known_devices.yaml
 **/*.log
 **/*.log.*
 
-# Again, no secrets please 
+# Again, no secrets please
 **/secrets.yaml
+
+**/__pycache__
+custom_components_repo

@@ -1,0 +1,47 @@
+---
+# ##############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   08/2022
+#   @package        :   Work from home calendar package
+#   @description    :   Automation for work from home stuff
+#   @url            :   https://github.com/PW999/home-assistant-config/
+# ##############################################################################
+calendar:
+- platform: ics_calendar
+  calendars:
+    - name: "Calendar - Work from home"
+      url: !secret outlook_work_url
+      include_all_day: True
+      download_interval: 240
+      exclude: "['/.*/']"
+      include: "['WFH']"
+
+input_boolean:
+  work_from_home:
+    name: Work from home
+    icon: mdi:home-city
+
+automation:
+  - id: calendar_wfh_start_work_from_home
+    alias: Calendar WFH - Start work from home
+    mode: queued
+    trigger:
+      - platform: calendar
+        event: start
+        entity_id: calendar.calendar_work_from_home
+    action:
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.work_from_home
+
+  - id: calendar_wfh_end_work_from_home
+    alias: Calendar WFH - End work from home
+    mode: queued
+    trigger:
+      - platform: calendar
+        event: end
+        entity_id: calendar.calendar_work_from_home
+    action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.work_from_home

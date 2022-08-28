@@ -7,14 +7,6 @@
 #   @url            :   https://github.com/PW999/home-assistant-config/
 # ##############################################################################
 
-binary_sensor:
-  - platform: workday
-    country: BE
-
-input_boolean:
-  work_from_home:
-    name: Work from home
-    icon: mdi:home-city
 
 timer:
   workday_countdown:

@@ -1,0 +1,62 @@
+---
+# ##############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   08/2022
+#   @package        :   Vacation package
+#   @description    :   Combine the workday sensor with my vacation calendar
+#   @url            :   https://github.com/PW999/home-assistant-config/
+# ##############################################################################
+
+calendar:
+- platform: ics_calendar
+  calendars:
+    - name: "Calendar - Verlof"
+      url: !secret outlook_work_url
+      include_all_day: True
+      download_interval: 240
+      exclude: "['/.*/']"
+      include: "['Verlof', 'Vakantie']"
+
+binary_sensor:
+  - platform: workday
+    country: BE
+
+input_boolean:
+  work_day:
+    name: Work day
+    icon: mdi:briefcase
+
+template:
+  - sensor:
+      - name: Work Day
+        state: >
+          {{ not states('calendar.calendar_verlof') and states('binary_sensor.workday_sensor') }}
+
+automation:
+  - id: calendar_vacation_turn_on_workday
+    alias: Calendar Vacation - Turn on
+    trigger:
+      - platform: state
+        entity_id: sensor.work_day
+    condition:
+      - condition: state
+        entity_id: sensor.work_day
+        state: "True"
+    action:
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.work_day
+
+  - id: calendar_vacation_turn_off_work_day
+    alias: Calendar Vacation - Turn off
+    trigger:
+      - platform: state
+        entity_id: sensor.work_day
+    condition:
+      - condition: state
+        entity_id: sensor.work_day
+        state: "False"
+    action:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.work_day
