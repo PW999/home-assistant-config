@@ -192,7 +192,7 @@ sensor:
     name: P1 Reader RSSI
     resource: http://192.168.0.60/wifi/info
     timeout: 30
-    scan_interval: 120
+    scan_interval: 240
     value_template: "{{ value_json.rssi | replace('dB', '') | float }}"
     device_class: signal_strength
     unit_of_measurement: dB
