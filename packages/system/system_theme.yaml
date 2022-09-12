@@ -17,4 +17,4 @@ automation:
     action:
       service: frontend.set_theme
       data:
-        name: ios-light-mode-orange-alternative
+        name: Fluent Blue
