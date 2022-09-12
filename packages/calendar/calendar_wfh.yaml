@@ -21,14 +21,17 @@ input_boolean:
     name: Work from home
     icon: mdi:home-city
 
+# So, full day events don't seems to trigger the calendar automation events ...
+# That's why I'm just using simple state triggers here
+# It seems a bit stupid though to replicate the value of a calendar in a boolean
+# but it decouples the calendar from the rest of the system which is nice I guess
 automation:
   - id: calendar_wfh_start_work_from_home
     alias: Calendar WFH - Start work from home
-    mode: queued
     trigger:
-      - platform: calendar
-        event: start
+      - platform: state
         entity_id: calendar.calendar_work_from_home
+        to: "on"
     action:
     - service: input_boolean.turn_on
       target:
@@ -36,11 +39,10 @@ automation:
 
   - id: calendar_wfh_end_work_from_home
     alias: Calendar WFH - End work from home
-    mode: queued
     trigger:
-      - platform: calendar
-        event: end
+      - platform: state
         entity_id: calendar.calendar_work_from_home
+        to: "off"
     action:
     - service: input_boolean.turn_off
       target:
