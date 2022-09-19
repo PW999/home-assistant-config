@@ -21,7 +21,7 @@ template:
             {% set ignore_seconds = 7200 %}
             {% set ignored = state_attr('group.ignored_unavailable_entities','entity_id') %}
             {% set ignore_ts = (now().timestamp() - ignore_seconds)|as_datetime %}
-            {% set entities = states|rejectattr('domain','in',['group','button','number', 'select', 'input_boolean', 'scene', 'input_boolean', 'update'])
+            {% set entities = states|rejectattr('domain','in',['group','button','number', 'select', 'input_boolean', 'scene', 'input_boolean', 'update', 'device_tracker'])
                 |rejectattr('last_changed','ge',ignore_ts)
                 |selectattr('state','in',['unavailable','unknown']) %}
             {% if ignored != none %}
@@ -43,8 +43,6 @@ group:
       - sensor.front_window_led_count
       - switch.front_window_reverse
       - sensor.front_window_wi_fi_rssi
-      - select.front_window_live_override
-      - select.front_window_playlist
       # living room WLED, skip these since there are plenty of other entities that go unavailable
       - sensor.living_room_tv_estimated_current
       - sensor.living_room_tv_max_current
@@ -52,17 +50,13 @@ group:
       - sensor.living_room_tv_led_count
       - switch.living_room_tv_reverse
       - sensor.living_room_tv_wi_fi_rssi
-      - select.living_room_tv_live_override
-      - select.living_room_tv_playlist
       # office WLED, skip these since there are plenty of other entities that go unavailable
       - sensor.bureau_wled_estimated_current
       - sensor.bureau_wled_max_current
       - binary_sensor.bureau_wled_firmware
       - sensor.bureau_wled_led_count
-      - sensor.bureau_wled_reverse
+      - switch.bureau_wled_reverse
       - sensor.bureau_wled_wi_fi_rssi
-      - select.bureau_wled_live_override
-      - select.bureau_wled_live_playlist
       - light.bureau_wled_segment_1
       - light.bureau_wled_segment_2
       - light.bureau_wled_segment_3
@@ -71,10 +65,6 @@ group:
       - switch.bureau_wled_segment_2_reverse
       - switch.bureau_wled_segment_3_reverse
       - switch.bureau_wled_segment_4_reverse
-      - number.bureau_wled_segment_1_intensity
-      - number.bureau_wled_segment_2_intensity
-      - number.bureau_wled_segment_3_intensity
-      - number.bureau_wled_segment_4_intensity
       - sensor.bureau_wled_segment_1_speed
       - sensor.bureau_wled_segment_2_speed
       - sensor.bureau_wled_segment_3_speed
@@ -93,6 +83,9 @@ group:
       - sensor.speedtest_download
       - sensor.speedtest_ping
       - sensor.speedtest_upload
+      # These aren't really "connected", so they disappear from time to time
+      - sensor.lightify_switch_mini_26_battery_level
+      - sensor.lightify_switch_mini_27_battery_level
 
 # OPTIONAL Example automation to demonstrate how you can utilize this sensor
 automation:
