@@ -41,19 +41,19 @@ group:
       - sensor.front_window_max_current
       - binary_sensor.front_window_firmware
       - sensor.front_window_led_count
-      - sensor.front_window_reverse
+      - switch.front_window_reverse
       - sensor.front_window_wi_fi_rssi
-      - sensor.front_window_live_override
-      - sensor.front_window_playlist
+      - select.front_window_live_override
+      - select.front_window_playlist
       # living room WLED, skip these since there are plenty of other entities that go unavailable
       - sensor.living_room_tv_estimated_current
       - sensor.living_room_tv_max_current
       - binary_sensor.living_room_tv_firmware
       - sensor.living_room_tv_led_count
-      - sensor.living_room_tv_reverse
+      - switch.living_room_tv_reverse
       - sensor.living_room_tv_wi_fi_rssi
-      - sensor.living_room_tv_live_override
-      - sensor.living_room_tv_playlist
+      - select.living_room_tv_live_override
+      - select.living_room_tv_playlist
       # office WLED, skip these since there are plenty of other entities that go unavailable
       - sensor.bureau_wled_estimated_current
       - sensor.bureau_wled_max_current
@@ -61,20 +61,20 @@ group:
       - sensor.bureau_wled_led_count
       - sensor.bureau_wled_reverse
       - sensor.bureau_wled_wi_fi_rssi
-      - sensor.bureau_wled_live_override
-      - sensor.bureau_wled_live_playlist
-      - sensor.bureau_wled_segment_1
-      - sensor.bureau_wled_segment_2
-      - sensor.bureau_wled_segment_3
-      - sensor.bureau_wled_segment_4
-      - sensor.bureau_wled_segment_1_reverse
-      - sensor.bureau_wled_segment_2_reverse
-      - sensor.bureau_wled_segment_3_reverse
-      - sensor.bureau_wled_segment_4_reverse
-      - sensor.bureau_wled_segment_1_intensity
-      - sensor.bureau_wled_segment_2_intensity
-      - sensor.bureau_wled_segment_3_intensity
-      - sensor.bureau_wled_segment_4_intensity
+      - select.bureau_wled_live_override
+      - select.bureau_wled_live_playlist
+      - light.bureau_wled_segment_1
+      - light.bureau_wled_segment_2
+      - light.bureau_wled_segment_3
+      - light.bureau_wled_segment_4
+      - switch.bureau_wled_segment_1_reverse
+      - switch.bureau_wled_segment_2_reverse
+      - switch.bureau_wled_segment_3_reverse
+      - switch.bureau_wled_segment_4_reverse
+      - number.bureau_wled_segment_1_intensity
+      - number.bureau_wled_segment_2_intensity
+      - number.bureau_wled_segment_3_intensity
+      - number.bureau_wled_segment_4_intensity
       - sensor.bureau_wled_segment_1_speed
       - sensor.bureau_wled_segment_2_speed
       - sensor.bureau_wled_segment_3_speed
@@ -89,6 +89,10 @@ group:
       - sensor.pm2_5_3
       - sensor.pm10
       - air_quality.weather_in_ekeren_in_port_of_antwerp
+      # Don't care about speedtest not working
+      - sensor.speedtest_download
+      - sensor.speedtest_ping
+      - sensor.speedtest_upload
 
 # OPTIONAL Example automation to demonstrate how you can utilize this sensor
 automation:
