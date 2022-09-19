@@ -54,7 +54,7 @@ automation:
       - platform: numeric_state
         entity_id: sensor.bureau_2
         above: 65
-        for: "00:15:00"
+        for: "00:25:00"
       - platform: state
         entity_id: sensor.terrace_2
       - platform: state
