@@ -19,8 +19,11 @@ automation:
         at: "07:02:00"
     condition:
       - condition: state
-        entity_id: binary_sensor.workday_sensor
+        entity_id: input_boolean.work_day
         state: "on"
+      - condition: state
+        entity_id: input_boolean.work_from_home
+        state: "off"
       - condition: state
         entity_id: input_boolean.vacation
         state: "off"
@@ -47,9 +50,14 @@ automation:
       - platform: time
         at: '08:30:00'
     condition:
-      - condition: state
-        entity_id: binary_sensor.workday_sensor
-        state: "off"
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: input_boolean.work_day
+          state: "off"
+        - condition: state
+          entity_id: input_boolean.work_from_home
+          state: "on"
       - condition: state
         entity_id: input_boolean.vacation
         state: "off"
