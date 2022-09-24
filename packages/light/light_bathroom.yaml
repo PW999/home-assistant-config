@@ -71,7 +71,7 @@ automation:
                   - service: light.turn_on
                     data:
                       color_temp: 330
-                      brightness: 192
+                      brightness: 224
                     target:
                           entity_id: light.bathroom_light
 

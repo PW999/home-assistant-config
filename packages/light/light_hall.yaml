@@ -347,5 +347,5 @@ scene:
     name: Pantry night
     entities:
       light.hall_3:
-        brightness: 96
+        brightness: 128
         state: "on"
