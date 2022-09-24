@@ -11,6 +11,9 @@ substitutions:
 
 esphome:
   name: ${plug_name}
+  on_boot:
+    then:
+      switch.turn_on: ${plug_id}_relay
 
 preferences:
   flash_write_interval: 10min
@@ -39,7 +42,7 @@ wifi:
     password: !secret ap_password
     ap_timeout: 15min
 
-captive_portal:
+#captive_portal:
 
 # Enable logging
 #logger:

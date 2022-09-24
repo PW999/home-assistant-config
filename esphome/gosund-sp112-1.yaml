@@ -11,11 +11,18 @@ substitutions:
 
 esphome:
   name: ${plug_name}
-  platform: ESP8266
-  board: esp01_1m
   on_boot:
     then:
       switch.turn_on: ${plug_id}_relay
+
+preferences:
+  flash_write_interval: 10min
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: true
+  framework:
+    version: recommended
 
 # WiFi connection
 wifi:
@@ -38,11 +45,11 @@ wifi:
 # captive_portal:
 
 # Enable logging
-logger:
-  logs:
-    sensor: INFO
-    adc: INFO
-    hlw8012: INFO
+#logger:
+#  logs:
+#    sensor: INFO
+#    adc: INFO
+#    hlw8012: INFO
 
 # Enable Home Assistant API
 api:
