@@ -10,7 +10,7 @@
 calendar:
 - platform: ics_calendar
   calendars:
-    - name: "Calendar - Verlof"
+    - name: "Calendar - Day off"
       url: !secret outlook_work_url
       include_all_day: True
       download_interval: 240
@@ -28,11 +28,6 @@ input_boolean:
   day_off:
     name: Day off
     icon: mdi:briefcase
-template:
-  - sensor:
-      - name: Work Day
-        state: >
-          {{ not states('input_boolean.verlof') and states('binary_sensor.workday_sensor') }}
 
 # So, full day events don't seems to trigger the calendar automation events ...
 # That's why I'm just using simple state triggers here
@@ -43,7 +38,7 @@ automation:
     alias: Calendar Vacation - Turn on day off
     trigger:
       - platform: state
-        entity_id: calendar.calendar_verlof
+        entity_id: calendar.calendar_day_off
         to: "on"
     action:
       - service: input_boolean.turn_on
@@ -54,9 +49,34 @@ automation:
     alias: Calendar Vacation - Turn off day off
     trigger:
       - platform: state
-        entity_id: calendar.calendar_verlof
+        entity_id: calendar.calendar_day_off
         to: "off"
     action:
       - service: input_boolean.turn_off
         target:
           entity_id: input_boolean.day_off
+
+  - id: calendar_vacation_toggle_work_day
+    trigger:
+      - platform: state
+        entity_id: input_boolean.day_off
+      - platform: state
+        entity_id: binary_sensor.workday_sensor
+    action:
+      - if:
+          - condition: or
+            conditions:
+            - condition: state
+              entity_id: input_boolean.day_off
+              state: "on"
+            - condition: state
+              entity_id: binary_sensor.workday_sensor
+              state: "off"
+        then:
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.work_day
+        else:
+          - service: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.work_day
