@@ -53,6 +53,7 @@ automation:
   - id: camera_front_door_motion_detection_disable
     alias: Camera - Disable motion detection
     description: Disable the camera surveillance
+    initial_state: false    # Always keep motion detection enabled, even though it's crappy
     trigger:
       - platform: state
         entity_id: input_boolean.master_switch
@@ -87,6 +88,8 @@ automation:
         to: "on"
         for:
           minutes: 5
+      - platform: homeassistant
+        event: start
     action:
       - service: foscam.ptz_preset
         entity_id: camera.foscam_r2m_one

@@ -92,7 +92,7 @@ script:
               filename: /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M') }}.jpg
             target:
               entity_id: camera.r2m_1_onvif_prof0_name
-          - delay: 7
+          - delay: 5
         until:
           - condition: or
             conditions:
