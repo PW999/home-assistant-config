@@ -40,6 +40,7 @@ automation:
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
+        for: "00:00:15"
     action:
       - service: light.toggle
         data:
@@ -64,6 +65,7 @@ automation:
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
+        for: "00:00:15"
     action:
       - service: light.toggle
         data:
@@ -72,7 +74,7 @@ automation:
       - service: timer.start
         data:
           entity_id: timer.roomba_countdown
-      - delay: 120
+      - delay: 15
       - service: input_boolean.turn_off
         data:
           entity_id: input_boolean.master_switch
