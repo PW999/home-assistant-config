@@ -20,6 +20,17 @@ automation:
       - condition: state
         entity_id: switch.foscam_r2m_one_motion
         state: "on"
+      # motion detection is now always on, so when I leave, I trigger it and I get a notification
+      # So, either master is on, or it has to be for enough of a time for me to have left
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_boolean.master_switch
+            state: "on"
+          - condition: state
+            entity_id: input_boolean.master_switch
+            state: "off"
+            for: "00:05:00"
     action:
       - service: script.camera_front_door_on_motion_detected_script
 
@@ -38,6 +49,17 @@ automation:
         condition: state
         entity_id: binary_sensor.front_door_presence
         state: "on"
+      # motion detection is now always on, so when I leave, I trigger it and I get a notification
+      # So, either master is on, or it has to be for enough of a time for me to have left
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_boolean.master_switch
+            state: "on"
+          - condition: state
+            entity_id: input_boolean.master_switch
+            state: "off"
+            for: "00:05:00"
     action:
       - service: script.camera_front_door_on_motion_detected_snapshot_loop_script
 
@@ -50,7 +72,7 @@ script:
         target:
           entity_id: camera.r2m_1_onvif_prof0_name
         data:
-          duration: 45
+          duration: 15
           filename: >-
             /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M')
             }}.mp4
