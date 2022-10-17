@@ -29,7 +29,7 @@ RaspberryPi 3B + Debian 10 installed on a Western Digital Elements 500GB USB HDD
 
 ## Homematic
 * HM-MOD-RPI-PCB (Homematic/Raspberrymatic)
-* Homematic basic thermostat (living)
+* Homematic basic thermostat (living + office)
 
 ## ESPHome
 * GoSund (/Tuya) SP-112 wifi power plug (x4)
@@ -55,6 +55,8 @@ RaspberryPi 3B + Debian 10 installed on a Western Digital Elements 500GB USB HDD
 * Raspberry Pi Power Supply Checker
 * Waze Travel Time
 * Buienradar
+* Speedtest
+* Onvif (for the Foscam IP camera)
 
 # Installation
 I'm running Home Assistant Supervised on Raspbian 10. The following is a complete list of the containers running on my Pi (apart from the default HA containers)
