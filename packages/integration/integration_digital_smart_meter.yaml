@@ -34,7 +34,7 @@ input_number:
     name: Hourly tarrif
     initial: 0.2683
     min: 0.2
-    max: 0.3
+    max: 1.0
     unit_of_measurement: EUR/kWh
 
   # Used to calculate today's consumption on the "high" (day) channel
