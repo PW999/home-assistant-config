@@ -5,7 +5,6 @@
 #   @package        :   Morning notification
 #   @description    :   Send me an update every morning
 #   @url            :   https://github.com/PW999/home-assistant-config/
-#   @requires       :   14_work.yaml, 12_weather.yaml
 ###############################################################################
 
 
@@ -50,14 +49,43 @@ automation:
       - platform: time
         at: '08:30:00'
     condition:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: input_boolean.work_day
-          state: "off"
-        - condition: state
-          entity_id: input_boolean.work_from_home
-          state: "on"
+      - condition: state
+        entity_id: input_boolean.work_day
+        state: "off"
+      - condition: state
+        entity_id: input_boolean.work_from_home
+        state: "off"
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          data:
+            actions:
+              - action: TURN_MASTER_SWITCH_ON
+                title: Turn master on
+          message: >
+            Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
+            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') | trim }}
+             - {{ states('input_number.forecast_temp') | trim }}°C with {{ states('input_number.forecast_precip') | trim }}mm rain.
+          title: Good morning
+      - delay: 600
+
+  - id: morning_notification_work_from_home
+    alias: Notification - Morning notification when working from home
+    description: Send morning updates to my smartphone when working from home
+    mode: single
+    trigger:
+      - platform: time
+        at: '07:55:00'
+    condition:
+      - condition: state
+        entity_id: input_boolean.work_day
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.work_from_home
+        state: "on"
       - condition: state
         entity_id: input_boolean.vacation
         state: "off"
