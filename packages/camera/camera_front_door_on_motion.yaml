@@ -92,6 +92,11 @@ script:
         alias: Check if nobody is home
         entity_id: group.household_members
         state: not_home
+      - condition: state
+        alias: Prevent false positives
+        entity_id: input_boolean.master_switch
+        state: "off"
+        for: "00:01:00"
       - service: notify.mobile_app_mi_9t
         data:
           message: |
