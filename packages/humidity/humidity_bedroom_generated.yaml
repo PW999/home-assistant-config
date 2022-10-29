@@ -90,7 +90,7 @@ automation:
             /
             ( float(6.112) * e**( (( float(17.67) * current_temperature )/(  current_temperature + float(243.5) )))  *   float(18.02) )
           ) %}
-          {{ ( current_humidity - inside_out_humidity ) >= 5 }}
+          {{ ( current_humidity - inside_out_humidity ) >= 10 }}
     action:
       - service: notify.mobile_app_mi_9t
         data:
