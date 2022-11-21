@@ -32,7 +32,7 @@ input_number:
   # How much is paid per kWh
   electricity_tarrif:
     name: Hourly tarrif
-    initial: 0.2683
+    initial: 0.4443
     min: 0.2
     max: 1.0
     unit_of_measurement: EUR/kWh
