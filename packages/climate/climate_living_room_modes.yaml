@@ -14,9 +14,9 @@
 # 3: ?
 
 # Week programmes:
-# 1: normal day (weekends at 19.5°c, weekdays not during the day)
-# 2: all day at home (always at 19.5°c except at night)
-# 3: away mode (always at 16°c)
+# 1: normal day (weekends at 16°c, weekdays not during the day)
+# 2: all day at home (always at 16°c except at night)
+# 3: away mode (always at 13°c)
 
 sensor:
   - platform: template
@@ -31,12 +31,22 @@ sensor:
         device_class: signal_strength
         availability_template: "{{ not is_state('climate.000a1709af6337', 'unavailable')  }}"
         value_template: "{{ state_attr('climate.000a1709af6337', 'rssi_device') }}"
+      hmip_00201d89a8ac5e_valve:
+        friendly_name: 00201d89a8ac5e valve
+        unit_of_measurement: "%"
+        availability_template: "{{ not is_state('climate.00201d89a8ac5e', 'unavailable')  }}"
+        value_template: "{{ state_attr('climate.00201d89a8ac5e', 'level') * 100 | round(0) | int }}"
+      hmip_00201d89a8ac5e_rssi:
+        friendly_name: 00201d89a8ac5e rssi
+        device_class: signal_strength
+        availability_template: "{{ not is_state('climate.00201d89a8ac5e', 'unavailable')  }}"
+        value_template: "{{ state_attr('climate.00201d89a8ac5e', 'rssi_device') }}"
 
 automation:
   # Turn off all the radiators when it's either warm outside, when the master switch is off (when I sleep or when I'm gone)
   # or when the summer mode is activated
   # Does not trigger when vacation mode is enabled or when summer mode is enabled
-  - id: climate_living_room_modes_off
+  - id: climate_heating_off
     alias: Heating - Turn off all radiators
     trigger:
       - platform: state
@@ -58,14 +68,21 @@ automation:
     action:
       - service: homematic.set_device_value   # enable the away schedule
         data:
-          address: 000A1709AF6337
+          address: 000A1709AF6337 # living room
+          channel: 1
+          param: ACTIVE_PROFILE
+          value: 3
+          value_type: int
+      - service: homematic.set_device_value   # enable the away schedule
+        data:
+          address: 00201d89a8ac5e # office
           channel: 1
           param: ACTIVE_PROFILE
           value: 3
           value_type: int
       - service: persistent_notification.create
         data:
-          message: Homematic change to profile 3
+          message: Homematic change all to profile 3
           title: "Heating: radiators off"
 
   # Sets the week schedule to one where the temperature is 19.5°c all day long. Can be usefull on holidays during the week.
@@ -127,7 +144,7 @@ automation:
     action:
       - service: homematic.set_device_value   # enable the all day long heating schedule
         data:
-          address: 000A1709AF6337
+          address: 000A1709AF6337 # living room
           channel: 1
           param: ACTIVE_PROFILE
           value: 2
@@ -192,12 +209,12 @@ automation:
     action:
       - service: climate.set_hvac_mode  # reset HA to auto schedule
         target:
-          entity_id: climate.000a1709af6337
+          entity_id: climate.000a1709af6337 # living room
         data:
           hvac_mode: auto
       - service: homematic.set_device_value   # enable the regular schedule
         data:
-          address: 000A1709AF6337
+          address: 000A1709AF6337 # living room
           channel: 1
           param: ACTIVE_PROFILE
           value: 1
@@ -208,7 +225,7 @@ automation:
           title: "Heating: regular"
 
   # Keeps the house at an okay temperature for the cat when I'm on holiday leave
-  - id: climate_living_room_modes_vacation
+  - id: climate_heating_vacation
     alias: Heating - Set heating vacation mode
     trigger:
       - platform: state
@@ -222,24 +239,38 @@ automation:
     action:
       - service: homematic.set_device_value
         data:
-          address: 000A1709AF6337
+          address: 000A1709AF6337 # living room
           channel: 1
           param: CONTROL_MODE
           value: 1  # MANU
       - delay: 5
       - service: homematic.set_device_value
         data:
-          address: 000A1709AF6337
+          address: 000A1709AF6337  # living room
           channel: 1
           param: SET_POINT_TEMPERATURE
-          value: 17
+          value: 14
+      - delay: 5
+      - service: homematic.set_device_value
+        data:
+          address: 00201d89a8ac5e # office
+          channel: 1
+          param: CONTROL_MODE
+          value: 1  # MANU
+      - delay: 5
+      - service: homematic.set_device_value
+        data:
+          address: 00201d89a8ac5e  # office
+          channel: 1
+          param: SET_POINT_TEMPERATURE
+          value: 14
       - service: persistent_notification.create
         data:
           message: Homematic change manual 17
-          title: "Heating: radiators vacation"
+          title: "Heating: all radiators vacation"
 
   # Keeps the house at an okay temperature for the cat when I'm on holiday leave
-  - id: climate_living_room_modes_summer
+  - id: climate_heating_summer
     alias: Heating - Set heating summer mode
     trigger:
       - platform: state
@@ -248,17 +279,31 @@ automation:
     action:
       - service: homematic.set_device_value
         data:
-          address: 000A1709AF6337
+          address: 000A1709AF6337 # living room
           channel: 1
           param: CONTROL_MODE
           value: 1  # MANU
       - delay: 5
       - service: homematic.set_device_value
         data:
-          address: 000A1709AF6337
+          address: 000A1709AF6337 # living room
           channel: 1
           param: SET_POINT_TEMPERATURE
-          value: 15
+          value: 14
+      - delay: 5
+      - service: homematic.set_device_value
+        data:
+          address: 00201d89a8ac5e # office
+          channel: 1
+          param: CONTROL_MODE
+          value: 1  # MANU
+      - delay: 5
+      - service: homematic.set_device_value
+        data:
+          address: 00201d89a8ac5e # office
+          channel: 1
+          param: SET_POINT_TEMPERATURE
+          value: 14
       - service: persistent_notification.create
         data:
           message: Homematic change manual 14
