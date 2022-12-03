@@ -8,20 +8,6 @@
 ###############################################################################
 
 sensor:
-  - platform: command_line
-    name: CPU Temperature
-    command: cat /sys/class/thermal/thermal_zone0/temp
-    # If errors occur, make sure configuration file is encoded as UTF-8
-    unit_of_measurement: °C
-    value_template: "{{ value | multiply(0.001) | round(0) }}"
-
-  - platform: command_line
-    name: GPU Temperature
-    command: /opt/vc/bin/vcgencmd measure_temp | sed 's/temp=//g' | sed "s/'C//g"
-    # If errors occur, make sure configuration file is encoded as UTF-8
-    unit_of_measurement: °C
-    value_template: "{{ value | float | round(0) }}"
-
   - platform: systemmonitor
     resources:
       - type: disk_use_percent
