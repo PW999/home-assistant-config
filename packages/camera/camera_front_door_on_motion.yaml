@@ -20,17 +20,15 @@ automation:
       - condition: state
         entity_id: switch.foscam_r2m_one_motion
         state: "on"
-      # motion detection is now always on, so when I leave, I trigger it and I get a notification
-      # So, either master is on, or it has to be for enough of a time for me to have left
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: input_boolean.master_switch
-            state: "on"
-          - condition: state
-            entity_id: input_boolean.master_switch
-            state: "off"
-            for: "00:05:00"
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "off"
+        for: "00:02:00"
+      - condition: numeric_state
+        entity_id: automation.button_hall_master_switch_off
+        attribute: current
+        below: 1
+
     action:
       - service: script.camera_front_door_on_motion_detected_script
 
@@ -49,17 +47,14 @@ automation:
         condition: state
         entity_id: binary_sensor.front_door_presence
         state: "on"
-      # motion detection is now always on, so when I leave, I trigger it and I get a notification
-      # So, either master is on, or it has to be for enough of a time for me to have left
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: input_boolean.master_switch
-            state: "on"
-          - condition: state
-            entity_id: input_boolean.master_switch
-            state: "off"
-            for: "00:05:00"
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "off"
+        for: "00:02:00"
+      - condition: numeric_state
+        entity_id: automation.button_hall_master_switch_off
+        attribute: current
+        below: 1
     action:
       - service: script.camera_front_door_on_motion_detected_snapshot_loop_script
 
@@ -105,7 +100,7 @@ script:
           data:
             sticky: true
             image: http://192.168.0.16:8123/local/snap_hall.jpg
-      - delay: 1800  # do no spam me with notifications (and keep HA's cost low)
+      - delay: 1800 # do no spam me with notifications (and keep HA's cost low)
 
   camera_front_door_on_motion_detected_snapshot_loop_script:
     description: Make multiple captures when motion is detected
