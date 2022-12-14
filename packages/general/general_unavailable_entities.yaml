@@ -78,6 +78,8 @@ group:
       - sensor.pm2_5_2
       - sensor.pm2_5_3
       - sensor.pm10
+      - sensor.pm10_2
+      - sensor.pm10_3
       - air_quality.weather_in_ekeren_in_port_of_antwerp
       # Don't care about speedtest not working
       - sensor.speedtest_download
@@ -124,7 +126,7 @@ automation:
                 - {{ state_attr('sensor.unavailable_entities','entity_id')|join('\n- ') }}
               title: Unavailable entities
 
-# OPTIONAL Detailed notifcation message example courtesy of @ThomDietrich
+          # OPTIONAL Detailed notifcation message example courtesy of @ThomDietrich
 
           - service: persistent_notification.create
             data:
