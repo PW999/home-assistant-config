@@ -99,7 +99,7 @@ script:
           title: Motion detected in hallway
           data:
             sticky: true
-            image: http://192.168.0.16:8123/local/snap_hall.jpg
+            image: http://192.168.0.21:8123/local/snap_hall.jpg
       - delay: 1800 # do no spam me with notifications (and keep HA's cost low)
 
   camera_front_door_on_motion_detected_snapshot_loop_script:
