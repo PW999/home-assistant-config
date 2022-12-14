@@ -8,14 +8,14 @@
 # ##############################################################################
 
 calendar:
-- platform: ics_calendar
-  calendars:
-    - name: "Calendar - Day off"
-      url: !secret outlook_work_url
-      include_all_day: True
-      download_interval: 240
-      exclude: "['/.*/']"
-      include: "['Verlof', 'Vakantie']"
+  - platform: ics_calendar
+    calendars:
+      - name: "Calendar - Day off"
+        url: !secret outlook_work_url
+        include_all_day: True
+        download_interval: 240
+        exclude: "['/.*/']"
+        include: "['Verlof', 'Vakantie']"
 
 binary_sensor:
   - platform: workday
@@ -57,6 +57,7 @@ automation:
           entity_id: input_boolean.day_off
 
   - id: calendar_vacation_toggle_work_day
+    alias: Calendar vacation - Toggle work day
     trigger:
       - platform: state
         entity_id: input_boolean.day_off
@@ -66,12 +67,12 @@ automation:
       - if:
           - condition: or
             conditions:
-            - condition: state
-              entity_id: input_boolean.day_off
-              state: "on"
-            - condition: state
-              entity_id: binary_sensor.workday_sensor
-              state: "off"
+              - condition: state
+                entity_id: input_boolean.day_off
+                state: "on"
+              - condition: state
+                entity_id: binary_sensor.workday_sensor
+                state: "off"
         then:
           - service: input_boolean.turn_off
             target:
