@@ -18,6 +18,7 @@ input_number:
 automation:
   - id: climate_living_room_offset_decrease
     alias: Heating - Decrease living room offset
+    initial_state: false
     trigger:
       - platform: time_pattern
         hours: "*"
@@ -44,6 +45,7 @@ automation:
 
   - id: climate_living_room_offset_increase
     alias: Heating - Increase living room offset
+    initial_state: false
     trigger:
       - platform: time_pattern
         hours: "*"
@@ -66,6 +68,7 @@ automation:
 
   - id: climate_living_room_offset_reset
     alias: Heating - reset offset
+    initial_state: false
     trigger:
       - platform: time_pattern
         hours: "*"
@@ -100,6 +103,7 @@ automation:
 
   - id: climate_living_room_offset_apply
     alias: Heating - apply offset
+    initial_state: false
     trigger:
       - platform: state
         entity_id: input_number.heating_offset_living_room
