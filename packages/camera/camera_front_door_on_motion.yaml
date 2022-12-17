@@ -25,7 +25,7 @@ automation:
         state: "off"
         for: "00:02:00"
       - condition: numeric_state
-        entity_id: automation.button_hall_master_switch_off
+        entity_id: automation.button_toggle_master_switch_off
         attribute: current
         below: 1
 
@@ -52,7 +52,7 @@ automation:
         state: "off"
         for: "00:02:00"
       - condition: numeric_state
-        entity_id: automation.button_hall_master_switch_off
+        entity_id: automation.button_toggle_master_switch_off
         attribute: current
         below: 1
     action:
