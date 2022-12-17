@@ -1,0 +1,270 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   12/2022
+#   @package        :   Climate control
+#   @description    :   Manages the different thermostats
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+# TODO:
+# [ ] Lower temperatures when no presence is detected in living/office
+# [ ] Maybe add a check that turns off the heating when master is off for a long time
+# CONTROL MODES
+# 0: AUTO
+# 1: MANU
+# 2: ?
+# 3: ?
+
+# Living room: 000A1709AF6337
+# Office: 00201d89a8ac5e
+
+# Presences
+# - Normal # Not a working day (weekend, public holiday, day off), usually at home
+# - Workday # Regular day, work at office
+# - Vacation # Meaning I'm away for a while
+# - WFH # Work from home
+
+# Normal: turn on heating everywhere at 7:30 till 22:30
+# Workday: turn on heating everywhere at 16:30, on timer.workday_countdown or on leave work zone till 22:30
+# WFH: turn on heating in office at 07:30 till 22:30, turn on heating in living at 15:30
+# Vacation: keep it steady all day
+
+script:
+  climate_control_set_all:
+    description: Sets the target temperature on all thermostats
+    mode: single
+    sequence:
+      - if:
+          - condition: template
+            value_template: "{{  climate_mode == 'on' }}"
+          - condition: or
+            conditions:
+              - condition: numeric_state
+                entity_id: weather.pw_casa
+                value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
+                above: 21
+              - alias: Summer mode is on
+                condition: state
+                entity_id: input_boolean.summer
+                state: "on"
+        then:
+          - alias: "Fire LOGBOOK_ENTRY event"
+            service: logbook.log
+            data:
+              name: climate_control_set_all
+              message: "Unchanged due to unmet conditions: summer mode: {{ states('input_boolean.summer') }} outside temp {{ state_attr('weather.pw_casa', 'temperature') }}"
+              entity_id: climate.000A1709AF6337 # living room
+              domain: climate
+          - alias: "Fire LOGBOOK_ENTRY event"
+            service: logbook.log
+            data:
+              name: climate_control_set_all
+              message: "Unchanged due to unmet conditions: summer mode: {{ states('input_boolean.summer') }} outside temp {{ state_attr('weather.pw_casa', 'temperature') }}"
+              entity_id: climate.00201d89a8ac5e # office
+              domain: climate
+          - stop: The conditions for turning on the heating are not met
+
+      - service: homematic.set_device_value
+        data:
+          address: 000A1709AF6337 # living room
+          channel: 1
+          param: CONTROL_MODE
+          value: 1 # MANU
+      - delay: 3
+      - service: homematic.set_device_value
+        data:
+          address: 000A1709AF6337 # living room
+          channel: 1
+          param: SET_POINT_TEMPERATURE
+          value: "{{ living_room_target_temperature }}"
+
+      - delay: 1
+      - service: homematic.set_device_value
+        data:
+          address: 00201d89a8ac5e # office
+          channel: 1
+          param: CONTROL_MODE
+          value: 1 # MANU
+      - delay: 3
+      - service: homematic.set_device_value
+        data:
+          address: 00201d89a8ac5e # office
+          channel: 1
+          param: SET_POINT_TEMPERATURE
+          value: "{{ office_target_temperature }}"
+
+      - alias: "Fire LOGBOOK_ENTRY event"
+        service: logbook.log
+        data:
+          name: climate_control_set_all
+          message: "Turn {{ climate_mode }} at {{ living_room_target_temperature }}°c by {{ source }}"
+          entity_id: climate.000a1709af6337
+          domain: climate
+      - alias: "Fire LOGBOOK_ENTRY event"
+        service: logbook.log
+        data:
+          name: climate_control_set_all
+          message: "Turn {{ climate_mode }} at {{ office_target_temperature }}°c by {{ source }}"
+          entity_id: climate.00201d89a8ac5e
+          domain: climate
+
+automation:
+  - id: climate_control_normal_turn_on
+    alias: "Climate control - Normal mode: turn on"
+    trigger:
+      - platform: time
+        at: "07:30:00"
+    condition:
+      - condition: state
+        entity_id: input_select.presence_mode
+        state: "Normal"
+    action:
+      service: script.turn_on
+      target:
+        entity_id: script.climate_control_set_all
+      data:
+        variables:
+          living_room_target_temperature: 21
+          office_target_temperature: 21
+          climate_mode: "on"
+          source: climate_control_normal_turn_on
+
+  - id: climate_control_wfh_turn_on
+    alias: "Climate control - WFH mode: turn on"
+    trigger:
+      - platform: time
+        at: "07:30:00"
+      - platform: time
+        at: "15:30:00"
+    condition:
+      - condition: state
+        entity_id: input_select.presence_mode
+        state: "WFH"
+    action:
+      - if:
+          - condition: time
+            before: "15:29:00"
+        then:
+          service: script.turn_on
+          target:
+            entity_id: script.climate_control_set_all
+          data:
+            variables:
+              living_room_target_temperature: 17
+              office_target_temperature: 21
+              climate_mode: "on"
+              source: climate_control_wfh_turn_on
+        else:
+          service: script.turn_on
+          target:
+            entity_id: script.climate_control_set_all
+          data:
+            variables:
+              living_room_target_temperature: 21
+              office_target_temperature: 21
+              climate_mode: "on"
+              source: climate_control_wfh_turn_on
+
+  - id: climate_control_workday_turn_on
+    alias: "Climate control - Workday mode: turn on"
+    trigger:
+      - platform: time
+        at: "16:30:00"
+      - platform: event
+        event_type: timer.finished
+        event_data:
+          entity_id: timer.workday_countdown
+      - platform: zone
+        zone: zone.work
+        entity_id:
+          - person.phillip
+        event: leave
+    condition:
+      - condition: state
+        entity_id: input_select.presence_mode
+        state: "Workday"
+    action:
+      service: script.turn_on
+      target:
+        entity_id: script.climate_control_set_all
+      data:
+        variables:
+          living_room_target_temperature: 21
+          office_target_temperature: 21
+          climate_mode: "on"
+          source: climate_control_workday_turn_on
+
+  - id: climate_control_turn_off
+    alias: "Climate control - Turn off the heating"
+    trigger:
+      - platform: time
+        at: "22:30:00"
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: "off"
+    condition:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: input_select.presence_mode
+            state: "Vacation"
+    action:
+      service: script.turn_on
+      target:
+        entity_id: script.climate_control_set_all
+      data:
+        variables:
+          living_room_target_temperature: 16
+          office_target_temperature: 16
+          climate_mode: "off"
+          source: climate_control_turn_off
+
+  - id: climate_control_vacation_mode
+    alias: "Climate control - Set to vacation mode"
+    trigger:
+      - platform: state
+        entity_id: input_select.presence_mode
+        to: "Vacation"
+    action:
+      service: script.turn_on
+      target:
+        entity_id: script.climate_control_set_all
+      data:
+        variables:
+          living_room_target_temperature: 15
+          office_target_temperature: 15
+          climate_mode: "off"
+          source: climate_control_vacation_mode
+
+  # DRY: only define these triggers once
+  - id: climate_control_trigger_on_automations
+    alias: "Climate control - Trigger on automation"
+    trigger:
+      - platform: zone
+        zone: zone.5km_from_home
+        entity_id:
+          - person.phillip
+        event: enter
+      - platform: zone
+        zone: zone.mama
+        entity_id:
+          - person.phillip
+        event: leave
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: "on"
+    condition:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: input_select.presence_mode
+            state: "Vacation"
+    action:
+      service: automation.trigger
+      data:
+        skip_condition: false
+      target:
+        entity_id:
+          - automation.climate_control_normal_turn_on
+          - automation.climate_control_wfh_turn_on
+          - automation.climate_control_workday_turn_on
