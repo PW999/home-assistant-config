@@ -70,7 +70,7 @@ script:
           channel: 1
           param: CONTROL_MODE
           value: 1 # MANU
-      - delay: 3
+      - delay: 5
       - service: homematic.set_device_value
         data:
           address: 000A1709AF6337 # living room
@@ -78,14 +78,14 @@ script:
           param: SET_POINT_TEMPERATURE
           value: "{{ living_room_target_temperature }}"
 
-      - delay: 1
+      - delay: 5
       - service: homematic.set_device_value
         data:
           address: 00201d89a8ac5e # office
           channel: 1
           param: CONTROL_MODE
           value: 1 # MANU
-      - delay: 3
+      - delay: 5
       - service: homematic.set_device_value
         data:
           address: 00201d89a8ac5e # office
