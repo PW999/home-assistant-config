@@ -7,7 +7,6 @@
 #   @url            :   https://github.com/PW999/home-assistant-config/
 ###############################################################################
 
-
 automation:
   - id: morning_notification_workday
     alias: Notification - Morning notification on workday
@@ -15,17 +14,11 @@ automation:
     mode: single
     trigger:
       - platform: time
-        at: "07:02:00"
+        at: "07:00:00"
     condition:
       - condition: state
-        entity_id: input_boolean.work_day
-        state: "on"
-      - condition: state
-        entity_id: input_boolean.work_from_home
-        state: "off"
-      - condition: state
-        entity_id: input_boolean.vacation
-        state: "off"
+        entity_id: input_select.presence_mode
+        state: "Workday"
     action:
       - service: notify.mobile_app_mi_9t
         data:
@@ -47,17 +40,11 @@ automation:
     mode: single
     trigger:
       - platform: time
-        at: '08:30:00'
+        at: "08:30:00"
     condition:
       - condition: state
-        entity_id: input_boolean.work_day
-        state: "off"
-      - condition: state
-        entity_id: input_boolean.work_from_home
-        state: "off"
-      - condition: state
-        entity_id: input_boolean.vacation
-        state: "off"
+        entity_id: input_select.presence_mode
+        state: "Normal"
     action:
       - service: notify.mobile_app_mi_9t
         data:
@@ -78,17 +65,11 @@ automation:
     mode: single
     trigger:
       - platform: time
-        at: '07:55:00'
+        at: "07:55:00"
     condition:
       - condition: state
-        entity_id: input_boolean.work_day
-        state: "on"
-      - condition: state
-        entity_id: input_boolean.work_from_home
-        state: "on"
-      - condition: state
-        entity_id: input_boolean.vacation
-        state: "off"
+        entity_id: input_select.presence_mode
+        state: "WFH"
     action:
       - service: notify.mobile_app_mi_9t
         data:

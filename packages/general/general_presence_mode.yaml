@@ -1,0 +1,119 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   12/2022
+#   @package        :   Presence mode
+#   @description    :   Expectations on presence in my home
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+input_select:
+  presence_mode:
+    name: Presence mode
+    options:
+      - Normal # Not a working day (weekend, public holiday, day off), usually at home
+      - Workday # Regular day, work at office
+      - Vacation # Meaning I'm away for a while
+      - WFH # Work from home
+
+binary_sensor:
+  - platform: workday
+    country: BE
+
+calendar:
+  - platform: ics_calendar
+    calendars:
+      - name: "Calendar - Day off"
+        url: !secret outlook_work_url
+        include_all_day: True
+        download_interval: 480
+        exclude: "['/.*/']"
+        include: "['Verlof', 'Vakantie']"
+  - platform: ics_calendar
+    calendars:
+      - name: "Calendar - Work from home"
+        url: !secret outlook_work_url
+        include_all_day: True
+        download_interval: 480
+        exclude: "['/.*/']"
+        include: "['WFH']"
+
+# So, full day events don't seems to trigger the calendar automation events ...
+# That's why I'm just using simple state triggers here
+automation:
+  - id: general_presence_set_wfh_mode
+    alias: General presence - Set WFH mode
+    trigger:
+      - platform: state
+        entity_id: calendar.calendar_work_from_home
+        to: "on"
+    condition:
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
+    action:
+      - service: input_select.select_option
+        data:
+          option: WFH
+        target:
+          entity_id: input_select.presence_mode
+
+  - id: general_presence_set_normal_or_workday
+    alias: General presence - Set normal or workday mode
+    trigger:
+      - platform: state
+        entity_id: calendar.calendar_day_off
+      - platform: state
+        entity_id: binary_sensor.workday_sensor
+    condition:
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
+    action:
+      - if: # It's a not workday or I have a day off -> Normal presence
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: calendar.calendar_day_off
+                state: "on"
+              - condition: state
+                entity_id: binary_sensor.workday_sensor
+                state: "off"
+        then:
+          - service: input_select.select_option
+            data:
+              option: Normal
+            target:
+              entity_id: input_select.presence_mode
+        else:
+          - if: # Not a day off and a workday -> Workday presence
+              - condition: state
+                entity_id: binary_sensor.workday_sensor
+                state: "on"
+            then:
+              - service: input_select.select_option
+                data:
+                  option: Workday
+                target:
+                  entity_id: input_select.presence_mode
+            else: # Not a workday, not a day off -> Normal
+              - service: input_select.select_option
+                data:
+                  option: Normal
+                target:
+                  entity_id: input_select.presence_mode
+
+  - id: general_presence_mode_set_vacation_mode
+    alias: General presence - Set vacation mode
+    trigger:
+      - platform: state
+        entity_id: input_boolean.vacation
+        to: "on"
+    action:
+      - service: input_select.select_option
+        data:
+          option: Vacation
+        target:
+          entity_id: input_select.presence_mode

@@ -42,14 +42,16 @@ automation:
       platform: time
       at: input_datetime.wakeup_alarm
     condition:
-      - condition: time   # can't use the generate morning state since this won't trigger in the winter (it might still be night)
+      - condition: time # can't use the generate morning state since this won't trigger in the winter (it might still be night)
         before: "09:00:00"
-      - condition: state  # since my alarm will go off too early anyway
-        entity_id: input_boolean.work_from_home
-        state: "off"
-      - condition: state   # this is actual vacation (I'm gone, not at home)
-        entity_id: input_boolean.vacation
-        state: "off"
+      - condition: not
+        conditions:
+          - condition: state # since my alarm will go off too early anyway
+            entity_id: input_select.presence_mode
+            state: "WFH"
+          - condition: state # this is actual vacation (I'm gone, not at home)
+            entity_id: input_select.presence_mode
+            state: "Vacation"
     action:
       - service: input_boolean.turn_on
         data:
