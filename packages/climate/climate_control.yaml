@@ -265,6 +265,6 @@ automation:
         skip_condition: false
       target:
         entity_id:
-          - automation.climate_control_normal_turn_on
-          - automation.climate_control_wfh_turn_on
-          - automation.climate_control_workday_turn_on
+          - automation.climate_control_normal_mode_turn_on
+          - automation.climate_control_wfh_mode_turn_on
+          - automation.climate_control_workday_mode_turn_on
