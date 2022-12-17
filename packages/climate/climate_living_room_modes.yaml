@@ -18,30 +18,6 @@
 # 2: all day at home (always at 16°c except at night)
 # 3: away mode (always at 13°c)
 
-sensor:
-  - platform: template
-    sensors:
-      hmip_000a1709af6337_valve:
-        friendly_name: 000a1709af6337 valve
-        unit_of_measurement: "%"
-        availability_template: "{{ not is_state('climate.000a1709af6337', 'unavailable')  }}"
-        value_template: "{{ state_attr('climate.000a1709af6337', 'level') * 100 | round(0) | int }}"
-      hmip_000a1709af6337_rssi:
-        friendly_name: 000a1709af6337 rssi
-        device_class: signal_strength
-        availability_template: "{{ not is_state('climate.000a1709af6337', 'unavailable')  }}"
-        value_template: "{{ state_attr('climate.000a1709af6337', 'rssi_device') }}"
-      hmip_00201d89a8ac5e_valve:
-        friendly_name: 00201d89a8ac5e valve
-        unit_of_measurement: "%"
-        availability_template: "{{ not is_state('climate.00201d89a8ac5e', 'unavailable')  }}"
-        value_template: "{{ state_attr('climate.00201d89a8ac5e', 'level') * 100 | round(0) | int }}"
-      hmip_00201d89a8ac5e_rssi:
-        friendly_name: 00201d89a8ac5e rssi
-        device_class: signal_strength
-        availability_template: "{{ not is_state('climate.00201d89a8ac5e', 'unavailable')  }}"
-        value_template: "{{ state_attr('climate.00201d89a8ac5e', 'rssi_device') }}"
-
 automation:
   # Turn off all the radiators when it's either warm outside, when the master switch is off (when I sleep or when I'm gone)
   # or when the summer mode is activated
@@ -66,14 +42,14 @@ automation:
         entity_id: input_boolean.summer
         state: "off"
     action:
-      - service: homematic.set_device_value   # enable the away schedule
+      - service: homematic.set_device_value # enable the away schedule
         data:
           address: 000A1709AF6337 # living room
           channel: 1
           param: ACTIVE_PROFILE
           value: 3
           value_type: int
-      - service: homematic.set_device_value   # enable the away schedule
+      - service: homematic.set_device_value # enable the away schedule
         data:
           address: 00201d89a8ac5e # office
           channel: 1
@@ -94,12 +70,12 @@ automation:
       - platform: time
         at: "02:00:00"
       - platform: zone
-        zone: zone.5km_from_home  # FYI, I shrunk it to 4km but the zone is still called zone.5km_from_home, don't name your zones like this
+        zone: zone.5km_from_home # FYI, I shrunk it to 4km but the zone is still called zone.5km_from_home, don't name your zones like this
         entity_id:
           - person.phillip
         event: enter
       - platform: zone
-        zone: zone.mama   # I live close to my mom
+        zone: zone.mama # I live close to my mom
         entity_id:
           - person.phillip
         event: leave
@@ -132,7 +108,7 @@ automation:
         condition: state
         entity_id: binary_sensor.workday_sensor
         state: "off"
-      - alias: Only on weekdays   # a weekday + not workday == public holiday, so I'll probably be at home
+      - alias: Only on weekdays # a weekday + not workday == public holiday, so I'll probably be at home
         condition: time
         before: "23:59:00"
         weekday:
@@ -142,7 +118,7 @@ automation:
           - thu
           - fri
     action:
-      - service: homematic.set_device_value   # enable the all day long heating schedule
+      - service: homematic.set_device_value # enable the all day long heating schedule
         data:
           address: 000A1709AF6337 # living room
           channel: 1
@@ -160,12 +136,12 @@ automation:
       - platform: time
         at: "02:00:00"
       - platform: zone
-        zone: zone.5km_from_home  # FYI, I shrunk it to 4km but the zone is still called zone.5km_from_home, don't name your zones like this
+        zone: zone.5km_from_home # FYI, I shrunk it to 4km but the zone is still called zone.5km_from_home, don't name your zones like this
         entity_id:
           - person.phillip
         event: enter
       - platform: zone
-        zone: zone.mama   # I live close to my mom
+        zone: zone.mama # I live close to my mom
         entity_id:
           - person.phillip
         event: leave
@@ -207,12 +183,12 @@ automation:
               - sat
               - sun
     action:
-      - service: climate.set_hvac_mode  # reset HA to auto schedule
+      - service: climate.set_hvac_mode # reset HA to auto schedule
         target:
           entity_id: climate.000a1709af6337 # living room
         data:
           hvac_mode: auto
-      - service: homematic.set_device_value   # enable the regular schedule
+      - service: homematic.set_device_value # enable the regular schedule
         data:
           address: 000A1709AF6337 # living room
           channel: 1
@@ -242,11 +218,11 @@ automation:
           address: 000A1709AF6337 # living room
           channel: 1
           param: CONTROL_MODE
-          value: 1  # MANU
+          value: 1 # MANU
       - delay: 5
       - service: homematic.set_device_value
         data:
-          address: 000A1709AF6337  # living room
+          address: 000A1709AF6337 # living room
           channel: 1
           param: SET_POINT_TEMPERATURE
           value: 14
@@ -256,11 +232,11 @@ automation:
           address: 00201d89a8ac5e # office
           channel: 1
           param: CONTROL_MODE
-          value: 1  # MANU
+          value: 1 # MANU
       - delay: 5
       - service: homematic.set_device_value
         data:
-          address: 00201d89a8ac5e  # office
+          address: 00201d89a8ac5e # office
           channel: 1
           param: SET_POINT_TEMPERATURE
           value: 14
@@ -282,7 +258,7 @@ automation:
           address: 000A1709AF6337 # living room
           channel: 1
           param: CONTROL_MODE
-          value: 1  # MANU
+          value: 1 # MANU
       - delay: 5
       - service: homematic.set_device_value
         data:
@@ -296,7 +272,7 @@ automation:
           address: 00201d89a8ac5e # office
           channel: 1
           param: CONTROL_MODE
-          value: 1  # MANU
+          value: 1 # MANU
       - delay: 5
       - service: homematic.set_device_value
         data:
