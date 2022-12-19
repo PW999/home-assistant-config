@@ -8,9 +8,11 @@ substitutions:
   current_res: "0.00200"
   # Lower value gives lower voltage readout
   voltage_div: "945"
+  comment: Dryer switch
 
 esphome:
   name: ${plug_name}
+  comment: ${comment}
   platform: ESP8266
   board: esp8285
 
@@ -107,17 +109,28 @@ sensor:
       unit_of_measurement: W
       accuracy_decimals: 1
       filters:
-        # Map from sensor -> measured value
+        # Map from sensor -> actual value
         - calibrate_linear:
            - 0.0 -> 0
-           - 27.5 -> 24.3
-           - 9.3 -> 8
-           - 331 -> 283
-           - 1572 -> 1415
-        - lambda: if (x < 2) return 0; else return x;
+           - 7.1 -> 6.1
+           - 27 -> 23.6
+           - 41.6 -> 37.3
+           - 896.8 -> 796
+        # Add the power consumtion of the plug
+        - lambda: |
+            if (id(${plug_id}_relay).state)
+              if (x < 0)
+                return 1.2;
+              else
+                return 1.2 + x;
+            else
+              if (x < 0)
+                return 0.6;
+              else 
+                return 0.6 + x;
         - sliding_window_moving_average:
-            window_size: 5
-            send_every: 6
+            window_size: 4
+            send_every: 5
     energy:
       id: ${plug_id}_total_energy
       name: ${plug_name} Consumption

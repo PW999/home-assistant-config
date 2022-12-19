@@ -8,9 +8,11 @@ substitutions:
   current_res: "0.00200"
   # Lower value gives lower voltage readout
   voltage_div: "945"
+  comment: Washing machine switch
 
 esphome:
   name: ${plug_name}
+  comment: ${comment}
   platform: ESP8266
   board: esp8285
 
@@ -107,17 +109,28 @@ sensor:
       unit_of_measurement: W
       accuracy_decimals: 1
       filters:
-        # Map from sensor -> measured value
+        # Map from sensor -> actual value
         - calibrate_linear:
-          - 0.0 -> 0.0
-          - 26.8 -> 24.3
-          - 8.9 -> 8.0
-          - 323 -> 282
-          - 1592 -> 1430
-        - lambda: if (x < 2) return 0; else return x;
+           - 0.0 -> 0
+           - 7.1 -> 6.4
+           - 26.6 -> 24.1
+           - 41.2 -> 37.3
+           - 860 -> 786
+        # Add the power consumtion of the plug
+        - lambda: |
+            if (id(${plug_id}_relay).state)
+              if (x < 0)
+                return 1.2;
+              else
+                return 1.2 + x;
+            else
+              if (x < 0)
+                return 0.6;
+              else 
+                return 0.6 + x;
         - sliding_window_moving_average:
-            window_size: 5
-            send_every: 6
+            window_size: 4
+            send_every: 5
     energy:
       id: ${plug_id}_total_energy
       name: ${plug_name} Consumption
