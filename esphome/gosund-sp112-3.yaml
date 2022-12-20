@@ -8,15 +8,18 @@ substitutions:
   current_res: "0.00200"
   # Lower value gives lower voltage readout
   voltage_div: "755"
+  comment: Dishwasher switch
+
 
 esphome:
   name: ${plug_name}
+  comment: ${comment}
   on_boot:
     then:
       switch.turn_on: ${plug_id}_relay
 
 preferences:
-  flash_write_interval: 10min
+  flash_write_interval: 60min
 
 esp8266:
   board: esp01_1m
@@ -178,12 +181,25 @@ sensor:
       # Map from sensor -> measured value
       - calibrate_linear:
         - 0 -> 0
+        - 28.9 -> 24.5
         - 44.5 -> 37.5
+        - 839 -> 703
         - 2592 -> 2180
-      - lambda: if (x < 2) return 0; else return x;
+      # Add the power consumtion of the plug
+      - lambda: |
+          if (id(${plug_id}_relay).state)
+            if (x < 0)
+              return 1.0;
+            else
+              return 1.0 + x;
+          else
+            if (x < 0)
+              return 0.6;
+            else 
+              return 0.6 + x;
       - sliding_window_moving_average:
-          window_size: 5
-          send_every: 6
+          window_size: 4
+          send_every: 5
   energy:
     id: ${plug_id}_total_energy
     name: ${plug_name} Consumption

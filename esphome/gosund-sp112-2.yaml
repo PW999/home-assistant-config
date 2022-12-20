@@ -1,3 +1,4 @@
+# fridge
 ---
 substitutions:
   plug_name: gosund-sp112-2
@@ -7,15 +8,24 @@ substitutions:
   current_res: "0.00200"
   # Lower value gives lower voltage readout
   voltage_div: "725"
+  comment: Fridge switch
 
 
 esphome:
   name: ${plug_name}
-  platform: ESP8266
-  board: esp01_1m
+  comment: ${comment}
   on_boot:
     then:
       switch.turn_on: ${plug_id}_relay
+
+preferences:
+  flash_write_interval: 60min
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: true
+  framework:
+    version: recommended
 
 # WiFi connection
 wifi:
@@ -38,11 +48,11 @@ wifi:
 # captive_portal:
 
 # Enable logging
-logger:
-  logs:
-    sensor: INFO
-    adc: INFO
-    hlw8012: INFO
+#logger:
+#  logs:
+#    sensor: INFO
+#    adc: INFO
+#    hlw8012: INFO
 
 # Enable Home Assistant API
 api:
@@ -172,14 +182,25 @@ sensor:
       # Map from sensor -> measured value
       - calibrate_linear:
         - 0.0 -> 0
-        - 27 -> 24.3
-        - 7 -> 7.9
+        - 7 -> 6.4
+        - 27.1 -> 24.6
+        - 41.1 -> 37.7
         - 318 -> 287
         - 1582 -> 1430
-      - lambda: if (x < 2) return 0; else return x;
+      - lambda: |
+          if (id(${plug_id}_relay).state)
+            if (x < 0)
+              return 1.0;
+            else
+              return 1.0 + x;
+          else
+            if (x < 0)
+              return 0.6;
+            else 
+              return 0.6 + x;
       - sliding_window_moving_average:
-          window_size: 5
-          send_every: 6
+          window_size: 4
+          send_every: 5
   energy:
     id: ${plug_id}_total_energy
     name: ${plug_name} Consumption
