@@ -115,7 +115,9 @@ sensor:
            - 7.1 -> 6.4
            - 26.6 -> 24.1
            - 41.2 -> 37.3
+           - 323 -> 282
            - 860 -> 786
+           - 1592 -> 1430
         # Add the power consumtion of the plug
         - lambda: |
             if (id(${plug_id}_relay).state)
