@@ -151,7 +151,7 @@ automation:
           data:
             variables:
               living_room_target_temperature: 17
-              office_target_temperature: 21
+              office_target_temperature: 20
               climate_mode: "on"
               source: climate_control_wfh_turn_on
         else:
@@ -161,7 +161,7 @@ automation:
           data:
             variables:
               living_room_target_temperature: 21
-              office_target_temperature: 21
+              office_target_temperature: 20
               climate_mode: "on"
               source: climate_control_wfh_turn_on
 
@@ -190,7 +190,7 @@ automation:
       data:
         variables:
           living_room_target_temperature: 21
-          office_target_temperature: 21
+          office_target_temperature: 20
           climate_mode: "on"
           source: climate_control_workday_turn_on
 
