@@ -46,7 +46,7 @@ automation:
               color_temp: 330
               brightness: 255
             target:
-                  entity_id: light.bathroom_light
+              entity_id: light.bathroom_light
         else:
           - if: # at night when the master is off (I'm asleep)
               - condition: state
@@ -64,16 +64,16 @@ automation:
                   entity_id: light.bathroom_light
             else:
               - if: # morning/evening when I'm home
-                - condition: state
-                  entity_id: input_boolean.master_switch
-                  state: "on"
+                  - condition: state
+                    entity_id: input_boolean.master_switch
+                    state: "on"
                 then:
                   - service: light.turn_on
                     data:
                       color_temp: 330
                       brightness: 224
                     target:
-                          entity_id: light.bathroom_light
+                      entity_id: light.bathroom_light
 
   - id: light_bathroom_turn_off
     alias: Bathroom - turn light off
@@ -83,6 +83,10 @@ automation:
         platform: state
         to: "off"
         for: "00:04:00"
+      - entity_id: light.bathroom_light
+        platform: state
+        to: "on"
+        for: "00:30:00" # sometimes it just keeps on for no reason (thanks Ikea)
       - entity_id: timer.bathroom_light_extended_time
         platform: state
         to: idle
@@ -90,6 +94,9 @@ automation:
       - condition: state
         entity_id: timer.bathroom_light_extended_time
         state: idle
+      - entity_id: binary_sensor.bathroom_presence
+        condition: state
+        state: "off"
     action:
       - service: light.turn_off
         target:
