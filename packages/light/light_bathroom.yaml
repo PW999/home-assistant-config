@@ -83,6 +83,10 @@ automation:
         platform: state
         to: "off"
         for: "00:04:00"
+      - entity_id: binary_sensor.bathroom_presence
+        platform: state
+        to: "off"
+        for: "00:06:00" # second attempt if Ikea missed it
       - entity_id: light.bathroom_light
         platform: state
         to: "on"
@@ -112,17 +116,17 @@ automation:
         type: remote_button_short_press
         subtype: turn_on
     action:
-      - service: light.turn_on
-        data:
-          flash: short
-        target:
-          entity_id: light.bathroom_light
       - service: timer.cancel
         target:
           entity_id: timer.bathroom_light_extended_time
       - service: timer.start
         target:
           entity_id: timer.bathroom_light_extended_time
+      - service: light.turn_on
+        data:
+          flash: short
+        target:
+          entity_id: light.bathroom_light
 
   - id: switch_bathroom_on_continuous
     alias: Bathroom - On switch pressed continuously
