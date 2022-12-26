@@ -15,6 +15,7 @@ This is a very short list of the hardware I'm using:
 
 ## Core
 HP Prodesk 600 G3 Desktop mini
+
 ![RaspberryPi](./doc/img/hpprodesk.jpg)
 
 ## Zigbee
