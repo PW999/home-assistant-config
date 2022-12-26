@@ -30,6 +30,9 @@ automation:
         for: "00:15:00"
     condition:
       - condition: numeric_state
+        entity_id: <%= sensor_id %>
+        above: 15
+      - condition: numeric_state
         entity_id: <%= sensor_id %>_2
         above: <%= humidity_high_threshold %>
       - condition: state
