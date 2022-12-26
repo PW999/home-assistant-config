@@ -36,26 +36,26 @@ sensor:
     sensors:
       hmip_000a1709af6337_valve:
         unique_id: hmip_000a1709af6337_valve
-        friendly_name: 000a1709af6337 valve
+        friendly_name: Living room valve
         unit_of_measurement: "%"
         availability_template: "{{ not is_state('climate.000a1709af6337', 'unavailable')  }}"
         value_template: "{{ state_attr('climate.000a1709af6337', 'level') * 100 | round(0) | int }}"
       hmip_000a1709af6337_rssi:
         unique_id: hmip_000a1709af6337_rssi
-        friendly_name: 000a1709af6337 rssi
+        friendly_name: Living room valve rssi
         device_class: signal_strength
         unit_of_measurement: "dBm"
         availability_template: "{{ not is_state('climate.000a1709af6337', 'unavailable')  }}"
         value_template: "{{ state_attr('climate.000a1709af6337', 'rssi_device') }}"
       hmip_00201d89a8ac5e_valve:
         unique_id: hmip_00201d89a8ac5e_valve
-        friendly_name: 00201d89a8ac5e valve
+        friendly_name: Office valve
         unit_of_measurement: "%"
         availability_template: "{{ not is_state('climate.00201d89a8ac5e', 'unavailable')  }}"
         value_template: "{{ state_attr('climate.00201d89a8ac5e', 'level') * 100 | round(0) | int }}"
       hmip_00201d89a8ac5e_rssi:
         unique_id: hmip_00201d89a8ac5e_rssi
-        friendly_name: 00201d89a8ac5e rssi
+        friendly_name: Office valve rssi
         device_class: signal_strength
         unit_of_measurement: "dBm"
         availability_template: "{{ not is_state('climate.00201d89a8ac5e', 'unavailable')  }}"
