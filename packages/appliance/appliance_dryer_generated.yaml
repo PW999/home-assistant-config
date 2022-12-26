@@ -54,6 +54,7 @@ sensor:
       # Dryer Status
       dryer_status:
         value_template: "{{ states.input_select.dryer_status.state}}"
+        unique_id: dryer_status
         friendly_name: Dryer status
         availability_template: >-
           {{ True if

@@ -19,6 +19,7 @@ sensor:
     sensors:
       <%= id %>_wattage:
         friendly_name: <%= name %> Light Power Consumption
+        unique_id: <%= id %>_wattage
         unit_of_measurement: W
         device_class: power
         availability_template: "{{ not is_state('<%= hue_light %>', 'unavailable') and not is_state('<%= hue_light %>', 'unknown')  }}"
@@ -26,6 +27,7 @@ sensor:
   - platform: integration
     source: sensor.<%= id %>_wattage
     name: <%= name %> light total energy consumption
+    unique_id: <%= name %>_light_total_energy_consumption
     round: 1
     method: left
 <% end %>

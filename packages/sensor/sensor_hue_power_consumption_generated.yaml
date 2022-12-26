@@ -13,6 +13,7 @@ sensor:
     sensors:
       light_toilet_wattage:
         friendly_name: Toilet Light Power Consumption
+        unique_id: light_toilet_wattage
         unit_of_measurement: W
         device_class: power
         availability_template: "{{ not is_state('light.toilet', 'unavailable') and not is_state('light.toilet', 'unknown')  }}"
@@ -20,12 +21,14 @@ sensor:
   - platform: integration
     source: sensor.light_toilet_wattage
     name: Toilet light total energy consumption
+    unique_id: Toilet_light_total_energy_consumption
     round: 1
     method: left
   - platform: template
     sensors:
       light_hall_1_wattage:
         friendly_name: Hall 1 Light Power Consumption
+        unique_id: light_hall_1_wattage
         unit_of_measurement: W
         device_class: power
         availability_template: "{{ not is_state('light.hall_1', 'unavailable') and not is_state('light.hall_1', 'unknown')  }}"
@@ -33,12 +36,14 @@ sensor:
   - platform: integration
     source: sensor.light_hall_1_wattage
     name: Hall 1 light total energy consumption
+    unique_id: Hall 1_light_total_energy_consumption
     round: 1
     method: left
   - platform: template
     sensors:
       light_hall_2_wattage:
         friendly_name: Hall 2 Light Power Consumption
+        unique_id: light_hall_2_wattage
         unit_of_measurement: W
         device_class: power
         availability_template: "{{ not is_state('light.hall_2', 'unavailable') and not is_state('light.hall_2', 'unknown')  }}"
@@ -46,12 +51,14 @@ sensor:
   - platform: integration
     source: sensor.light_hall_2_wattage
     name: Hall 2 light total energy consumption
+    unique_id: Hall 2_light_total_energy_consumption
     round: 1
     method: left
   - platform: template
     sensors:
       light_hall_3_wattage:
         friendly_name: Hall 3 Light Power Consumption
+        unique_id: light_hall_3_wattage
         unit_of_measurement: W
         device_class: power
         availability_template: "{{ not is_state('light.hall_3', 'unavailable') and not is_state('light.hall_3', 'unknown')  }}"
@@ -59,5 +66,6 @@ sensor:
   - platform: integration
     source: sensor.light_hall_3_wattage
     name: Hall 3 light total energy consumption
+    unique_id: Hall 3_light_total_energy_consumption
     round: 1
     method: left

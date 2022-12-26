@@ -54,6 +54,7 @@ sensor:
       # Dish washer Status
       dish_washer_status:
         value_template: "{{ states.input_select.dish_washer_status.state}}"
+        unique_id: dish_washer_status
         friendly_name: Dish washer status
         availability_template: >-
           {{ True if

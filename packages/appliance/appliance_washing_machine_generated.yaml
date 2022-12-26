@@ -54,6 +54,7 @@ sensor:
       # Washing machine Status
       washing_machine_status:
         value_template: "{{ states.input_select.washing_machine_status.state}}"
+        unique_id: washing_machine_status
         friendly_name: Washing machine status
         availability_template: >-
           {{ True if

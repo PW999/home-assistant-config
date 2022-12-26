@@ -36,6 +36,7 @@ sensor:
       # <%= appliance_name %> Status
       <%= appliance_id %>_status:
         value_template: "{{ states.input_select.<%= appliance_id %>_status.state}}"
+        unique_id: <%= appliance_id %>_status
         friendly_name: <%= appliance_name %> status
         availability_template: >-
           {{ True if
