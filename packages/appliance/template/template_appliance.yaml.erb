@@ -56,7 +56,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.<%= power_plug %>_wattage
-        above: 10
+        above: 4
         for:
           minutes: 1
     condition:
@@ -83,7 +83,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.<%= power_plug %>_wattage
-        below: 5
+        below: 3
         for:
           minutes: <%= appliance_off_time_minutes %>
     condition:

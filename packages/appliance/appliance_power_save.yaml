@@ -1,0 +1,106 @@
+---
+# ##############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   12/2022
+#   @package        :   Appliance power save
+#   @description    :   Turns of relays when appliances aren't used (save ~0.4Wh per appliance)
+#   @url            :   https://github.com/PW999/home-assistant-config/
+# ##############################################################################
+
+automation:
+  - id: washing_machine_turn_off_when_unused
+    alias: Washing machine - Turn of when unused
+    trigger:
+      - platform: state
+        entity_id: input_select.washing_machine_status
+        to: idle
+        for:
+          hours: 4
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.gosund_sp1_2_main_relay
+      - service: logbook.log
+        data:
+          name: washing_machine_turn_off_when_unused
+          message: Relay turned off to save power
+          entity_id: switch.gosund_sp1_2_main_relay
+          domain: switch
+
+  - id: dryer_turn_off_when_unused
+    alias: Dryer - Turn of when unused
+    trigger:
+      - platform: state
+        entity_id: input_select.dryer_status
+        to: idle
+        for:
+          hours: 4
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.gosund_sp1_1_main_relay
+      - service: logbook.log
+        data:
+          name: dryer_turn_off_when_unused
+          message: Relay turned off to save power
+          entity_id: switch.gosund_sp1_1_main_relay
+          domain: switch
+
+    # Use the Ikea button to toggle the relais. I can't access the buttons on the plugs
+    # because they are on top of the dryer (which sits on top of the washing machine)
+  - id: washing_machine_dryer_toggle_on_button_press
+    alias: Washing machine and dryer - Toggle on button press
+    trigger:
+      - platform: device
+        device_id: 38c1a38ab3652833a89847b70a2e1a2a
+        domain: deconz
+        type: remote_button_short_press
+        subtype: turn_off
+    action:
+      - service: switch.toggle
+        target:
+          entity_id: switch.gosund_sp1_2_main_relay
+      - service: logbook.log
+        data:
+          name: washing_machine_turn_off_when_unused
+          message: Relay toggled using button
+          entity_id: switch.gosund_sp1_2_main_relay
+          domain: switch
+      - delay: 2
+      - if:
+          - condition: state
+            entity_id: switch.gosund_sp1_2_main_relay
+            state: "on"
+        then:
+          - service: switch.turn_on
+            target:
+              entity_id: switch.gosund_sp1_1_main_relay
+        else:
+          - service: switch.turn_off
+            target:
+              entity_id: switch.gosund_sp1_1_main_relay
+      - service: logbook.log
+        data:
+          name: dryer_turn_off_when_unused
+          message: Relay toggled using button
+          entity_id: switch.gosund_sp1_1_main_relay
+          domain: switch
+
+  - id: dish_washer_turn_off_when_unused
+    alias: Dish washer - Turn of when unused
+    trigger:
+      - platform: state
+        entity_id: input_select.dish_washer_status
+        to: idle
+        for:
+          hours: 4
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.gosund_sp112_3_main_relay
+      - service: logbook.log
+        data:
+          name: dish_washer_turn_off_when_unused
+          message: Relay turned off to save power
+          entity_id: switch.gosund_sp112_3_main_relay
+          domain: switch

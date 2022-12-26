@@ -74,7 +74,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.gosund_sp112_3_wattage
-        above: 10
+        above: 4
         for:
           minutes: 1
     condition:
@@ -101,7 +101,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.gosund_sp112_3_wattage
-        below: 5
+        below: 3
         for:
           minutes: 30
     condition:
