@@ -214,8 +214,8 @@ automation:
         entity_id: script.climate_control_set_all
       data:
         variables:
-          living_room_target_temperature: 16
-          office_target_temperature: 16
+          living_room_target_temperature: 15
+          office_target_temperature: 15
           climate_mode: "off"
           source: climate_control_turn_off
 
