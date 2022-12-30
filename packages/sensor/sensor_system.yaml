@@ -12,7 +12,5 @@ sensor:
     resources:
       - type: disk_use_percent
         arg: /
-      - type: disk_use_percent
-        arg: /config
       - type: processor_use
       - type: last_boot

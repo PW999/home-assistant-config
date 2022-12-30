@@ -88,8 +88,8 @@ sensor:
           - 4.063 -> 6.36
         - lambda: if (x < 0.01) return 0; else return x;
         - sliding_window_moving_average:
-            window_size: 5
-            send_every: 6
+            window_size: 12
+            send_every: 12
     # Voltage sensor
     voltage:
       id: ${plug_id}_voltage
@@ -101,7 +101,7 @@ sensor:
         - calibrate_linear:
            - 0.0 -> 0.0
            - 218.1 -> 218
-        - throttle: 30s
+        - throttle: 120s
     # Power sensor
     power:
       id: ${plug_id}_wattage
@@ -149,7 +149,7 @@ sensor:
       
   - platform: wifi_signal
     name: "${plug_name} RSSI"
-    update_interval: 60s
+    update_interval: 120s
     unit_of_measurement: dBm
 
 binary_sensor:

@@ -67,7 +67,6 @@ automation:
       - service: scene.turn_on
         entity_id: scene.hall_50
 
-
   - id: light_hall_presence_night
     alias: Hall presence detected during night
     description: Turn on a little light during the night when presence detected
@@ -93,7 +92,6 @@ automation:
     action:
       - service: scene.turn_on
         entity_id: scene.hall_night
-
 
   ## SENSOR CLEAR ##
   - id: light_hall_clear_day
@@ -134,7 +132,6 @@ automation:
         entity_id: scene.hall_25
         data:
           transition: 3
-
 
   - id: light_hall_clear_evening
     alias: Hall no presence during the evening
@@ -203,7 +200,6 @@ automation:
     action:
       - service: scene.turn_on
         entity_id: scene.hall_low
-
 
   - id: light_hall_off_night
     alias: Hall off at night
@@ -275,22 +271,40 @@ scene:
   - id: light_hall_100
     name: Hall 100%
     entities:
-      light.hall_lights:
+      light.hall_1:
+        brightness: 255
+        state: "on"
+      light.hall_2:
+        brightness: 255
+        state: "on"
+      light.hall_3:
         brightness: 255
         state: "on"
 
   - id: light_hall_75
     name: Hall 75%
     entities:
-      light.hall_lights:
+      light.hall_1:
+        brightness: 192
+        state: "on"
+      light.hall_2:
+        brightness: 192
+        state: "on"
+      light.hall_3:
         brightness: 192
         state: "on"
 
   - id: light_hall_50
     name: Hall 50%
     entities:
-      light.hall_lights:
-        brightness: 128
+      light.hall_1:
+        brightness: 127
+        state: "on"
+      light.hall_2:
+        brightness: 127
+        state: "on"
+      light.hall_3:
+        brightness: 127
         state: "on"
 
   - id: light_hall_25
@@ -309,7 +323,11 @@ scene:
   - id: light_hall_off
     name: Hall off
     entities:
-      light.hall_lights:
+      light.hall_1:
+        state: "off"
+      light.hall_2:
+        state: "off"
+      light.hall_3:
         state: "off"
 
   - id: light_hall_night
