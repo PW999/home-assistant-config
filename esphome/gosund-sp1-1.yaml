@@ -88,7 +88,7 @@ sensor:
           - 4.063 -> 6.36
         - lambda: if (x < 0.01) return 0; else return x;
         - sliding_window_moving_average:
-            window_size: 12
+            window_size: 5
             send_every: 12
     # Voltage sensor
     voltage:
@@ -131,7 +131,7 @@ sensor:
               else 
                 return 0.6 + x;
         - sliding_window_moving_average:
-            window_size: 4
+            window_size: 3
             send_every: 5
     energy:
       id: ${plug_id}_total_energy
