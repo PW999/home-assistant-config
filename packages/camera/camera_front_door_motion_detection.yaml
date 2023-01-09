@@ -11,7 +11,6 @@
 # TODO:
 # [ ] Site source (find it first, should have noted it when I used it)
 
-
 # Command lines used in this template to get data from the camera using the XML API
 # I do not have motion detection enabled in all area's
 # foscam_r2m_one_motion_on_url: 'curl -k --tls-max 1.2 "https://IP-ADDRESS:443/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=1&snapInterval=3&sensitivity=3&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&area0=960&area1=960&area2=960&area3=960&area4=960&area5=960&area6=992&area7=1016&area8=1020&area9=1023&linkage=12&usr=ADMIN&pwd=PASSWD"'
@@ -47,13 +46,13 @@ switch:
         command_on: !secret foscam_r2m_one_motion_on_url
         command_off: !secret foscam_r2m_one_motion_off_url
         command_state: !secret foscam_r2m_one_motion_state_url
-        value_template: "{{ value == \"1\" }}"
+        value_template: '{{ value == "1" }}'
 
 automation:
   - id: camera_front_door_motion_detection_disable
     alias: Camera - Disable motion detection
     description: Disable the camera surveillance
-    initial_state: false    # Always keep motion detection enabled, even though it's crappy
+    initial_state: false # Always keep motion detection enabled, even though it's crappy
     trigger:
       - platform: state
         entity_id: input_boolean.master_switch
@@ -67,10 +66,10 @@ automation:
     action:
       - service: switch.turn_off
         entity_id: switch.foscam_r2m_one_motion
-      - service: foscam.ptz_preset
-        entity_id: camera.foscam_r2m_one
-        data:
-          preset_name: Park
+      # - service: foscam.ptz_preset
+      #   entity_id: camera.foscam_r2m_one
+      #   data:
+      #     preset_name: Park
 
   - id: camera_front_door_motion_detection_enable
     alias: Camera - Enable motion detection
@@ -91,10 +90,10 @@ automation:
       - platform: homeassistant
         event: start
     action:
-      - service: foscam.ptz_preset
-        entity_id: camera.foscam_r2m_one
-        data:
-          preset_name: Hall
-      - delay: 30   # make sure the camera has stopped moving (it shouldn't detect motion while moving but still ...)
+      # - service: foscam.ptz_preset
+      #   entity_id: camera.foscam_r2m_one
+      #   data:
+      #     preset_name: Hall
+      - delay: 30 # make sure the camera has stopped moving (it shouldn't detect motion while moving but still ...)
       - service: switch.turn_on
         entity_id: switch.foscam_r2m_one_motion
