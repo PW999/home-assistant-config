@@ -199,7 +199,7 @@ automation:
     alias: "Climate control - Workday mode: turn on"
     trigger:
       - platform: time
-        at: "16:30:00"
+        at: "16:00:00"
       - platform: event
         event_type: timer.finished
         event_data:
