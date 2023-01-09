@@ -1,0 +1,26 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2023
+#   @package        :   Afvalbeheer
+#   @description    :   Adds waste management reminders
+#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @credit         :   https://github.com/pippyn/Home-Assistant-Sensor-Afvalbeheer
+###############################################################################
+
+afvalbeheer:
+  wastecollector: RecycleApp
+  resources:
+    - restafval
+    - gft
+    - papier
+    - pmd
+  postcode: !secret postcode
+  streetnumber: 1
+  streetname: !secret street
+  upcomingsensor: 1
+  dateobject: 1
+  builtinicons: 1
+  builtiniconsnew: 1
+  dutch: 0
+  updateinterval: 24
