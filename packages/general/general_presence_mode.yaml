@@ -67,7 +67,16 @@ automation:
         entity_id: calendar.calendar_day_off
       - platform: state
         entity_id: binary_sensor.workday_sensor
+      - platform: state
+        entity_id: calendar.calendar_work_from_home
+        to: "off"
     condition:
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
+      - condition: state
+        entity_id: calendar.calendar_work_from_home
+        state: "off"
       - condition: state
         entity_id: input_boolean.vacation
         state: "off"
