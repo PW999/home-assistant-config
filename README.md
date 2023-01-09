@@ -3,7 +3,7 @@
 ![Last commits](https://img.shields.io/github/last-commit/PW999/home-assistant-config)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/PW999/home-assistant-config)
 ![Maintenance](https://img.shields.io/maintenance/yes/2023)
-![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2022.12.08-blue)
+![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2023.1-blue)
 ![Ruby](https://img.shields.io/badge/Made%20with-Ruby-red?logo=ruby)
 
 
@@ -16,7 +16,7 @@ This is a very short list of the hardware I'm using:
 ## Core
 HP Prodesk 600 G3 Desktop mini
 
-![RaspberryPi](./doc/img/hpprodesk.jpg)
+![HPProdesk](./doc/img/hpprodesk.jpg)
 
 ## Zigbee
 * ConbeeII stick (Zigbee/Deconz)
@@ -44,8 +44,8 @@ HP Prodesk 600 G3 Desktop mini
 * Athom Tasmota EU plug V2
 
 ## WLED
-* ESP8260 (living room x2, office)
-  * Mean Well LPV100-12
+* ESP8260 (living room x2, office x2)
+  * Mean Well LPV100-12/Ledmo HTY-1200500 adapter
   * BTF-Lighting WS2811 BTF-12V-60L-W
 
 ## Other hardware
@@ -64,11 +64,11 @@ HP Prodesk 600 G3 Desktop mini
 * ~~Raspberry Pi Power Supply Checker~~
 * ☁ Waze Travel Time
 * ☁ Buienradar
-* ☁ Speedtest
+* ☁ ~~Speedtest~~ (removed it because of [this PR](https://github.com/home-assistant/core/pull/84295))
 * Onvif (for the Foscam IP camera)
 
 # Installation
-I'm running HAOS as a virtual machine on Proxmox.
+I'm running HAOS as a virtual machine on Proxmox in a 2 core 4GB VM.
 
 On the same proxmox installation I also run the following service for HA:
 * Postgresql
