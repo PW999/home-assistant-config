@@ -85,6 +85,14 @@ automation:
           message: Relay toggled using button
           entity_id: switch.gosund_sp1_1_main_relay
           domain: switch
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.washing_machine_status
+          option: Idle
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.dryer_status
+          option: Idle
 
   - id: dish_washer_turn_off_when_unused
     alias: Dish washer - Turn of when unused
