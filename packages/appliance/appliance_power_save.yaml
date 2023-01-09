@@ -13,7 +13,7 @@ automation:
     trigger:
       - platform: state
         entity_id: input_select.washing_machine_status
-        to: idle
+        to: Idle
         for:
           hours: 4
     action:
@@ -32,7 +32,7 @@ automation:
     trigger:
       - platform: state
         entity_id: input_select.dryer_status
-        to: idle
+        to: Idle
         for:
           hours: 4
     action:
@@ -99,7 +99,7 @@ automation:
     trigger:
       - platform: state
         entity_id: input_select.dish_washer_status
-        to: idle
+        to: Idle
         for:
           hours: 4
     action:
