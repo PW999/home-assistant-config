@@ -12,7 +12,7 @@ automation:
     alias: Office - turn LEDs on
     description: Turn the lights behind the desk on when I turn on my computer(s)
     trigger:
-      - entity_id: group.office_members   # computers/laptops that might be in the office
+      - entity_id: group.office_members # computers/laptops that might be in the office
         platform: state
         to: home
       - entity_id: input_boolean.master_switch
@@ -34,7 +34,6 @@ automation:
           option: Desk
         target:
           entity_id: select.bureau_wled_preset
-
 
   - id: light_office_wled_turn_off
     alias: Office - turn LEDs off
@@ -65,3 +64,55 @@ automation:
           option: "Off"
         target:
           entity_id: select.bureau_wled_preset
+
+  - id: light_office_ceiling_turn_on
+    alias: Office - Turn ceiling WLED on
+    description: Turn on the LED strip pointing at the ceiling
+    trigger:
+      - entity_id: input_boolean.master_switch
+        platform: state
+        to: "on"
+      - entity_id: binary_sensor.office_presence
+        platform: state
+        to: "on"
+      - entity_id: input_select.home_mode
+        platform: state
+    condition:
+      - condition: state
+        entity_id: input_boolean.master_switch
+        state: "on"
+      - condition: state
+        entity_id: binary_sensor.office_presence
+        state: "on"
+      - condition: state
+        entity_id: input_select.home_mode
+        state:
+          - Morning
+          - Evening
+          - Night
+    action:
+      - service: light.turn_on
+        data:
+          brightness_pct: 100
+          effect: Random Colors
+        target:
+          entity_id: light.office_ceiling
+
+  - id: light_office_ceiling_turn_off
+    alias: Office - Turn ceiling WLED off
+    description: Turn off the LED strip pointing at the ceiling
+    trigger:
+      - entity_id: input_boolean.master_switch
+        platform: state
+        to: "off"
+      - entity_id: binary_sensor.office_presence
+        platform: state
+        to: "off"
+        for: "00:05:00"
+      - entity_id: input_select.home_mode
+        platform: state
+        to: "Day"
+    action:
+      - service: light.turn_off
+        target:
+          entity_id: light.office_ceiling
