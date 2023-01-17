@@ -24,3 +24,29 @@ afvalbeheer:
   builtiniconsnew: 1
   dutch: 0
   updateinterval: 24
+
+automation:
+  - id: afvalbeheer_notification_on_resource
+    alias: Afvalbeheer - Notification on resource
+    trigger:
+      - platform: state
+        entity_id: sensor.recycleapp_tomorrow
+        from: "None"
+        for: "17:00:00"
+    condition:
+      - alias: "Not grofvuil or kerstboom"
+        condition: template
+        value_template: >
+          {% if 'grofvuil' in trigger.to_state.state %}
+          false
+          {% elif 'kerstboom' in trigger.to_state.state %}
+          false
+          {% else %}
+          true
+          {% endif %}
+    action:
+      - service: notify.mobile_app_mi_9t
+        data:
+          message: |
+            Tomorrow we must put {{ trigger.to_state.state }} outside
+          title: Waste
