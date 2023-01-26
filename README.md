@@ -33,7 +33,7 @@ HP Prodesk 600 G3 Desktop mini
 * Ikea TRÅDFRI 1055 lumen E27 bulb
 
 ## Homematic
-* HM-MOD-RPI-PCB (Homematic/Raspberrymatic)
+* HM-MOD-RPI-PCB (Homematic/Raspberrymatic) on a Raspberry Pi-3B running from a USB SSD
 * Homematic basic thermostat (living + office)
 
 ## ESPHome
@@ -44,7 +44,7 @@ HP Prodesk 600 G3 Desktop mini
 * Athom Tasmota EU plug V2
 
 ## WLED
-* ESP8260 (living room x2, office x2)
+* [ESP8266](dock/img/wled.jpg) (living room x2, office x2)
   * Mean Well LPV100-12/Ledmo HTY-1200500 adapter
   * BTF-Lighting WS2811 BTF-12V-60L-W
 
@@ -66,6 +66,7 @@ HP Prodesk 600 G3 Desktop mini
 * ☁ Buienradar
 * ☁ ~~Speedtest~~ (removed it because of [this PR](https://github.com/home-assistant/core/pull/84295))
 * Onvif (for the Foscam IP camera)
+* MQTT
 
 # Installation
 I'm running HAOS as a virtual machine on Proxmox in a 2 core 4GB VM.
