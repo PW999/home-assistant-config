@@ -56,3 +56,17 @@ automation:
       - service: input_boolean.turn_on
         data:
           entity_id: input_boolean.master_switch
+
+  - id: general_wakeup_turn_on_master_switch_wfh
+    alias: Wakeup - Turn on master switch when working from home
+    trigger:
+      platform: time
+      at: "07:45:00"
+    condition:
+      - condition: state
+        entity_id: input_select.presence_mode
+        state: "WFH"
+    action:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.master_switch
