@@ -163,7 +163,7 @@ automation:
     alias: "Climate control - WFH mode: turn on"
     trigger:
       - platform: time
-        at: "07:30:00"
+        at: "07:15:00"
       - platform: time
         at: "15:30:00"
     condition:
@@ -180,8 +180,8 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 17
-              office_target_temperature: 20
+              living_room_target_temperature: 18
+              office_target_temperature: 21
               climate_mode: "on"
               source: climate_control_wfh_turn_on
         else:
@@ -214,15 +214,29 @@ automation:
         entity_id: input_select.presence_mode
         state: "Workday"
     action:
-      service: script.turn_on
-      target:
-        entity_id: script.climate_control_set_all
-      data:
-        variables:
-          living_room_target_temperature: 21
-          office_target_temperature: 20
-          climate_mode: "on"
-          source: climate_control_workday_turn_on
+      - if:
+          - condition: time
+            before: "15:00:00"
+        then:
+          service: script.turn_on
+          target:
+            entity_id: script.climate_control_set_all
+          data:
+            variables:
+              living_room_target_temperature: 21
+              office_target_temperature: 15
+              climate_mode: "on"
+              source: climate_control_workday_turn_on
+        else:
+          service: script.turn_on
+          target:
+            entity_id: script.climate_control_set_all
+          data:
+            variables:
+              living_room_target_temperature: 21
+              office_target_temperature: 21
+              climate_mode: "on"
+              source: climate_control_workday_turn_on
 
   - id: climate_control_turn_off
     alias: "Climate control - Turn off the heating"
