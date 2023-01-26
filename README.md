@@ -44,7 +44,7 @@ HP Prodesk 600 G3 Desktop mini
 * Athom Tasmota EU plug V2
 
 ## WLED
-* [ESP8266](dock/img/wled.jpg) (living room x2, office x2)
+* [ESP8266](doc/img/wled.jpg) (living room x2, office x2)
   * Mean Well LPV100-12/Ledmo HTY-1200500 adapter
   * BTF-Lighting WS2811 BTF-12V-60L-W
 
