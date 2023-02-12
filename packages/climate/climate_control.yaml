@@ -320,7 +320,7 @@ automation:
         entity_id: binary_sensor.office_presence
         to: "off"
         for:
-          hours: 1
+          minutes: 30
     condition:
       - condition: not
         conditions:
@@ -352,7 +352,7 @@ automation:
         entity_id: binary_sensor.office_presence
         to: "on"
         for:
-          minutes: 4 # in case cat just walks by the sensor
+          minutes: 5 # in case cat just walks by the sensor
     condition:
       - condition: not
         conditions:
