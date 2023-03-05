@@ -16,6 +16,7 @@ automation:
       - platform: state
         entity_id: binary_sensor.front_door_presence
         to: "on"
+        from: "off"
     condition:
       - condition: state
         entity_id: switch.foscam_r2m_one_motion
@@ -39,6 +40,7 @@ automation:
       - platform: state
         entity_id: binary_sensor.front_door_presence
         to: "on"
+        from: "off"
     condition:
       - condition: state
         entity_id: switch.foscam_r2m_one_motion
