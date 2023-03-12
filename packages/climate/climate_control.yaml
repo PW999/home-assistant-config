@@ -321,7 +321,17 @@ automation:
         to: "off"
         for:
           minutes: 30
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: "on"
+        for:
+          minutes: 30
     condition:
+      - condition: state
+        entity_id: binary_sensor.office_presence
+        state: "off"
+        for:
+          minutes: 30
       - condition: not
         conditions:
           - condition: state
