@@ -7,11 +7,10 @@
 #   @url            :   https://github.com/PW999/home-assistant-config/
 # ##############################################################################
 
-
 timer:
   workday_countdown:
     name: Workday countdown
-    duration: "07:30:00"
+    duration: "08:00:00"
 
 automation:
   - id: workday_timer_start
@@ -32,7 +31,7 @@ automation:
         entity_id: timer.workday_countdown
         state: idle
     action:
-      - delay: 300  # Zone is pretty big, gotta park my car and stuff
+      - delay: 300 # Zone is pretty big, gotta park my car and stuff
       - service: timer.start
         data:
           entity_id: timer.workday_countdown
@@ -50,7 +49,7 @@ automation:
         entity_id:
           - device_tracker.as_hq_lt_108
         to: away
-        for: "00:20:00"   # bluetooth tracking is not so accurate
+        for: "00:20:00" # bluetooth tracking is not so accurate
     condition:
       - condition: state
         entity_id: timer.workday_countdown

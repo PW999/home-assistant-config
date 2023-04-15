@@ -18,6 +18,11 @@ input_select:
 binary_sensor:
   - platform: workday
     country: BE
+    workdays:
+      - tue
+      - wed
+      - thu
+      - fri
 
 calendar:
   - platform: ics_calendar
