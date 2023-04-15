@@ -131,3 +131,25 @@ automation:
           option: Vacation
         target:
           entity_id: input_select.presence_mode
+
+  - id: general_presence_mode_reset_manually_set_state
+    alias: General presence - Reset manually set state
+    trigger:
+      - platform: time
+        at: "04:00:00"
+    condition:
+      - condition: state
+        entity_id: calendar.calendar_work_from_home
+        state: "off"
+      - condition: state
+        entity_id: calendar.calendar_day_off
+        state: "off"
+      - condition: state
+        entity_id: input_boolean.vacation
+        state: "off"
+    action:
+      service: automation.trigger
+      data:
+        skip_condition: false
+      target:
+        entity_id: automation.general_presence_set_normal_or_workday_mode
