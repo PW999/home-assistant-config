@@ -39,6 +39,36 @@ script:
     description: Sets the target temperature on a single thermostat
     mode: single
     sequence:
+      - if:
+          - condition: template
+            value_template: "{{  climate_mode == 'on' }}"
+          - condition: or
+            conditions:
+              - condition: numeric_state
+                entity_id: weather.pw_casa
+                value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
+                above: 21
+              - alias: Summer mode is on
+                condition: state
+                entity_id: input_boolean.summer
+                state: "on"
+        then:
+          - alias: "Fire LOGBOOK_ENTRY event"
+            service: logbook.log
+            data:
+              name: climate_control_set_all
+              message: "Unchanged due to unmet conditions: summer mode: {{ states('input_boolean.summer') }} outside temp {{ state_attr('weather.pw_casa', 'temperature') }}"
+              entity_id: climate.000A1709AF6337 # living room
+              domain: climate
+          - alias: "Fire LOGBOOK_ENTRY event"
+            service: logbook.log
+            data:
+              name: climate_control_set_all
+              message: "Unchanged due to unmet conditions: summer mode: {{ states('input_boolean.summer') }} outside temp {{ state_attr('weather.pw_casa', 'temperature') }}"
+              entity_id: climate.00201d89a8ac5e # office
+              domain: climate
+          - stop: The conditions for turning on the heating are not met
+
       - service: homematic.set_device_value
         data:
           address: "{{ target }}"
