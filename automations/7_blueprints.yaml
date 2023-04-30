@@ -12,7 +12,7 @@
           - sensor.mi_9t_battery_level
           - sensor.pwroomba_battery_level
       actions:
-        - service: notify.mobile_app_mi_9t
+        - service: notify.mobile_app_pwxperia10iv
           data:
             message: "Low battery warning for: {{sensors}}"
         - service: notify.persistent_notification
@@ -25,6 +25,6 @@
   use_blueprint:
     path: JackPoint/mute_media_player_on_call.yaml
     input:
-      phone_state: sensor.mi_9t_phone_state
+      phone_state: sensor.pwxperia10iv_phone_state
       person: person.phillip
       media_player: media_player.living_room_tv

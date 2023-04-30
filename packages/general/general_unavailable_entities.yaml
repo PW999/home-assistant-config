@@ -83,7 +83,7 @@ automation:
           #     notification_id: unavailable_entities
           #     title: "Unavailable Entities"
           #     message: "- {{ state_attr('sensor.unavailable_entities','entity_id')|join('\n- ') }}"
-          - service: notify.mobile_app_mi_9t
+          - service: notify.mobile_app_pwxperia10iv
             data:
               message: |
                 - {{ state_attr('sensor.unavailable_entities','entity_id')|join('\n- ') }}

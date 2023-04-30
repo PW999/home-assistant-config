@@ -45,7 +45,7 @@ automation:
           true
           {% endif %}
     action:
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Tomorrow we must put {{ trigger.to_state.state }} outside

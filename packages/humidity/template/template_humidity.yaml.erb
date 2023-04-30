@@ -62,7 +62,7 @@ automation:
           ) %}
           {{ ( current_humidity - inside_out_humidity ) >= 12 }}
     action:
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Relative humidity is {{ float(states('<%= sensor_id %>_2')) }}%, consider opening a window.
@@ -106,7 +106,7 @@ automation:
         entity_id: <%= sensor_id %>_2
         below: <%= humidity_low_threshold %>
     action:
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Relative humidity is at {{ float(states('<%= sensor_id %>_2')) }}% !

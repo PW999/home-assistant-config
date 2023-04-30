@@ -41,6 +41,7 @@ recorder:
       - sensor.*_wled_uptime
       - sensor.*_wled_wi_fi_channel
       - sensor.mi_9t*
+      - sensor.pwxperia10iv*
       - sensor.*presence
       - input_number.electricity_*
       - input_number.forecast_*

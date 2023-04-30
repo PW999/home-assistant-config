@@ -23,7 +23,7 @@ automation:
         entity_id: sensor.gosund_sp112_1_wattage
         above: 20
     action:
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Do not forget to turn of the power in the office. <br />

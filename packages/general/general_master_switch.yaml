@@ -41,10 +41,10 @@ automation:
     description: Turn on the master switch when phone connects to Wifi
     trigger:
       - platform: state
-        entity_id: sensor.mi_9t_wifi_connection
+        entity_id: sensor.pwxperia10iv_wifi_connection
         to: !secret wifi_ssid_2_4G
       - platform: state
-        entity_id: sensor.mi_9t_wifi_connection
+        entity_id: sensor.pwxperia10iv_wifi_connection
         to: !secret wifi_ssid_5G
     condition:
       - condition: state
@@ -56,10 +56,10 @@ automation:
       - condition: template
         alias: Do not trigger 10 minutes after changing the master state
         value_template: >
-            {% set ignore_ts = (now().timestamp() - 600)|as_datetime %}
-            {% set last_triggered_at = states.input_boolean.master_switch.last_updated %}
-            {% set limit = last_triggered_at <= ignore_ts %}
-            {{ limit }}
+          {% set ignore_ts = (now().timestamp() - 600)|as_datetime %}
+          {% set last_triggered_at = states.input_boolean.master_switch.last_updated %}
+          {% set limit = last_triggered_at <= ignore_ts %}
+          {{ limit }}
     action:
       - service: input_boolean.turn_on
         data:

@@ -20,7 +20,7 @@ automation:
         entity_id: input_select.presence_mode
         state: "Workday"
     action:
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           data:
             actions:
@@ -46,7 +46,7 @@ automation:
         entity_id: input_select.presence_mode
         state: "Normal"
     action:
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           data:
             actions:
@@ -71,7 +71,7 @@ automation:
         entity_id: input_select.presence_mode
         state: "WFH"
     action:
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           data:
             actions:

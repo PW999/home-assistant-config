@@ -94,7 +94,7 @@ script:
         entity_id: input_boolean.master_switch
         state: "off"
         for: "00:01:00"
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             It is {{ as_timestamp(now()) | timestamp_custom('%a %B %-m, %I:%M %p') }}

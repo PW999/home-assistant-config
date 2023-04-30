@@ -69,7 +69,7 @@ automation:
         event_data:
           entity_id: timer.workday_countdown
     action:
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Almost time to go home, travel time is {{ states('sensor.to_home') }} {{ state_attr('sensor.to_home', 'unit_of_measurement') }} via {{ state_attr('sensor.to_home', 'route') }}

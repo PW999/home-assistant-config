@@ -1,5 +1,4 @@
 ---
-
 # ##############################################################################
 #   @author         :   Phillip (P_W999)
 #   @date           :   01/2022
@@ -54,7 +53,7 @@ automation:
         service: switch.turn_on
         target:
           entity_id: switch.gosund_sp112_2_main_relay
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Fridge power was off !

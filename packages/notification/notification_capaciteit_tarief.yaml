@@ -7,7 +7,6 @@
 #   @url            :   https://github.com/PW999/home-assistant-config/
 ###############################################################################
 
-
 automation:
   - id: morning_notification_capaciteit_tarief
     alias: Notification - Capaciteit tarief
@@ -19,9 +18,9 @@ automation:
         above: 2.5
         for: "00:05:00"
     action:
-      - service: notify.mobile_app_mi_9t
+      - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Power consumption is {{ states('sensor.power_consumption') }}.
           title: Capaciteits tarief
-      - delay: 900  # cheap trick to only send it once every 15 min
+      - delay: 900 # cheap trick to only send it once every 15 min
