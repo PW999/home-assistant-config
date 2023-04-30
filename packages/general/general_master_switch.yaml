@@ -46,6 +46,12 @@ automation:
       - platform: state
         entity_id: sensor.pwxperia10iv_wifi_connection
         to: !secret wifi_ssid_5G
+      - platform: state
+        entity_id: sensor.pwxperia10iv_wifi_connection
+        to: !secret new_wifi_ssid_2_4G
+      - platform: state
+        entity_id: sensor.pwxperia10iv_wifi_connection
+        to: !secret new_wifi_ssid_5G
     condition:
       - condition: state
         entity_id: input_boolean.master_switch
