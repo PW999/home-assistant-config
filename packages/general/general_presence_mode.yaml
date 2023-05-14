@@ -15,15 +15,6 @@ input_select:
       - Vacation # Meaning I'm away for a while
       - WFH # Work from home
 
-binary_sensor:
-  - platform: workday
-    country: BE
-    workdays:
-      - tue
-      - wed
-      - thu
-      - fri
-
 calendar:
   - platform: ics_calendar
     calendars:
