@@ -50,7 +50,7 @@ recorder:
       - call_service # Don't record service calls
 
 influxdb:
-  host: 192.168.0.17
+  host: influx.pwcasa.local
   port: 8086
   api_version: 2
   token: !secret influx_token
@@ -106,5 +106,5 @@ device_tracker:
       track_new_devices: false
   - platform: ping
     hosts:
-      pwnitrogen: 192.168.0.101
+      pwnitrogen: 10.0.1.101
 #      hasspi: 192.168.0.16

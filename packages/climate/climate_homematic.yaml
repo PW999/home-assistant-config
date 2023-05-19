@@ -10,7 +10,7 @@
 homematic:
   interfaces:
     ip:
-      host: 192.168.0.16
+      host: 10.0.10.2
       port: 2010
       resolvenames: json
       username: !secret homematic_user
