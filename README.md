@@ -3,7 +3,7 @@
 ![Last commits](https://img.shields.io/github/last-commit/PW999/home-assistant-config)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/PW999/home-assistant-config)
 ![Maintenance](https://img.shields.io/maintenance/yes/2023)
-![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2023.3-blue)
+![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2023.5-blue)
 ![Ruby](https://img.shields.io/badge/Made%20with-Ruby-red?logo=ruby)
 
 
@@ -14,7 +14,7 @@ I'm focussing on cloud-less solutions since I value having light and heating whe
 This is a very short list of the hardware I'm using:
 
 ## Core
-HP Prodesk 600 G3 Desktop mini
+HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
 
 ![HPProdesk](./doc/img/hpprodesk.jpg)
 
@@ -41,7 +41,7 @@ HP Prodesk 600 G3 Desktop mini
 * GoSund (/Tuya) SP-1 wifi power plug (x2)
 
 ## Tasmota
-* Athom Tasmota EU plug V2
+* Athom Tasmota EU plug V2 (x2)
 
 ## WLED
 * [ESP8266](doc/img/wled.jpg) (living room x2, office x2)
