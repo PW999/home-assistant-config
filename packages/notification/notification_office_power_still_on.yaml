@@ -16,12 +16,23 @@ automation:
       - entity_id: input_boolean.master_switch
         platform: state
         to: "off"
-        for: 00:00:05
+        for: 00:00:02
     condition:
       - alias: Stand-by usage is high
         condition: numeric_state
         entity_id: sensor.gosund_sp112_1_wattage
         above: 20
+      - condition: not
+        conditions:
+          - alias: "Ingore me going to fetch a sandwich"
+            condition: time
+            after: "11:30:00"
+            before: "12:30:00"
+            weekday:
+              - "tue"
+              - "wed"
+              - "thu"
+              - "fri"
     action:
       - service: notify.mobile_app_pwxperia10iv
         data:
