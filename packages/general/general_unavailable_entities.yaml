@@ -34,7 +34,6 @@ template:
 group:
   ignored_unavailable_entities:
     entities:
-      - binary_sensor.updater
       # Some unreliable (external) entities that are nice to have
       - sensor.pm2_5
       - sensor.pm2_5_2
