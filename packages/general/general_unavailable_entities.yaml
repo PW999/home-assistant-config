@@ -47,10 +47,6 @@ group:
       # These aren't really "connected", so they disappear from time to time
       - sensor.lightify_switch_mini_26_battery_level
       - sensor.lightify_switch_mini_27_battery_level
-      # These are new but I don't have them on my camera
-      - switch.r2m_1_onvif_autofocus
-      - switch.r2m_1_onvif_ir_lamp
-      - switch.r2m_1_onvif_wiper
 
 # OPTIONAL Example automation to demonstrate how you can utilize this sensor
 automation:
