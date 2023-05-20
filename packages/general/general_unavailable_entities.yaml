@@ -43,7 +43,6 @@ group:
       - sensor.pm10
       - sensor.pm10_2
       - sensor.pm10_3
-      - air_quality.weather_in_ekeren_in_port_of_antwerp
       # These aren't really "connected", so they disappear from time to time
       - sensor.lightify_switch_mini_26_battery_level
       - sensor.lightify_switch_mini_27_battery_level
