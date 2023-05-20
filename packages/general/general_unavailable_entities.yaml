@@ -15,11 +15,20 @@ template:
         unit_of_measurement: entities
         state: >
           {% set entities = state_attr(this.entity_id,'entity_id') %}
-          {% if entities != none %} {{ entities|count }} {% endif %}
+          {% if entities != none %} {{ entities|count }} {% else %} 0 {% endif %}
         attributes:
           entity_id: >
             {% set ignore_seconds = 7200 %}
-            {% set ignored = state_attr('group.ignored_unavailable_entities','entity_id') %}
+            {% set ignored = [
+              'sensor.pm2_5', 
+              'sensor.pm2_5_2', 
+              'sensor.pm2_5_3', 
+              'sensor.pm10', 
+              'sensor.pm10_2', 
+              'sensor.pm10_3', 
+              'sensor.lightify_switch_mini_26_battery_level', 
+              'sensor.lightify_switch_mini_27_battery_level'
+            ] %}
             {% set ignore_ts = (now().timestamp() - ignore_seconds)|as_datetime %}
             {% set entities = states|rejectattr('domain','in',['group','button','number', 'select', 'input_boolean', 'scene', 'input_boolean', 'update', 'device_tracker'])
                 |rejectattr('last_changed','ge',ignore_ts)
@@ -28,22 +37,6 @@ template:
               {% set entities =  entities|rejectattr('entity_id','in',ignored) %}
             {% endif %}
             {{ entities|map(attribute='entity_id')|list }}
-
-# OPTIONAL - Uncomment and add entities you want to ignore to this group.
-
-group:
-  ignored_unavailable_entities:
-    entities:
-      # Some unreliable (external) entities that are nice to have
-      - sensor.pm2_5
-      - sensor.pm2_5_2
-      - sensor.pm2_5_3
-      - sensor.pm10
-      - sensor.pm10_2
-      - sensor.pm10_3
-      # These aren't really "connected", so they disappear from time to time
-      - sensor.lightify_switch_mini_26_battery_level
-      - sensor.lightify_switch_mini_27_battery_level
 
 # OPTIONAL Example automation to demonstrate how you can utilize this sensor
 automation:
