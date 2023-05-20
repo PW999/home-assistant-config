@@ -12,6 +12,7 @@ homematic:
     ip:
       host: 10.0.10.2
       port: 2010
+      jsonport: 8080
       resolvenames: json
       username: !secret homematic_user
       password: !secret homematic_password
