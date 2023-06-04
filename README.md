@@ -52,7 +52,6 @@ HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
 * Roomba 690
 * Foscam R2M Wifi camera
 * Fluvius Smart meter with [SlimmeLezer](https://www.zuidwijk.com/slimmelezer-smartreader/)
-* ~~HP Touchpad with Evervolv ROM to run Wallpanel on (appdaemon dashboard)~~ (dead again)
 
 ## Other integration
 * ☁ CO2 Signal
@@ -61,7 +60,6 @@ HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
 * ☁ Met.no weather
 * ~~Bluetooth Device Tracker~~ (broken due to HA changing bluetooth implementation, also no bluetooth on the HP Prodesk)
 * Nmap Device Tracker
-* ~~Raspberry Pi Power Supply Checker~~
 * ☁ Waze Travel Time
 * ☁ Buienradar
 * ☁ ~~Speedtest~~ (removed it because of [this PR](https://github.com/home-assistant/core/pull/84295))
