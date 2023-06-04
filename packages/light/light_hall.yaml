@@ -29,9 +29,6 @@ automation:
         entity_id: input_select.home_mode
         state: Day
       - condition: state
-        entity_id: sensor.very_sunny
-        state: "False"
-      - condition: state
         entity_id: binary_sensor.hall_presence
         state: "on"
     action:
