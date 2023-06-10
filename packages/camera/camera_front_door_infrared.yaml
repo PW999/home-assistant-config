@@ -15,16 +15,15 @@ homeassistant:
   customize:
     switch.foscam_r2m_one_infrared:
       icon: mdi:cctv
+      friendly_name: Foscam R2M-1 Infrared
 
-switch:
-  - platform: command_line
-    switches:
-      foscam_r2m_one_infrared:
-        friendly_name: Foscam R2M-1 Infrared
-        command_on: !secret foscam_r2m_one_infrared_on_url
-        command_off: !secret foscam_r2m_one_infrared_off_url
-        command_state: !secret foscam_r2m_one_infrared_state_url
-        value_template: "{{ value == \"1\" }}"
+command_line:
+  switch:
+    name: foscam_r2m_one_infrared
+    command_on: !secret foscam_r2m_one_infrared_on_url
+    command_off: !secret foscam_r2m_one_infrared_off_url
+    command_state: !secret foscam_r2m_one_infrared_state_url
+    value_template: '{{ value == "1" }}'
 
 automation:
   - id: camera_front_door_enable_infrared

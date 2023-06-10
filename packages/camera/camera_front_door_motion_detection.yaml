@@ -36,17 +36,15 @@ homeassistant:
   customize:
     switch.foscam_r2m_one_motion:
       icon: mdi:cctv
+      friendly_name: Foscam R2M-1 Motion Sensor
 
-switch:
-  - platform: command_line
-    switches:
-      # Switch for Foscam Motion Detection
-      foscam_r2m_one_motion:
-        friendly_name: Foscam R2M-1 Motion Sensor
-        command_on: !secret foscam_r2m_one_motion_on_url
-        command_off: !secret foscam_r2m_one_motion_off_url
-        command_state: !secret foscam_r2m_one_motion_state_url
-        value_template: '{{ value == "1" }}'
+command_line:
+  switch:
+    name: foscam_r2m_one_motion
+    command_on: !secret foscam_r2m_one_motion_on_url
+    command_off: !secret foscam_r2m_one_motion_off_url
+    command_state: !secret foscam_r2m_one_motion_state_url
+    value_template: '{{ value == "1" }}'
 
 automation:
   - id: camera_front_door_motion_detection_disable
