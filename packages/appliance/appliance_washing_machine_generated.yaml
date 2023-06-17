@@ -1,4 +1,5 @@
 ---
+
 # ##############################################################################
 #   @author         :   Phillip (P_W999)
 #   @date           :   01/2022
@@ -32,6 +33,7 @@ homeassistant:
     sensor.gosund_sp1_2_consumption:
       friendly_name: Washing machine total energy consumption
 
+
 input_boolean:
   washing_machine_disable_notification:
     name: Disable Washing machine Notification
@@ -61,6 +63,7 @@ sensor:
           }}
 
 automation:
+
   # When power is detected, and the washing machine is not in
   # the Running state, change the status of the washing machine
   # to Running.
@@ -161,8 +164,8 @@ automation:
           title: Washing machine ready
           data:
             actions:
-              - action: WASHING_MACHINE_DISABLE_NOTIFICATION # The key you are sending for the event
-                title: Finish # The button title
+              - action: WASHING_MACHINE_DISABLE_NOTIFICATION   # The key you are sending for the event
+                title: Finish   # The button title
       - delay: 600
 
   # When clicked on the Finish button in the above notification, set the washing machine to Idle

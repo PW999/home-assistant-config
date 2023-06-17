@@ -15,4 +15,4 @@
 # ##############################################################################
 <% location_id = location_name.chomp('').gsub(' ', '_').downcase() %>
 
-<%= ERB.new(File.read(File.expand_path('template_humidity_sensor.yaml.erb', __dir__)), nil, nil, eoutvar="_sub01").result(binding) %>
+<%= ERB.new(File.read(File.expand_path('template_humidity_sensor.yaml.erb', __dir__)), trim_mode: nil, eoutvar: "_sub01").result(binding) %>

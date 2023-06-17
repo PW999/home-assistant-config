@@ -16,7 +16,7 @@
 <% appliance_id = appliance_name.chomp('').gsub(' ', '_').downcase() %>
 homeassistant:
   customize:
-<%= ERB.new(File.read(File.expand_path('template_power_plug_customization.yaml.erb', __dir__)), nil, nil, eoutvar="_sub01").result(binding) %>
+<%= ERB.new(File.read(File.expand_path('template_power_plug_customization.yaml.erb', __dir__)), trim_mode: nil, eoutvar: "_sub01").result(binding) %>
 
 automation:
   # Just make sure that the power plug of the fridge is always on !

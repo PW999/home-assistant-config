@@ -14,7 +14,7 @@ homeassistant:
   customize:
     sensor.<%= appliance_id %>_status:
       icon: <%= icon %>
-<%= ERB.new(File.read(File.expand_path('template_power_plug_customization.yaml.erb', __dir__)), nil, nil, eoutvar="_sub01").result(binding) %>
+<%= ERB.new(File.read(File.expand_path('template_power_plug_customization.yaml.erb', __dir__)), trim_mode: nil, eoutvar: "_sub01").result(binding) %>
 
 input_boolean:
   <%= appliance_id %>_disable_notification:

@@ -13,7 +13,6 @@ sensor:
     sensors:
       hall_temperature_corrected:
         friendly_name: Hall temperature
-        unique_id: hall_temperature_corrected
         unit_of_measurement: °C
         device_class: temperature
         availability_template: "{{ not is_state('sensor.hall_presence', 'unavailable')  }}"

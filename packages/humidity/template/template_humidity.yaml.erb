@@ -11,7 +11,7 @@
 # ##############################################################################
 <% location_id = location_name.chomp('').gsub(' ', '_').downcase() %>
 
-<%= ERB.new(File.read(File.expand_path('template_humidity_sensor.yaml.erb', __dir__)), nil, nil, eoutvar="_sub01").result(binding) %>
+<%= ERB.new(File.read(File.expand_path('template_humidity_sensor.yaml.erb', __dir__)), trim_mode: nil, eoutvar: "_sub01").result(binding) %>
 
 automation:
   - id: <%= "humidity_#{location_id}_automation_humidity_too_high" %>
@@ -100,7 +100,7 @@ automation:
           {%  if trigger.entity_id != '<%= sensor_id %>_2'  %}
           false
           {% else %}
-          {{ states(trigger.from_state) | float >= <%= humidity_low_threshold%>.0   }}
+          {{ trigger.from_state.state | float >= <%= humidity_low_threshold%>.0   }}
           {% endif %}
       - condition: numeric_state
         entity_id: <%= sensor_id %>_2
