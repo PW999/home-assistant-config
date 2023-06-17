@@ -44,6 +44,8 @@ command_line:
     command_on: !secret foscam_r2m_one_motion_on_url
     command_off: !secret foscam_r2m_one_motion_off_url
     command_state: !secret foscam_r2m_one_motion_state_url
+    command_timeout: 60
+    scan_interval: 120
     value_template: '{{ value == "1" }}'
 
 automation:
