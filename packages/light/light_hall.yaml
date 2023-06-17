@@ -3,7 +3,7 @@
 #   @author         :   Phillip (P_W999)
 #   @date           :   05/2021
 #   @package        :   General hall light automation
-#   @description    :   Motion, presence and sun based hall light automation
+#   @description    :   Presence based hall lights
 #   @url            :   https://github.com/PW999/home-assistant-config/
 ###############################################################################
 
@@ -99,9 +99,6 @@ automation:
         platform: state
         to: "off"
         for: "00:01:00"
-      - entity_id: sensor.very_sunny
-        platform: state
-        to: "False"
       - entity_id: input_boolean.master_switch
         platform: state
         to: "on"
@@ -118,9 +115,6 @@ automation:
       - condition: state
         entity_id: binary_sensor.hall_presence
         state: "off"
-      - condition: state
-        entity_id: sensor.very_sunny
-        state: "False"
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
@@ -163,40 +157,6 @@ automation:
         entity_id: scene.hall_25
         data:
           transition: 3
-
-  # This used to turn the hall lights off when it's sunny because the lights were of no much use,
-  # but it kept confusing me because "off" could also have meant that
-  # the master switch was turned off (or I forgot to turn it on in the morning)
-  - id: light_hall_dimmed_very_sunny_day
-    alias: Hall minimum brightness during sunny day
-    description: Turn the lights to minimum brightness when it's sunny during the day
-    trigger:
-      - entity_id: binary_sensor.hall_presence
-        platform: state
-        to: "off"
-        for: "00:01:00"
-      - entity_id: input_boolean.master_switch
-        platform: state
-        to: "on"
-      - entity_id: binary_sensor.pantry_door
-        platform: state
-        to: "off"
-      - entity_id: sensor.very_sunny
-        platform: state
-        to: "True"
-    condition:
-      - condition: state
-        entity_id: sensor.very_sunny
-        state: "True"
-      - condition: state
-        entity_id: input_boolean.master_switch
-        state: "on"
-      - condition: state
-        entity_id: input_select.home_mode
-        state: Day
-    action:
-      - service: scene.turn_on
-        entity_id: scene.hall_low
 
   - id: light_hall_off_night
     alias: Hall off at night
