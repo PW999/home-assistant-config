@@ -13,6 +13,7 @@ sensor:
     sensors:
       toilet_temperature_corrected:
         friendly_name: Toilet temperature
+        unique_id: sensor.toilet_temperature_corrected
         unit_of_measurement: °C
         device_class: temperature
         availability_template: "{{ not is_state('sensor.toilet_presence', 'unavailable')  }}"

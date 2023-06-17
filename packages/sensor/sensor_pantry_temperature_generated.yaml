@@ -13,6 +13,7 @@ sensor:
     sensors:
       pantry_temperature_corrected:
         friendly_name: Pantry temperature
+        unique_id: sensor.pantry_temperature_corrected
         unit_of_measurement: °C
         device_class: temperature
         availability_template: "{{ not is_state('sensor.pantry_door_temperature', 'unavailable')  }}"
