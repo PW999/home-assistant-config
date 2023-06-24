@@ -53,7 +53,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.bedroom_2
-        above: 68
+        above: 70
         for: "00:10:00"
       - platform: state
         entity_id: sensor.terrace_2
@@ -67,7 +67,7 @@ automation:
         above: 15
       - condition: numeric_state
         entity_id: sensor.bedroom_2
-        above: 68
+        above: 70
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
@@ -78,7 +78,7 @@ automation:
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
           - alias: Trigger when bedroom humidity rises from below to above threshold
             condition: template
-            value_template: "{{ trigger.entity_id == 'sensor.bedroom_2' and (trigger.from_state.state | float) <= 68.0 }}"
+            value_template: "{{ trigger.entity_id == 'sensor.bedroom_2' and (trigger.from_state.state | float) <= 70.0 }}"
           - alias: Trigger when outside humidity lowers
             condition: template
             value_template: "{{ trigger.entity_id == 'sensor.terrace_2' and (trigger.from_state.state | float) > (trigger.to_state.state | float) }}"
@@ -124,7 +124,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.bedroom_2
-        below: 45
+        below: 40
         for: "00:10:00"
     condition:
       - alias: Only if we cross the treshold
@@ -133,11 +133,11 @@ automation:
           {%  if trigger.entity_id != 'sensor.bedroom_2'  %}
           false
           {% else %}
-          {{ trigger.from_state.state | float >= 45.0   }}
+          {{ trigger.from_state.state | float >= 40.0   }}
           {% endif %}
       - condition: numeric_state
         entity_id: sensor.bedroom_2
-        below: 45
+        below: 40
     action:
       - service: notify.mobile_app_pwxperia10iv
         data:

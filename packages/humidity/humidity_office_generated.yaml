@@ -124,7 +124,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.bureau_2
-        below: 45
+        below: 40
         for: "00:10:00"
     condition:
       - alias: Only if we cross the treshold
@@ -133,11 +133,11 @@ automation:
           {%  if trigger.entity_id != 'sensor.bureau_2'  %}
           false
           {% else %}
-          {{ trigger.from_state.state | float >= 45.0   }}
+          {{ trigger.from_state.state | float >= 40.0   }}
           {% endif %}
       - condition: numeric_state
         entity_id: sensor.bureau_2
-        below: 45
+        below: 40
     action:
       - service: notify.mobile_app_pwxperia10iv
         data:

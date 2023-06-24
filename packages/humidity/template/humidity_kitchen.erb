@@ -3,7 +3,7 @@
   sensor_id = SENSOR_KITCHEN
   outside_sensor_id = SENSOR_OUTSIDE
   humidity_high_threshold = 70
-  humidity_low_threshold = 45
+  humidity_low_threshold = 40
   erb = ERB.new(File.read(File.expand_path('template_humidity.yaml.erb', __dir__)))
   erb.filename = __FILE__
 %>
