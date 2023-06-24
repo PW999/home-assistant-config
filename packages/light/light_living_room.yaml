@@ -67,7 +67,7 @@ automation:
           - condition: state
             entity_id: input_select.home_mode
             state: Morning
-      - condition: state  # for the tv light trigger
+      - condition: state # for the tv light trigger
         entity_id: binary_sensor.living_room_presence
         state: "off"
         for: "00:10:00"
@@ -83,7 +83,6 @@ automation:
             state: "off"
           light.living_room_tv:
             state: "off"
-
 
   - id: light_living_room_morning_turn_off
     alias: Living room - turn off ligts in the morning
@@ -183,7 +182,7 @@ scene:
         color_temp: 370
         brightness: 192
         state: "on"
-      switch.on_off_plug_1:
+      switch.gosund_sp112_4_usb:
         state: "on"
   - id: light_living_room_scene_off
     name: Living Room off
@@ -200,7 +199,7 @@ scene:
         state: "on"
         brightness: 0
         color_temp: 370
-      switch.on_off_plug_1:
+      switch.gosund_sp112_4_usb:
         state: "off"
   - id: light_living_room_scene_dimmed
     name: Living Room Evening Dimmed
@@ -229,5 +228,5 @@ scene:
         color_temp: 370
         brightness: 64
         state: "on"
-      switch.on_off_plug_1:
+      switch.gosund_sp112_4_usb:
         state: "on"

@@ -83,7 +83,7 @@ scene:
         state: "off"
       light.bathroom_light:
         state: "off"
-      switch.on_off_plug_1:
+      switch.gosund_sp112_4_usb:
         state: "off"
       switch.fan_switch:
         state: "off"
@@ -109,7 +109,7 @@ scene:
         state: "off"
       light.bathroom_light:
         state: "off"
-      switch.on_off_plug_1:
+      switch.gosund_sp112_4_usb:
         state: "off"
       switch.fan_switch:
         state: "off"
