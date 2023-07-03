@@ -97,11 +97,15 @@ automation:
   - id: dish_washer_turn_off_when_unused
     alias: Dish washer - Turn of when unused
     trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: DISH_WASHER_DISABLE_NOTIFICATION
       - platform: state
-        entity_id: input_select.dish_washer_status
+        entity_id: sensor.dish_washer_status
         to: Idle
         for:
-          hours: 4
+          hours: 2
     action:
       - service: switch.turn_off
         target:
