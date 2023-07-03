@@ -21,15 +21,22 @@ automation:
       - condition: state
         entity_id: switch.foscam_r2m_one_motion
         state: "on"
-      - condition: state
-        entity_id: input_boolean.master_switch
-        state: "off"
-        for: "00:02:00"
-      - condition: numeric_state
-        entity_id: automation.button_toggle_master_switch_off
-        attribute: current
-        below: 1
-
+      - condition: or
+        conditions:
+          - alias: Master switch off and button_toggle_master_switch_off not running still
+            condition: and
+            conditions:
+              - condition: state
+                entity_id: input_boolean.master_switch
+                state: "off"
+              - condition: numeric_state
+                entity_id: automation.button_toggle_master_switch_off
+                attribute: current
+                below: 1
+          - alias: On vacation, trigger always
+            condition: state
+            entity_id: input_boolean.vacation
+            state: "on"
     action:
       - service: script.camera_front_door_on_motion_detected_script
 
@@ -49,14 +56,22 @@ automation:
         condition: state
         entity_id: binary_sensor.front_door_presence
         state: "on"
-      - condition: state
-        entity_id: input_boolean.master_switch
-        state: "off"
-        for: "00:02:00"
-      - condition: numeric_state
-        entity_id: automation.button_toggle_master_switch_off
-        attribute: current
-        below: 1
+      - condition: or
+        conditions:
+          - alias: Master switch off and button_toggle_master_switch_off not running still
+            condition: and
+            conditions:
+              - condition: state
+                entity_id: input_boolean.master_switch
+                state: "off"
+              - condition: numeric_state
+                entity_id: automation.button_toggle_master_switch_off
+                attribute: current
+                below: 1
+          - alias: On vacation, trigger always
+            condition: state
+            entity_id: input_boolean.vacation
+            state: "on"
     action:
       - service: script.camera_front_door_on_motion_detected_snapshot_loop_script
 
@@ -65,6 +80,12 @@ script:
     description: Captures hall camera when motion is detected and notify if not home in 5 min
     mode: single
     sequence:
+      - service: camera.snapshot
+        alias: Take snapshot for notification
+        data:
+          filename: /config/www/snap_hall.jpg
+        target:
+          entity_id: camera.r2m_1_onvif_prof0_name
       - service: camera.record
         target:
           entity_id: camera.r2m_1_onvif_prof0_name
@@ -73,27 +94,16 @@ script:
           filename: >-
             /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M')
             }}.mp4
-      - service: camera.snapshot
-        alias: Take snapshot for notification
-        data:
-          filename: /config/www/snap_hall.jpg
-        target:
-          entity_id: camera.r2m_1_onvif_prof0_name
-      - wait_for_trigger:
-          - platform: state
-            entity_id: group.household_members
-            to: home
-        timeout: "00:05:00"
-        continue_on_timeout: true
-      - condition: state
-        alias: Check if nobody is home
-        entity_id: group.household_members
-        state: not_home
-      - condition: state
-        alias: Prevent false positives
-        entity_id: input_boolean.master_switch
-        state: "off"
-        for: "00:01:00"
+      # - wait_for_trigger:
+      #     - platform: state
+      #       entity_id: group.household_members
+      #       to: home
+      #   timeout: "00:00:10"
+      #   continue_on_timeout: true
+      # - condition: state
+      #   alias: Check if nobody is home
+      #   entity_id: group.household_members
+      #   state: not_home
       - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
