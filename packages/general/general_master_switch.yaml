@@ -35,6 +35,12 @@ automation:
       - service: input_boolean.turn_on
         data:
           entity_id: input_boolean.master_switch
+      - service: logbook.log
+        data:
+          name: general_master_switch_turn_on
+          message: "Master switched turned on by {{ trigger.entity_id }}"
+          entity_id: input_boolean.master_switch
+          domain: input_boolean
 
   - id: general_master_switch_turn_on_on_wifi
     alias: Switches - Master switch on on wifi change
@@ -70,6 +76,12 @@ automation:
       - service: input_boolean.turn_on
         data:
           entity_id: input_boolean.master_switch
+      - service: logbook.log
+        data:
+          name: general_master_switch_turn_on_on_wifi
+          message: "Master switched turned on by {{ trigger.entity_id }}"
+          entity_id: input_boolean.master_switch
+          domain: input_boolean
 
   - id: general_master_switch_turn_off
     alias: Switches - Master switch off
@@ -86,3 +98,9 @@ automation:
       - service: input_boolean.turn_off
         data:
           entity_id: input_boolean.master_switch
+      - service: logbook.log
+        data:
+          name: general_master_switch_turn_off
+          message: "Master switched turned off by {{ trigger.entity_id }}"
+          entity_id: input_boolean.master_switch
+          domain: input_boolean
