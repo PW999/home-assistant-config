@@ -10,7 +10,7 @@
 timer:
   bathroom_light_extended_time:
     name: Bathroom light extended timer
-    duration: "00:15:00"
+    duration: "00:25:00"
 
 input_boolean:
   bathroom_light_increase_brightness:
