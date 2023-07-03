@@ -63,7 +63,7 @@ influxdb:
     entities:
       - counter.dsmr_reconnect
       - weather.pw_casa
-      - device_tracker.mi_9t
+      - device_tracker.pwxperia10iv
     domains:
       - sensor
       - climate
@@ -89,7 +89,7 @@ influxdb:
       - sensor.*_wled_wi_fi_bssid
       - sensor.*_wled_uptime
       - sensor.*_wled_wi_fi_channel
-      - sensor.mi_9t*
+      - sensor.pwxperia10iv*
       - sensor.*presence
       - sensor.foscam_r2m_1_log*
 
