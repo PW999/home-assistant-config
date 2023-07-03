@@ -5,18 +5,9 @@ homeassistant:
   packages: !include_dir_named packages
 
 automation: !include_dir_merge_list automations/
+
 frontend:
   themes: !include_dir_merge_named themes
-
-# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-# http:
-#   base_url: example.duckdns.org:8123
-
-python_script:
-
-# Text to speech
-tts:
-  - platform: google_translate
 
 recorder:
   db_url: !secret recorder_url
@@ -112,4 +103,3 @@ device_tracker:
   - platform: ping
     hosts:
       pwnitrogen: 10.0.1.101
-#      hasspi: 192.168.0.16
