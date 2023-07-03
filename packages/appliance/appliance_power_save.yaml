@@ -12,10 +12,10 @@ automation:
     alias: Washing machine - Turn of when unused
     trigger:
       - platform: state
-        entity_id: input_select.washing_machine_status
+        entity_id: sensor.washing_machine_status
         to: Idle
         for:
-          hours: 4
+          hours: 8
     action:
       - service: switch.turn_off
         target:
@@ -31,10 +31,10 @@ automation:
     alias: Dryer - Turn of when unused
     trigger:
       - platform: state
-        entity_id: input_select.dryer_status
+        entity_id: sensor.dryer_status
         to: Idle
         for:
-          hours: 4
+          hours: 8
     action:
       - service: switch.turn_off
         target:
