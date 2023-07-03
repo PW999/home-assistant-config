@@ -97,6 +97,11 @@ logbook:
   exclude:
     entities:
       - number.heatbooster_front_window_fan_speed
+    entity_globs:
+      - light.hall*
+      - scene.hall*
+    domains:
+      - update
 
 device_tracker:
   - platform: bluetooth_le_tracker
