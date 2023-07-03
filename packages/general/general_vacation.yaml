@@ -32,14 +32,20 @@ automation:
       - service: input_boolean.turn_on
         data:
           entity_id: input_boolean.master_switch
+      - service: logbook.log
+        data:
+          name: general_vacation_turn_on_master_switch
+          message: "Master switched turned on by vacation schedule"
+          entity_id: input_boolean.master_switch
+          domain: input_boolean
 
   # WHEN ON VACATION, TURN OFF THE MASTER SWITCH AFTER 3 HOURS OF LIGHT #
   - id: general_vacation_turn_off_master_switch
     alias: Vacation - Turn off lights in the evening
     description: Turn off master switch
     trigger:
-      - entity_id: input_boolean.dusk_till_dawn
-        for: "04:20:00"
+      - entity_id: light.living_room_big
+        for: "03:00:00"
         platform: state
         to: "on"
     condition:
@@ -53,3 +59,9 @@ automation:
       - service: input_boolean.turn_off
         data:
           entity_id: input_boolean.master_switch
+      - service: logbook.log
+        data:
+          name: general_vacation_turn_off_master_switch
+          message: "Master switched turned off by vacation schedule"
+          entity_id: input_boolean.master_switch
+          domain: input_boolean
