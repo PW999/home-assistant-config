@@ -21,6 +21,9 @@ automation:
       - condition: state
         entity_id: switch.foscam_r2m_one_motion
         state: "on"
+      - alias: "Button triggered long enough ago"
+        condition: template
+        value_template: "{{ (as_timestamp(now()) - as_timestamp(state_attr('automation.button_toggle_master_switch_off', 'last_triggered'))) > 300 }}"
       - condition: or
         conditions:
           - alias: Master switch off and button_toggle_master_switch_off not running still
