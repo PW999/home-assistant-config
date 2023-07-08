@@ -66,6 +66,10 @@ HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
 * Onvif (for the Foscam IP camera)
 * MQTT
 
+## Custom components
+* [ICS Calendar](https://github.com/franc6/ics_calendar) to pull calendar from Outlook
+* [Afvalbeheer](https://github.com/pippyn/Home-Assistant-Sensor-Afvalbeheer) to get waste reminders (since the official Belgian app is crap)
+
 # Installation
 I'm running HAOS as a virtual machine on Proxmox in a 2 core 4GB VM.
 
