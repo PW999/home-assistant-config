@@ -103,3 +103,9 @@ device_tracker:
   - platform: ping
     hosts:
       pwnitrogen: 10.0.1.101
+
+logger:
+  logs:
+    # https://github.com/home-assistant/core/issues/95036
+    # https://github.com/home-assistant/core/issues/94713
+    homeassistant.components.command_line: error
