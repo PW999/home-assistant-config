@@ -25,11 +25,17 @@ automation:
       - service: input_boolean.turn_on
         data:
           entity_id: input_boolean.master_switch
+      - service: logbook.log
+        data:
+          name: button_hall_master_switch_on
+          message: "Master switched turned on by button"
+          entity_id: input_boolean.master_switch
+          domain: input_boolean
 
   - id: button_hall_master_switch_off
     alias: Button - Toggle master switch off
     description: Use center button of Osram Mini to turn off the master switch after 15s (blink hall light to confirm action)
-    mode: single  # make sure a double press doesn't do strange things
+    mode: single # make sure a double press doesn't do strange things
     trigger:
       - platform: event
         event_type: deconz_event
@@ -50,6 +56,12 @@ automation:
       - service: input_boolean.turn_off
         data:
           entity_id: input_boolean.master_switch
+      - service: logbook.log
+        data:
+          name: button_hall_master_switch_off
+          message: "Master switched turned off by button"
+          entity_id: input_boolean.master_switch
+          domain: input_boolean
 
   - id: button_hall_leave_and_roomba
     alias: Button - Leave and start Roomba
@@ -60,7 +72,7 @@ automation:
         event_type: deconz_event
         event_data:
           id: lightify_switch_mini_26
-          event: 2002   # short button press
+          event: 2002 # short button press
     condition:
       - condition: state
         entity_id: input_boolean.master_switch
@@ -78,6 +90,12 @@ automation:
       - service: input_boolean.turn_off
         data:
           entity_id: input_boolean.master_switch
+      - service: logbook.log
+        data:
+          name: button_hall_leave_and_roomba
+          message: "Master switched turned off by button"
+          entity_id: input_boolean.master_switch
+          domain: input_boolean
 
   - id: button_hall_cancel_roomba_timer
     alias: Button - Cancel Roomba
@@ -88,7 +106,7 @@ automation:
         event_type: deconz_event
         event_data:
           id: lightify_switch_mini_26
-          event: 2003   # long button press (release)
+          event: 2003 # long button press (release)
     action:
       - service: light.toggle
         data:
