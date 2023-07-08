@@ -1,8 +1,0 @@
-<%
-  location_name = 'Pantry'
-  sensor_id = 'sensor.pantry_door_temperature'
-  temperature_offset = '- 2.5'
-  erb = ERB.new(File.read(File.expand_path('template_temperature_offset.yaml.erb', __dir__)))
-  erb.filename = __FILE__
-%>
-<%= erb.result(binding) %>
