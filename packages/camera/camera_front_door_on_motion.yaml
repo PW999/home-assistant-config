@@ -97,16 +97,16 @@ script:
           filename: >-
             /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M')
             }}.mp4
-      # - wait_for_trigger:
-      #     - platform: state
-      #       entity_id: group.household_members
-      #       to: home
-      #   timeout: "00:00:10"
-      #   continue_on_timeout: true
-      # - condition: state
-      #   alias: Check if nobody is home
-      #   entity_id: group.household_members
-      #   state: not_home
+      - wait_for_trigger:
+          - platform: state
+            entity_id: group.household_members
+            to: home
+        timeout: "00:00:10"
+        continue_on_timeout: true
+      - condition: state
+        alias: Check if nobody is home
+        entity_id: group.household_members
+        state: not_home
       - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
