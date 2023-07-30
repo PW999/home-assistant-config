@@ -49,5 +49,5 @@ automation:
       - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
-            Tomorrow we must put {{ trigger.to_state.state }} outside
+            Tomorrow we must put {{ states('sensor.recycleapp_tomorrow') }} outside
           title: Waste
