@@ -48,10 +48,12 @@ automation:
             target:
               entity_id: light.bathroom_light
         else:
-          - if: # at night when the master is off (I'm asleep)
+          - if: # at night or morning when the master is off (I'm asleep)
               - condition: state
                 entity_id: input_select.home_mode
-                state: Night
+                state:
+                  - Night
+                  - Morning
               - condition: state
                 entity_id: input_boolean.master_switch
                 state: "off"
