@@ -37,6 +37,12 @@ recorder:
       - input_number.electricity_*
       - input_number.forecast_*
       - input_text.forecast_*
+      - sensor.pwmanjaro_disk*
+      - sensor.pwmanjaro_gpu*
+      - sensor.pwmanjaro_cpu*
+      - sensor.pwmanjaro_memory*
+      - sensor.pwmanjaro_network*
+      - sensor.pwmanjaro_media_info
     event_types:
       - call_service # Don't record service calls
 
@@ -83,6 +89,12 @@ influxdb:
       - sensor.pwxperia10iv*
       - sensor.*presence
       - sensor.foscam_r2m_1_log*
+      - sensor.pwmanjaro_disk*
+      - sensor.pwmanjaro_gpu*
+      - sensor.pwmanjaro_cpu*
+      - sensor.pwmanjaro_memory*
+      - sensor.pwmanjaro_network*
+      - sensor.pwmanjaro_media_info
 
 logbook:
   exclude:
