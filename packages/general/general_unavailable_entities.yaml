@@ -27,7 +27,25 @@ template:
               'sensor.pm10_2', 
               'sensor.pm10_3', 
               'sensor.lightify_switch_mini_26_battery_level', 
-              'sensor.lightify_switch_mini_27_battery_level'
+              'sensor.lightify_switch_mini_27_battery_level',
+              'button.pwmanjaro_suspend',
+              'camera.pwmanjaro_screenshot',
+              'select.pwmanjaro_boot_select',
+              'sensor.pwmanjaro_cpu_usage',
+              'sensor.pwmanjaro_disk_dev_sdd1',
+              'sensor.pwmanjaro_disk_dev_sdd2',
+              'sensor.pwmanjaro_disk_dev_sdd5',
+              'sensor.pwmanjaro_disk_dev_sdd6',
+              'sensor.pwmanjaro_gpu_nvidia_0',
+              'sensor.pwmanjaro_idle',
+              'sensor.pwmanjaro_media_info',
+              'sensor.pwmanjaro_memory_usage',
+              'sensor.pwmanjaro_network_download',
+              'sensor.pwmanjaro_network_upload',
+              'switch.pwmanjaro_keep_alive',
+              'switch.pwmanjaro_screen_onoff',
+              'switch.pwmanjaro_screenshot',
+              'update.pwmanjaro_update'
             ] %}
             {% set ignore_ts = (now().timestamp() - ignore_seconds)|as_datetime %}
             {% set entities = states|rejectattr('domain','in',['group','button','number', 'select', 'input_boolean', 'scene', 'input_boolean', 'update', 'device_tracker'])
