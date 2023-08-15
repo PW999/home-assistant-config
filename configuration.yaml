@@ -64,7 +64,6 @@ influxdb:
     domains:
       - sensor
       - climate
-      - update
   exclude:
     domains:
       - camera
@@ -74,6 +73,7 @@ influxdb:
       - switch
       - scene
       - device_tracker
+      - update
     entities:
       - sensor.last_boot
       - sensor.washing_machine_status
