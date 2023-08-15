@@ -4,16 +4,19 @@ default_config:
 homeassistant:
   packages: !include_dir_named packages
 
+# Blueprints created from the UI are placed here and are otherwise not picked up
 automation: !include_dir_merge_list automations/
 
 frontend:
   themes: !include_dir_merge_named themes
 
+# Recorder stores historical information used the History portion of entities
+# It's configured to use a PostgresSQL database running in a LXC Container.
 recorder:
-  db_url: !secret recorder_url
-  purge_keep_days: 30
-  commit_interval: 120
-  exclude:
+  db_url: !secret recorder_url                # postgresql://<USERNAME>:<PASSWORD>@pg1.pwcasa.local/homeassistant?client_encoding=utf8
+  purge_keep_days: 30                         # Deletes data older than 30 days, Postgres can handle more, but long term data is stored in Influx
+  commit_interval: 120                        # No need to commit very often, lower commit rates reduce stress on SD/SSD
+  exclude:                                    # Exclude a lot of stuff that generates noise or is just not interesting
     domains:
       - automation
       - updater
@@ -25,39 +28,46 @@ recorder:
       - camera.buienradar_loop
       - weather.pw_casa_hourly
     entity_globs:
-      - sensor.*absolute_humidity
-      - sensor.*estimated_current
+      - sensor.*absolute_humidity             # It's a helper for some automations but I don't care about the value
+      - sensor.*estimated_current             # Some WLED data I don't need or is very noisy
       - sensor.*_wled_free_memory
       - sensor.*_wled_wi_fi_bssid
       - sensor.*_wled_uptime
       - sensor.*_wled_wi_fi_channel
-      - sensor.mi_9t*
-      - sensor.pwxperia10iv*
-      - sensor.*presence
-      - input_number.electricity_*
+      - sensor.mi_9t*                         # Old phone, don't care about the sensor history
+      - sensor.pwxperia10iv*                  # Current phone, don't care about the sensor history
+      - sensor.*presence                      # Osram motion sensor included temperature sensors are way off, see sensor_compensation.yaml
+      - input_number.electricity_*            # Input numbers hardly change, don't care about history
       - input_number.forecast_*
       - input_text.forecast_*
-      - sensor.pwmanjaro_disk*
-      - sensor.pwmanjaro_gpu*
+      - sensor.pwmanjaro_disk*                # LNXLink, it's for my desktop which doesn't run 24/7
+      - sensor.pwmanjaro_gpu*                 # These are some attribut heavy sensors for which I don't need historical data
       - sensor.pwmanjaro_cpu*
       - sensor.pwmanjaro_memory*
       - sensor.pwmanjaro_network*
       - sensor.pwmanjaro_media_info
     event_types:
-      - call_service # Don't record service calls
+      - call_service                          # Don't need to keep track of all service calls made
 
+# InfluxDB v2 is used to store long term data (talking about years)
+# Influx will automatically reduce the data to min/max/avg/stdev
+# on a 1m, 5m, 30m, 1h and 1d basis. For high frequency data (eg power meter)
+# even the 1m window will reduce the data to 1/5th of the original.
+# Raw data is discarded after a year.
+# Influx runs in a separate LCX container. Running it on a Pi will result in
+# issues once you have enough data in it since it's only 32-bit.
 influxdb:
   host: influx.pwcasa.local
   port: 8086
   api_version: 2
   token: !secret influx_token
   organization: homeassistant
-  bucket: homeassistant/hass_1y
+  bucket: homeassistant/hass_1y               # The bucket with raw data which is kept for 1 year
   ssl: false
   verify_ssl: false
   max_retries: 5
-  include:
-    entities:
+  include:                                    # Only include what I (potentially want). Data reduction means data *must* be numeric.
+    entities:                                 # Non-numeric data will break the data reduction
       - counter.dsmr_reconnect
       - weather.pw_casa
       - device_tracker.pwxperia10iv
@@ -99,22 +109,22 @@ influxdb:
 logbook:
   exclude:
     entities:
-      - number.heatbooster_front_window_fan_speed
+      - number.heatbooster_front_window_fan_speed # This thing floods the logbook
     entity_globs:
-      - light.hall*
+      - light.hall*                               # Everytime I go through the hall this logs something, it's not needed
       - scene.hall*
     domains:
-      - update
+      - update                                    # Some update sensors constantly switch between "Unavailable" and "Update/No update"
 
 device_tracker:
-  - platform: bluetooth_le_tracker
+  - platform: bluetooth_le_tracker                # Afaik this doesn't work anymore
     interval_seconds: 30
     consider_home: 240
     new_device_defaults:
       track_new_devices: false
   - platform: ping
     hosts:
-      pwnitrogen: 10.0.1.101
+      pwnitrogen: 10.0.1.101                      # My desktop pc (now called PWManjaro)
 
 logger:
   logs:
