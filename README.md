@@ -61,7 +61,7 @@ HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
 * [MQTT](https://www.home-assistant.io/integrations/mqtt)
   * [LNXLink](https://bkbilly.github.io/lnxlink/)
 * [Android Debug Bridge](https://www.home-assistant.io/integrations/androidtv) (Amazon FireTV stick)
-
+* [Nginx add-on](https://github.com/home-assistant/addons/tree/master/nginx_proxy) (with self-signed certificate)
 ### Cloud
 * ☁ [Electricity Maps](https://www.home-assistant.io/integrations/co2signal)
 * ☁ [Sensor Community](https://www.home-assistant.io/integrations/luftdaten)
