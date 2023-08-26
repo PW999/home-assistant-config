@@ -122,11 +122,6 @@ logbook:
       - update                                    # Some update sensors constantly switch between "Unavailable" and "Update/No update"
 
 device_tracker:
-  - platform: bluetooth_le_tracker                # Afaik this doesn't work anymore
-    interval_seconds: 30
-    consider_home: 240
-    new_device_defaults:
-      track_new_devices: false
   - platform: ping
     hosts:
       pwnitrogen: 10.0.1.101                      # My desktop pc (now called PWManjaro)
@@ -136,3 +131,4 @@ logger:
     # https://github.com/home-assistant/core/issues/95036
     # https://github.com/home-assistant/core/issues/94713
     homeassistant.components.command_line: error
+    homeassistant.components.bluetooth_le_tracker: debug
