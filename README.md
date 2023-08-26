@@ -3,15 +3,14 @@
 ![Last commits](https://img.shields.io/github/last-commit/PW999/home-assistant-config)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/PW999/home-assistant-config)
 ![Maintenance](https://img.shields.io/maintenance/yes/2023)
-![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2023.6-blue)
+![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2023.8-blue)
 ![Ruby](https://img.shields.io/badge/Made%20with-Ruby-red?logo=ruby)
 
 
-This is the home-assistant configuration which I'm using in my little appartment.
-I'm focussing on cloud-less solutions since I value having light and heating when the internet doesn't work.
+Welcome to my Home Assistant configuration.
+I mainly focus on using cloudless solution for controling and managing my devices.
 
 # Hardware
-This is a very short list of the hardware I'm using:
 
 ## Core
 HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
@@ -26,11 +25,11 @@ HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
 * Osram Smart+ Motion sensors (hall/pantry)
 * Osram Smart+ Switch mini (hall, living room)
 * Osram Smart+ Light bulb (living room x2)
-* Ledvance Smart+ smart plug AB32570 (living room)
-* Philips Hue spots GU10 (hall, toilet)
-* Ikea TRÅDFRI motion sensor
-* Ikea TRÅDFRI dimmer button
-* Ikea TRÅDFRI 1055 lumen E27 bulb
+* Ledvance Smart+ smart plug AB32570 (unused)
+* Philips Hue spots GU10 (hall x3, toilet)
+* Ikea TRÅDFRI motion sensor (bathroom)
+* Ikea TRÅDFRI dimmer button (bathroom)
+* Ikea TRÅDFRI 1055 lumen E27 bulb (bathroom)
 
 ## Homematic
 * HM-MOD-RPI-PCB (Homematic/Raspberrymatic) on a Raspberry Pi-3B running from a USB SSD
@@ -51,29 +50,35 @@ HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
 ## Other hardware
 * Roomba 690
 * Foscam R2M Wifi camera
+* Reolink RLC-520A
 * Fluvius Smart meter with [SlimmeLezer](https://www.zuidwijk.com/slimmelezer-smartreader/)
+* [Heatbooster](https://www.sdr-engineering.nl/webshop/index.php?route=product/category&path=59_61)
 
 ## Other integration
-* ☁ CO2 Signal
-* ☁ ~~OpenSenseMap~~ (too often unavailable)
-* ☁ Luftdaten
-* ☁ Met.no weather
-* ~~Bluetooth Device Tracker~~ (broken due to HA changing bluetooth implementation, also no bluetooth on the HP Prodesk)
-* Nmap Device Tracker
-* ☁ Waze Travel Time
-* ☁ Buienradar
-* ☁ ~~Speedtest~~ (removed it because of [this PR](https://github.com/home-assistant/core/pull/84295))
-* Onvif (for the Foscam IP camera)
-* MQTT
+### Local
+* [Nmap Device Tracker](https://www.home-assistant.io/integrations/nmap_tracker)
+* [Onvif](https://www.home-assistant.io/integrations/onvif) (for the Foscam IP camera)
+* [MQTT](https://www.home-assistant.io/integrations/mqtt)
+  * [LNXLink](https://bkbilly.github.io/lnxlink/)
+* [Android Debug Bridge](https://www.home-assistant.io/integrations/androidtv) (Amazon FireTV stick)
+
+### Cloud
+* ☁ [Electricity Maps](https://www.home-assistant.io/integrations/co2signal)
+* ☁ [Sensor Community](https://www.home-assistant.io/integrations/luftdaten)
+* ☁ [Met.no weather](https://www.home-assistant.io/integrations/met)
+* ☁ [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time)
+* ☁ [Buienradar](https://www.home-assistant.io/integrations/buienradar)
 
 ## Custom components
 * [ICS Calendar](https://github.com/franc6/ics_calendar) to pull calendar from Outlook
 * [Afvalbeheer](https://github.com/pippyn/Home-Assistant-Sensor-Afvalbeheer) to get waste reminders (since the official Belgian app is crap)
+* [bar-card](https://github.com/custom-cards/bar-card)
+* [simple-thermostat](https://github.com/nervetattoo/simple-thermostat)
 
 # Installation
 I'm running HAOS as a virtual machine on Proxmox in a 2 core 4GB VM.
 
-On the same proxmox installation I also run the following service for HA:
-* Postgresql
+On the same proxmox server I also run the following service for HA:
+* Postgresql v13
 * InfluxDB v2
 * Mosquitto MQTT broker
