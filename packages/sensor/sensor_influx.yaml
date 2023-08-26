@@ -1,0 +1,169 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   08/2023
+#   @package        :   Influx sensors
+#   @description    :   Fetch data from Influx2 as sensor
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+homeassistant:
+  customize:
+    sensor.pve_cpu_package_temperature:
+      icon: mdi:thermometer
+    sensor.pve_cpu_package_power:
+      icon: mdi:cpu-64-bit
+    sensor.pve_nvme_temperature:
+      icon: mdi:thermometer
+    sensor.pve_sda_temperature:
+      icon: mdi:thermometer
+    sensor.pve_cpu_usage:
+      icon: mdi:cpu-64-bit
+    sensor.pve_mem_free:
+      icon: mdi:memory
+    sensor.pve_pvedata_free:
+      icon: mdi:harddisk
+    sensor.pve_pvedatathin_free:
+      icon: mdi:harddisk
+    sensor.pve_pvedir_free:
+      icon: mdi:harddisk
+    sensor.pve_synology_free:
+      icon: mdi:nas
+
+sensor:
+  - platform: influxdb
+    api_version: 2
+    host: influx.pwcasa.local
+    port: 8086
+    ssl: false
+    organization: telegraf
+    bucket: telegraf
+    token: !secret influx_telegraf_token
+    queries_flux:
+      - group_function: max
+        name: "PVE CPU package temperature"
+        unique_id: pve_cpu_package_temperature
+        unit_of_measurement: °C
+        query: >
+          filter(fn: (r) => r["_measurement"] == "sensors")
+          |> filter(fn: (r) => r["_field"] == "temp_input")
+          |> filter(fn: (r) => r["chip"] == "coretemp-isa-0000")
+          |> filter(fn: (r) => r["feature"] == "package_id_0")
+          |> filter(fn: (r) => r["host"] == "pve.pwcasa.local")
+        range_start: "-1m"
+      - group_function: max
+        name: "PVE NVMe temperature"
+        unique_id: pve_nvme_temperature
+        unit_of_measurement: °C
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "sensors")
+          |> filter(fn: (r) => r["_field"] == "temp_input")
+          |> filter(fn: (r) => r["chip"] == "nvme-pci-0200")
+          |> filter(fn: (r) => r["feature"] == "sensor_1")
+          |> filter(fn: (r) => r["host"] == "pve.pwcasa.local")
+          |> map(fn: (r) => ({ r with _value: math.round(x: r._value) }))
+        range_start: "-1m"
+      - group_function: max
+        name: "PVE sda temperature"
+        unique_id: pve_sda_temperature
+        unit_of_measurement: °C
+        query: >
+          filter(fn: (r) => r["_measurement"] == "smart_device")
+          |> filter(fn: (r) => r["_field"] == "temp_c")
+          |> filter(fn: (r) => r["host"] == "pve.pwcasa.local")
+          |> filter(fn: (r) => r["device"] == "sda")
+        range_start: "-60m"
+      - group_function: max
+        name: "PVE CPU Package power"
+        unique_id: pve_cpu_package_power
+        unit_of_measurement: W
+        query: >
+          filter(fn: (r) => r["_measurement"] == "powerstat_package")
+          |> filter(fn: (r) => r["_field"] == "current_power_consumption_watts")
+          |> filter(fn: (r) => r["host"] == "pve.pwcasa.local")
+          |> group(columns: ["host"])
+          |> aggregateWindow(every: 10s, fn: sum, createEmpty: false)
+        range_start: "-1m"
+  - platform: influxdb
+    api_version: 2
+    host: influx.pwcasa.local
+    port: 8086
+    ssl: false
+    organization: proxmox
+    bucket: proxmox
+    token: !secret influx_proxmox_token
+    queries_flux:
+      - group_function: max
+        name: "PVE CPU usage"
+        unique_id: pve_cpu_usage
+        unit_of_measurement: "%"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "cpustat")
+          |> filter(fn: (r) => r["host"] == "pve")
+          |> filter(fn: (r) => r["_field"] == "cpu")
+          |> map(fn: (r) => ({ r with _value: math.round(x: r._value * 100.0) }))
+        range_start: "-1m"
+      - group_function: min
+        name: "PVE Memory free"
+        unique_id: pve_mem_free
+        unit_of_measurement: "GB"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "memory")
+          |> filter(fn: (r) => r["_field"] == "memfree")
+          |> filter(fn: (r) => r["host"] == "pve")
+          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
+        range_start: "-1m"
+      - group_function: min
+        name: "PVE pvedata free"
+        unique_id: pve_pvedata_free
+        unit_of_measurement: "GB"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "system")
+          |> filter(fn: (r) => r["_field"] == "avail")
+          |> filter(fn: (r) => r["host"] == "pvedata")
+          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
+        range_start: "-1m"
+      - group_function: min
+        name: "PVE pvedatathin free"
+        unique_id: pve_pvedatathin_free
+        unit_of_measurement: "GB"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "system")
+          |> filter(fn: (r) => r["_field"] == "avail")
+          |> filter(fn: (r) => r["host"] == "pvedatathin")
+          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
+        range_start: "-1m"
+      - group_function: min
+        name: "PVE pvedir free"
+        unique_id: pve_pvedir_free
+        unit_of_measurement: "GB"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "system")
+          |> filter(fn: (r) => r["_field"] == "avail")
+          |> filter(fn: (r) => r["host"] == "pvedir")
+          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
+        range_start: "-1m"
+      - group_function: min
+        name: "PVE synology free"
+        unique_id: pve_synology_free
+        unit_of_measurement: "GB"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "system")
+          |> filter(fn: (r) => r["_field"] == "avail")
+          |> filter(fn: (r) => r["host"] == "synology")
+          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
+        range_start: "-1m"

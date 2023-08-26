@@ -110,6 +110,7 @@ influxdb:
       - sensor.pwmanjaro_memory*
       - sensor.pwmanjaro_network*
       - sensor.pwmanjaro_media_info
+      - sensor.pve_*                      # This is data queried from proxmox, no need to duplicate it in the HA bucket
 
 logbook:
   exclude:
