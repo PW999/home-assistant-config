@@ -17,68 +17,112 @@ HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
 
 ![HPProdesk](./doc/img/hpprodesk.jpg)
 
-## Zigbee
-* ConbeeII stick (Zigbee/Deconz)
-* Xiaomi Aqara temperature and humidity sensor (living room, kitchen, bathroom, office, bedroom, terrace)
-* Xiaomi Aqara motion sensor (hall)
-* Xiaomi Mi Smart plug ZNCZ04LM (bathroom fan)
-* Osram Smart+ Motion sensors (hall/pantry)
-* Osram Smart+ Switch mini (hall, living room)
-* Osram Smart+ Light bulb (living room x2)
-* Ledvance Smart+ smart plug AB32570 (unused)
-* Philips Hue spots GU10 (hall x3, toilet)
-* Ikea TRÅDFRI motion sensor (bathroom)
-* Ikea TRÅDFRI dimmer button (bathroom)
-* Ikea TRÅDFRI 1055 lumen E27 bulb (bathroom)
-
-## Homematic
-* HM-MOD-RPI-PCB (Homematic/Raspberrymatic) on a Raspberry Pi-3B running from a USB SSD
-* Homematic basic thermostat (living + office)
-
-## ESPHome
-* GoSund (/Tuya) SP-112 wifi power plug (x4)
-* GoSund (/Tuya) SP-1 wifi power plug (x2)
-
-## Tasmota
-* Athom Tasmota EU plug V2 (x2)
-
-## WLED
-* [ESP8266](doc/img/wled.jpg) (living room x2, office x2)
-  * Mean Well LPV100-12/Ledmo HTY-1200500 adapter
-  * BTF-Lighting WS2811 BTF-12V-60L-W
-
-## Other hardware
-* Roomba 690
-* Foscam R2M Wifi camera
-* Reolink RLC-520A
-* Fluvius Smart meter with [SlimmeLezer](https://www.zuidwijk.com/slimmelezer-smartreader/)
-* [Heatbooster](https://www.sdr-engineering.nl/webshop/index.php?route=product/category&path=59_61)
-
-## Other integration
-### Local
-* [Nmap Device Tracker](https://www.home-assistant.io/integrations/nmap_tracker)
-* [Onvif](https://www.home-assistant.io/integrations/onvif) (for the Foscam IP camera)
-* [MQTT](https://www.home-assistant.io/integrations/mqtt)
-  * [LNXLink](https://bkbilly.github.io/lnxlink/)
-* [Android Debug Bridge](https://www.home-assistant.io/integrations/androidtv) (Amazon FireTV stick)
-* [Nginx add-on](https://github.com/home-assistant/addons/tree/master/nginx_proxy) (with self-signed certificate)
-### Cloud
-* ☁ [Electricity Maps](https://www.home-assistant.io/integrations/co2signal)
-* ☁ [Sensor Community](https://www.home-assistant.io/integrations/luftdaten)
-* ☁ [Met.no weather](https://www.home-assistant.io/integrations/met)
-* ☁ [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time)
-* ☁ [Buienradar](https://www.home-assistant.io/integrations/buienradar)
-
-## Custom components
-* [ICS Calendar](https://github.com/franc6/ics_calendar) to pull calendar from Outlook
-* [Afvalbeheer](https://github.com/pippyn/Home-Assistant-Sensor-Afvalbeheer) to get waste reminders (since the official Belgian app is crap)
-* [bar-card](https://github.com/custom-cards/bar-card)
-* [simple-thermostat](https://github.com/nervetattoo/simple-thermostat)
-
-# Installation
 I'm running HAOS as a virtual machine on Proxmox in a 2 core 4GB VM.
 
-On the same proxmox server I also run the following service for HA:
-* Postgresql v13
+On the same Proxmox server I have the following LXC containers to support HA:
+
+* Postgresql v15
 * InfluxDB v2
 * Mosquitto MQTT broker
+
+Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
+
+## Bridges
+| Device                            | Integration                                                   | Remarks                      |
+|-----------------------------------|---------------------------------------------------------------|------------------------------|
+| Conbee II USB Stick               | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | 
+| [HM-MOD-RPI-PCB](https://de.elv.com/elv-homematic-komplettbausatz-funkmodul-fuer-raspberry-pi-hm-mod-rpi-pcb-fuer-smart-home-hausautomation-142141) | [Homematic](https://www.home-assistant.io/integrations/homematic/)  | Installed on RPI 3B to control smart heating valves using [Rasbperrimatic](https://raspberrymatic.de/)  |
+
+## Ligts
+| Device                            | Integration                                                   | Remarks                      |
+|-----------------------------------|---------------------------------------------------------------|------------------------------|
+| Osram Smart+ Light bulb  (x4)     | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable light with temperature control (warm/cold) |
+| Philips Hue spots GU10   (x4)     | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable spots               |
+| Ikea TRÅDFRI 1055 lumen E27 bulb  | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable light with temperature control (warm/cold) |
+| WLED on [ESP8266](doc/img/wled.jpg) | [WLED](https://www.home-assistant.io/integrations/wled/)    | BTF-Lighting WS2811 BTF-12V-60L-W led strip |
+| [Athom WLED controller](https://www.athom.tech/blank-1/wled-high-power-led-strip-controller)| [WLED](https://www.home-assistant.io/integrations/wled/)    | BTF-Lighting WS2811 BTF-12V-60L-W led strip |
+
+## Sensors
+
+| Device                            | Integration                                                   | Remarks                      |
+|-----------------------------------|---------------------------------------------------------------|------------------------------|
+| [Xiaomi Aqara temperature & humidity sensor](https://www.aqara.com/us/product/temperature-humidity-sensor/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) | Indoor & outdoor temperature reporting |
+| [Xiami Aqara motion sensor P1](https://www.aqara.com/us/product/motion-sensor-p1/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) |  |
+| Osram Smart+ Motion sensors | [Deconz](https://www.home-assistant.io/integrations/deconz/) | | 
+| [Aquara door & window sensor](https://www.aqara.com/us/product/door-and-window-sensor/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) |  |
+| [Ikea TRÅDFRI motion sensor](https://www.ikea.com/be/nl/p/tradfri-draadloze-bewegingssensor-smart-wit-70429913/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) |  |
+
+## Climate
+| Device                            | Integration                                                   | Remarks                      |
+|-----------------------------------|---------------------------------------------------------------|------------------------------|
+| [Homematic basic thermostat](https://homematic-ip.com/en/product/radiator-thermostat-basic) | [Homematic](https://www.home-assistant.io/integrations/homematic/) | No cloud required |
+| [Homematic radiator thermostat](https://homematic-ip.com/en/product/radiator-thermostat) | [Homematic](https://www.home-assistant.io/integrations/homematic/) | No cloud required, slightly better build quality |
+| [Heatbooster](https://www.sdr-engineering.nl/webshop/index.php?route=product/category&path=59_61) | [MQTT](https://www.home-assistant.io/integrations/mqtt/) | With 5x 80mm zip-tied together underneath a radiator |
+
+## Power
+| Device                            | Integration                                                   | Remarks                      |
+|-----------------------------------|---------------------------------------------------------------|------------------------------|
+| GoSund (/Tuya) SP-112 (x4)        | [ESPHome](https://www.home-assistant.io/integrations/esphome/) | "Hacked" and flashed with ESPHome |
+| GoSund (/Tuya) SP-1 (x2)          | [ESPHome](https://www.home-assistant.io/integrations/esphome/) | "Hacked" and flashed with ESPHome |
+| [Athom Tasmota EU plug v2](https://www.athom.tech/blank-1/EU-plug) | [Tasmota](https://www.home-assistant.io/integrations/tasmota/) | |
+| Ledvance Smart+ smart plug AB32570| [Deconz](https://www.home-assistant.io/integrations/deconz/) | Only on/off, does not report power usage |
+| Xiaomi Mi Smart plug ZNCZ04LM     | [Deconz](https://www.home-assistant.io/integrations/deconz/) | Only on/off, does not report power usage |
+| [Fluvius digital meter](https://www.fluvius.be/nl/meters-en-meterstanden/digitale-meter)  | [DSMR](https://www.home-assistant.io/integrations/dsmr_reader/) | Official BE smart meter with [SlimmeLezer](https://www.zuidwijk.com/slimmelezer-smartreader/) connected to P1 port |
+
+## Buttons
+| Device                            | Integration                                                   | Remarks                      |
+|-----------------------------------|---------------------------------------------------------------|------------------------------|
+| Osram Smart+ Switch mini  (x2)    | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Has 3 buttons and short/long press support |
+| [IKEA wireless dimmer](https://www.ikea.com/be/nl/p/tradfri-draadloze-dimmer-smart-wit-70408595/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) | 2 buttons with short/long press support |
+
+## Device tracking
+| Device                            | Integration                                                   |
+|-----------------------------------|---------------------------------------------------------------|
+| nmap                              | [Nmap Device Tracker](https://www.home-assistant.io/integrations/nmap_tracker) |
+| Companion app                     | [Mobile app](https://www.home-assistant.io/integrations/mobile_app/) |
+
+## Security
+| Device                            | Integration                                                   | Remarks                      |
+|-----------------------------------|---------------------------------------------------------------|------------------------------|
+| [Reolink RLC-520A](https://reolink.com/product/rlc-520a/) | [Reolink](https://www.home-assistant.io/integrations/reolink/)  | No cloud or app required |
+| [Foscam R2M PT-camera](https://www.foscam.eu/r2m-wb.html) | [Foscam](https://www.home-assistant.io/integrations/foscam/) <br />[Onvif](https://www.home-assistant.io/integrations/onvif/)<br />[Command line](https://www.home-assistant.io/integrations/command_line/) | No cloud or app required. Web interface requires IE6 and ActiveX, desktop app is ok. Human detection requires app. |
+
+## Other
+| Device                            | Integration                                                   |
+|-----------------------------------|---------------------------------------------------------------|
+| Roomba 690                        | [Roomba](https://www.home-assistant.io/integrations/roomba/)  |
+
+# Other integration
+## Local
+
+| Name                              | Integration                                                   | Remarks                      |
+|-----------------------------------|---------------------------------------------------------------|------------------------------|
+| [LNXLink](https://bkbilly.github.io/lnxlink/) | [MQTT](https://www.home-assistant.io/integrations/mqtt/) | Linux companion app   |
+| FireTV stick 4K Max               | [Android Debug Bridge](https://www.home-assistant.io/integrations/androidtv) | |
+| Workday sensor                    | [Workday](https://www.home-assistant.io/integrations/workday/) | |
+
+## Cloud based
+
+| Integration                                                   | Remarks                      |
+| --------------------------------------------------------------|------------------------------|
+| [Electricity Maps](https://www.home-assistant.io/integrations/co2signal) | Reports CO2eq, requires API key     |
+| [Sensor Community](https://www.home-assistant.io/integrations/luftdaten) | Community air quality indicators, no API key 
+| [Met.no weather](https://www.home-assistant.io/integrations/met)  | |
+| [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time)
+| [Buienradar](https://www.home-assistant.io/integrations/buienradar) | Shows a map with expected rainfall |
+
+## Addons
+
+| Add-on                                                        | Remarks                      |
+| --------------------------------------------------------------|------------------------------|
+| [Nginx add-on](https://github.com/home-assistant/addons/tree/master/nginx_proxy)  | Using certificates signed by my own, trusted CA |
+| [Studio code server](https://github.com/hassio-addons/addon-vscode) | Since remotely mounting the config folder is pretty damn hard on HAOS |
+| [Terminal & SSH](https://github.com/home-assistant/addons/tree/master/ssh) | For those special cases |
+
+## Custom components
+| Component                                                     | Remarks                      |
+| --------------------------------------------------------------|------------------------------|
+| [ICS Calendar](https://github.com/franc6/ics_calendar)        | Fetch Outlook ICS calendar   |
+| [Afvalbeheer](https://github.com/pippyn/Home-Assistant-Sensor-Afvalbeheer) | Notifies about upcoming was collections |
+| [bar-card](https://github.com/custom-cards/bar-card)          | Shows sensors as bar charts |
+| [simple-thermostat](https://github.com/nervetattoo/simple-thermostat) | Much more compact version card for controlling thermostats |
