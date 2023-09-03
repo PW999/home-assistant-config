@@ -100,6 +100,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | [LNXLink](https://bkbilly.github.io/lnxlink/) | [MQTT](https://www.home-assistant.io/integrations/mqtt/) | Linux companion app   |
 | FireTV stick 4K Max               | [Android Debug Bridge](https://www.home-assistant.io/integrations/androidtv) | |
 | Workday sensor                    | [Workday](https://www.home-assistant.io/integrations/workday/) | |
+| InfluxDB 2                        | [InfluxDB](https://www.home-assistant.io/integrations/influxdb/) | Exports time-series data and query InfluxDB as custom sensors. |
 
 ## Cloud based
 
