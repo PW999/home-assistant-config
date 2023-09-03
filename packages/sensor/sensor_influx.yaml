@@ -34,8 +34,9 @@ sensor:
   - platform: influxdb
     api_version: 2
     host: influx.pwcasa.local
-    port: 8086
-    ssl: false
+    port: 443
+    ssl: true
+    ssl_ca_cert: /config/ssl/ca_certificate.crt
     organization: telegraf
     bucket: telegraf
     token: !secret influx_telegraf_token
@@ -50,7 +51,7 @@ sensor:
           |> filter(fn: (r) => r["chip"] == "coretemp-isa-0000")
           |> filter(fn: (r) => r["feature"] == "package_id_0")
           |> filter(fn: (r) => r["host"] == "pve.pwcasa.local")
-        range_start: "-1m"
+        range_start: "-2m"
       - group_function: max
         name: "PVE NVMe temperature"
         unique_id: pve_nvme_temperature
@@ -64,7 +65,7 @@ sensor:
           |> filter(fn: (r) => r["feature"] == "sensor_1")
           |> filter(fn: (r) => r["host"] == "pve.pwcasa.local")
           |> map(fn: (r) => ({ r with _value: math.round(x: r._value) }))
-        range_start: "-1m"
+        range_start: "-2m"
       - group_function: max
         name: "PVE sda temperature"
         unique_id: pve_sda_temperature
@@ -85,12 +86,13 @@ sensor:
           |> filter(fn: (r) => r["host"] == "pve.pwcasa.local")
           |> group(columns: ["host"])
           |> aggregateWindow(every: 10s, fn: sum, createEmpty: false)
-        range_start: "-1m"
+        range_start: "-2m"
   - platform: influxdb
     api_version: 2
     host: influx.pwcasa.local
-    port: 8086
-    ssl: false
+    port: 443
+    ssl: true
+    ssl_ca_cert: /config/ssl/ca_certificate.crt
     organization: proxmox
     bucket: proxmox
     token: !secret influx_proxmox_token
@@ -106,7 +108,7 @@ sensor:
           |> filter(fn: (r) => r["host"] == "pve")
           |> filter(fn: (r) => r["_field"] == "cpu")
           |> map(fn: (r) => ({ r with _value: math.round(x: r._value * 100.0) }))
-        range_start: "-1m"
+        range_start: "-2m"
       - group_function: min
         name: "PVE Memory free"
         unique_id: pve_mem_free
@@ -118,7 +120,7 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "memfree")
           |> filter(fn: (r) => r["host"] == "pve")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-1m"
+        range_start: "-10m"
       - group_function: min
         name: "PVE pvedata free"
         unique_id: pve_pvedata_free
@@ -130,7 +132,7 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "avail")
           |> filter(fn: (r) => r["host"] == "pvedata")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-1m"
+        range_start: "-10m"
       - group_function: min
         name: "PVE pvedatathin free"
         unique_id: pve_pvedatathin_free
@@ -142,7 +144,7 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "avail")
           |> filter(fn: (r) => r["host"] == "pvedatathin")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-1m"
+        range_start: "-10m"
       - group_function: min
         name: "PVE pvedir free"
         unique_id: pve_pvedir_free
@@ -154,7 +156,7 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "avail")
           |> filter(fn: (r) => r["host"] == "pvedir")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-1m"
+        range_start: "-10m"
       - group_function: min
         name: "PVE synology free"
         unique_id: pve_synology_free
@@ -166,4 +168,4 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "avail")
           |> filter(fn: (r) => r["host"] == "synology")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-1m"
+        range_start: "-10m"
