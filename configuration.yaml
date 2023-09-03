@@ -51,6 +51,7 @@ recorder:
       - sensor.pwmanjaro_memory*
       - sensor.pwmanjaro_network*
       - sensor.pwmanjaro_media_info
+      - sensor.pwmanjaro_idle
     event_types:
       - call_service                          # Don't need to keep track of all service calls made
 
@@ -63,13 +64,14 @@ recorder:
 # issues once you have enough data in it since it's only 32-bit.
 influxdb:
   host: influx.pwcasa.local
-  port: 8086
+  port: 443
   api_version: 2
   token: !secret influx_token
   organization: homeassistant
   bucket: homeassistant/hass_1y               # The bucket with raw data which is kept for 1 year
-  ssl: false
-  verify_ssl: false
+  ssl: true
+  verify_ssl: true
+  ssl_ca_cert: /config/ssl/ca_certificate.crt
   max_retries: 5
   include:                                    # Only include what I (potentially want). Data reduction means data *must* be numeric.
     entities:                                 # Non-numeric data will break the data reduction
@@ -104,13 +106,8 @@ influxdb:
       - sensor.pwxperia10iv*
       - sensor.*presence
       - sensor.foscam_r2m_1_log*
-      - sensor.pwmanjaro_disk*
-      - sensor.pwmanjaro_gpu*
-      - sensor.pwmanjaro_cpu*
-      - sensor.pwmanjaro_memory*
-      - sensor.pwmanjaro_network*
-      - sensor.pwmanjaro_media_info
-      - sensor.pve_*                      # This is data queried from proxmox, no need to duplicate it in the HA bucket
+      - sensor.pwmanjaro_*
+      - sensor.pve_*                              # This is data queried from Influx, no need to duplicate it in the HA bucket
 
 logbook:
   exclude:
