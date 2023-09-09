@@ -33,7 +33,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | Conbee II USB Stick               | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | 
 | [HM-MOD-RPI-PCB](https://de.elv.com/elv-homematic-komplettbausatz-funkmodul-fuer-raspberry-pi-hm-mod-rpi-pcb-fuer-smart-home-hausautomation-142141) | [Homematic](https://www.home-assistant.io/integrations/homematic/)  | Installed on RPI 3B to control smart heating valves using [Rasbperrimatic](https://raspberrymatic.de/)  |
 
-## Ligts
+## Lights
 | Device                            | Integration                                                   | Remarks                      |
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
 | Osram Smart+ Light bulb  (x4)     | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable light with temperature control (warm/cold) |
