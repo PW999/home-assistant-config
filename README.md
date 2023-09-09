@@ -123,7 +123,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 ## Custom components
 | Component                                                     | Remarks                      |
 | --------------------------------------------------------------|------------------------------|
-| [ICS Calendar](https://github.com/franc6/ics_calendar)        | Fetch Outlook ICS calendar   |
-| [Afvalbeheer](https://github.com/pippyn/Home-Assistant-Sensor-Afvalbeheer) | Notifies about upcoming was collections |
+| [ICS Calendar](https://github.com/franc6/ics_calendar)        | Fetches Outlook ICS calendar   |
+| [Afvalbeheer](https://github.com/pippyn/Home-Assistant-Sensor-Afvalbeheer) | Notifies about upcoming waste collections |
 | [bar-card](https://github.com/custom-cards/bar-card)          | Shows sensors as bar charts |
 | [simple-thermostat](https://github.com/nervetattoo/simple-thermostat) | Much more compact version card for controlling thermostats |
