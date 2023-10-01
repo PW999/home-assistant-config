@@ -21,13 +21,23 @@ automation:
       - entity_id: binary_sensor.office_presence
         platform: state
         to: "on"
+      - entity_id: sensor.pwmanjaro_cpu_usage
+        platform: state
+        from: "unavailable"
     condition:
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
-      - condition: state
-        entity_id: group.office_members
-        state: home
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: group.office_members
+            state: home
+          - condition: not
+            conditions:
+              - condition: state
+                entity_id: sensor.pwmanjaro_cpu_usage
+                state: "unavailable"
     action:
       - service: select.select_option
         data:
@@ -49,6 +59,9 @@ automation:
         platform: state
         to: "off"
         for: "00:10:00"
+      - entity_id: sensor.pwmanjaro_cpu_usage
+        platform: state
+        to: "unavailable"
     condition:
       - condition: or
         conditions:
@@ -58,6 +71,9 @@ automation:
           - condition: state
             entity_id: binary_sensor.office_presence
             state: "off"
+          - condition: state
+            entity_id: sensor.pwmanjaro_cpu_usage
+            state: "unavailable"
     action:
       - service: select.select_option
         data:
