@@ -24,6 +24,9 @@ automation:
       - entity_id: sensor.pwmanjaro_cpu_usage
         platform: state
         from: "unavailable"
+      - entity_id: sensor.pwzenbookux303_cpuload
+        platform: state
+        from: "unavailable"
     condition:
       - condition: state
         entity_id: input_boolean.master_switch
@@ -37,6 +40,11 @@ automation:
             conditions:
               - condition: state
                 entity_id: sensor.pwmanjaro_cpu_usage
+                state: "unavailable"
+          - condition: not
+            conditions:
+              - condition: state
+                entity_id: sensor.pwzenbookux303_cpuload
                 state: "unavailable"
     action:
       - service: select.select_option
@@ -62,6 +70,11 @@ automation:
       - entity_id: sensor.pwmanjaro_cpu_usage
         platform: state
         to: "unavailable"
+        for: "00:00:10"
+      - entity_id: sensor.pwzenbookux303_cpuload
+        platform: state
+        to: "unavailable"
+        for: "00:00:10"
     condition:
       - condition: or
         conditions:
@@ -71,9 +84,14 @@ automation:
           - condition: state
             entity_id: binary_sensor.office_presence
             state: "off"
-          - condition: state
-            entity_id: sensor.pwmanjaro_cpu_usage
-            state: "unavailable"
+          - condition: and
+            conditions:
+              - condition: state
+                entity_id: sensor.pwmanjaro_cpu_usage
+                state: "unavailable"
+              - condition: state
+                entity_id: sensor.pwzenbookux303_cpuload
+                state: "unavailable"
     action:
       - service: select.select_option
         data:

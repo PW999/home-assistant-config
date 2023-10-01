@@ -1,0 +1,19 @@
+homeassistant:
+  customize:
+    sensor.pwzenbookux303_battery_charge_remaining_percentage:
+      friendly_name: PWZenbookUX303 Battery %
+    sensor.pwzenbookux303_cpuload:
+      friendly_name: PWZenbookUX303 CPU Usage
+    sensor.pwzenbookux303_gpuload:
+      friendly_name: PWZenbookUX303 GPU Usage
+      icon: mdi:expansion-card-variant
+    sensor.pwzenbookux303_memoryusage:
+      friendly_name: PWZenbookUX303 Memory Usage
+    sensor.pwzenbookux303_gputemperature:
+      friendly_name: PWZenbookUX303 GPU Temp
+    button.pwzenbookux303_hibernate:
+      friendly_name: PWZenbookUX303 Hibernate
+    button.pwzenbookux303_sleep:
+      friendly_name: PWZenbookUX303 Sleep
+    button.pwzenbookux303_shutdown:
+      friendly_name: PWZenbookUX303 Shutdown
