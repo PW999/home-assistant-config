@@ -51,7 +51,20 @@ template:
               'switch.pwmanjaro_keep_alive',
               'switch.pwmanjaro_screen_onoff',
               'switch.pwmanjaro_screenshot',
-              'update.pwmanjaro_update'
+              'update.pwmanjaro_update',
+              'button.pwzenbookux303_hibernate',
+              'button.pwzenbookux303_shutdown',
+              'button.pwzenbookux303_sleep',
+              'sensor.pwzenbookux303_battery_charge_remaining',
+              'sensor.pwzenbookux303_battery_charge_remaining_percentage',
+              'sensor.pwzenbookux303_battery_charge_status',
+              'sensor.pwzenbookux303_battery_full_charge_lifetime',
+              'sensor.pwzenbookux303_battery_powerline_status',
+              'sensor.pwzenbookux303_cpuload',
+              'sensor.pwzenbookux303_gpuload',
+              'sensor.pwzenbookux303_gputemperature',
+              'sensor.pwzenbookux303_memoryusage',
+              'sensor.pwzenbookux303_satellite_cpuload'
             ] %}
             {% set ignore_ts = (now().timestamp() - ignore_seconds)|as_datetime %}
             {% set entities = states|rejectattr('domain','in',['group','button','number', 'select', 'input_boolean', 'scene', 'input_boolean', 'update', 'device_tracker'])
