@@ -3,7 +3,7 @@
 ![Last commits](https://img.shields.io/github/last-commit/PW999/home-assistant-config)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/PW999/home-assistant-config)
 ![Maintenance](https://img.shields.io/maintenance/yes/2023)
-![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2023.8-blue)
+![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2023.9-blue)
 ![Ruby](https://img.shields.io/badge/Made%20with-Ruby-red?logo=ruby)
 
 
