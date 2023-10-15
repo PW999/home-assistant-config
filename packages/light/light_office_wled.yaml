@@ -128,9 +128,18 @@ automation:
       - service: light.turn_on
         data:
           brightness_pct: 100
-          effect: Random Colors
+          effect: Noise 3
+          rgb_color:
+            - 29
+            - 255
+            - 0
         target:
           entity_id: light.office_ceiling
+      - service: select.select_option
+        data:
+          option: "* Color Gradient"
+        target:
+          entity_id: select.office_ceiling_color_palette
 
   - id: light_office_ceiling_turn_off
     alias: Office - Turn ceiling WLED off
