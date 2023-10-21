@@ -19,13 +19,13 @@ automation:
     trigger:
       - entity_id: sensor.bathroom_2
         platform: numeric_state
-        above: 65
+        above: 68
       - entity_id: sensor.bureau_2
         platform: numeric_state
-        above: 70
+        above: 73
       - entity_id: sensor.living_room_2
         platform: numeric_state
-        above: 70
+        above: 73
       - platform: state
         entity_id: sensor.dryer_status
         to: Running
@@ -41,15 +41,15 @@ automation:
     trigger:
       - entity_id: sensor.bathroom_2
         platform: numeric_state
-        below: 65
+        below: 68
         for: "00:10:00"
       - entity_id: sensor.bureau_2
         platform: numeric_state
-        below: 65
+        below: 68
         for: "00:10:00"
       - entity_id: sensor.living_room_2
         platform: numeric_state
-        below: 65
+        below: 68
         for: "00:10:00"
       - entity_id: switch.fan_switch
         platform: state
