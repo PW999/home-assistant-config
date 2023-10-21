@@ -75,7 +75,7 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "temp_c")
           |> filter(fn: (r) => r["host"] == "pve.pwcasa.local")
           |> filter(fn: (r) => r["device"] == "sda")
-        range_start: "-60m"
+        range_start: "-120m"
       - group_function: max
         name: "PVE CPU Package power"
         unique_id: pve_cpu_package_power
