@@ -34,6 +34,24 @@ automation:
       - service: switch.turn_on
         data:
           entity_id: switch.fan_switch
+      - service: logbook.log
+        data:
+          name: humidity_bathroom_fan_on
+          message: Bathroom fan turned on by {{ trigger.entity_id }}
+          entity_id: sensor.bathroom_2
+          domain: sensor
+      - service: logbook.log
+        data:
+          name: humidity_bathroom_fan_on
+          message: Bathroom fan turned on by {{ trigger.entity_id }}
+          entity_id: sensor.living_room_2
+          domain: sensor
+      - service: logbook.log
+        data:
+          name: humidity_bathroom_fan_on
+          message: Bathroom fan turned on by {{ trigger.entity_id }}
+          entity_id: sensor.bureau_2
+          domain: sensor
 
   - id: humidity_bathroom_fan_off
     alias: Bathroom fan - turn off
