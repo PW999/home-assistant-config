@@ -101,7 +101,7 @@ script:
           - platform: state
             entity_id: group.household_members
             to: home
-        timeout: "00:00:10"
+        timeout: "00:07:00"
         continue_on_timeout: true
       - condition: state
         alias: Check if nobody is home
@@ -114,7 +114,7 @@ script:
           title: Motion detected in hallway
           data:
             sticky: true
-            image: http://homeassistant.pwcasa.local:8123/local/snap_hall.jpg
+            image: https://homeassistant.pwcasa.local/local/snap_hall.jpg
       - delay: 1800 # do no spam me with notifications (and keep HA's cost low)
 
   camera_front_door_on_motion_detected_snapshot_loop_script:
