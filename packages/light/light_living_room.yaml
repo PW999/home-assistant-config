@@ -50,7 +50,7 @@ automation:
       - entity_id: binary_sensor.living_room_presence
         platform: state
         to: "off"
-        for: "00:10:00"
+        for: "00:25:00"
       - entity_id: light.living_room_tv # handles the case where the lights go on but I'm not in the living for the next couple of hours
         platform: state
         to: "on"
