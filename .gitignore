@@ -33,3 +33,5 @@ known_devices.yaml
 
 **/__pycache__
 custom_components_repo
+
+.shopping_list.json
