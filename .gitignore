@@ -35,3 +35,4 @@ known_devices.yaml
 custom_components_repo
 
 .shopping_list.json
+frigate.yaml
