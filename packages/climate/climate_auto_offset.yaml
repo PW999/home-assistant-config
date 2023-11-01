@@ -1,0 +1,42 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   11/2023
+#   @package        :   Climate control
+#   @description    :   Adjusts the climate offset since measuring temp near the radiator is dumb
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+input_number:
+  living_room_desired_temperature:
+    min: 15
+    max: 25
+    step: 0.5
+
+automation:
+  - id: climate_control_auto_offset
+    alias: "Offset the target desired temperature"
+    trigger:
+      - platform: time_pattern
+        hours: "*"
+        minutes: "/30"
+        seconds: "0"
+    condition:
+      - alias: "Assume the heating is on"
+        condition: numeric_state
+        entity_id: climate.000a1709af6337
+        attribute: temperature
+        above: 18
+    action:
+      - alias: "Update the input number"
+        service: input_number.set_value
+        target:
+          entity_id: input_number.living_room_desired_temperature
+        data:
+          value: "{{ float(states('input_number.living_room_desired_temperature')) + float(state_attr('climate.000a1709af6337', 'current_temperature')) - float(states('sensor.living_room')) }}"
+
+# Assume target temperature is 20
+# Measured temperature is 21
+# Actual temperature is 19
+# New target temperature should be 22
+# So it's just target + (measured - actual)
