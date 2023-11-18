@@ -14,13 +14,12 @@ automation:
     mode: single
     trigger:
       - platform: numeric_state
-        entity_id: sensor.power_consumption
-        above: 2.5
-        for: "00:05:00"
+        entity_id: sensor.electricity_meter_current_average_demand
+        above: 1.75
     action:
       - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
-            Power consumption is {{ states('sensor.power_consumption') }}.
+            Average power consumption is {{ states('sensor.electricity_meter_current_average_demand') }}.
           title: Capaciteits tarief
       - delay: 900 # cheap trick to only send it once every 15 min
