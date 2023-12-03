@@ -1,0 +1,75 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   12/2023
+#   @package        :   Disables/Enables Frigate
+#   @description    :   Frigate consumes a lot of CPU, don't when I'm at home
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  - id: camera_frigate_enable_detection
+    alias: Camera - Enable Frigate detection
+    mode: single
+    description: Enables frigate when I'm not at home (or asleep)
+    trigger:
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: "off"
+      - platform: state
+        entity_id: input_boolean.vacation
+        to: "on"
+    condition:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_boolean.vacation
+            state: "on"
+          - condition: state
+            entity_id: input_boolean.master_switch
+            state: "off"
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.reolink_motion
+      - service: switch.turn_on
+        target:
+          entity_id: switch.reolink_detect
+      - service: switch.turn_on
+        target:
+          entity_id: switch.r2m_1_onvif_motion
+      - service: switch.turn_on
+        target:
+          entity_id: switch.r2m_1_onvif_detect
+
+  - id: camera_frigate_disable_detection
+    alias: Camera - Disable Frigate detection
+    mode: single
+    description: Disable frigate when I'm at home
+    trigger:
+      - platform: state
+        entity_id: input_boolean.master_switch
+        to: "on"
+      - platform: state
+        entity_id: input_boolean.vacation
+        to: "off"
+    condition:
+        - condition: state
+          entity_id: input_boolean.vacation
+          state: "off"
+        - condition: state
+          entity_id: input_boolean.master_switch
+          state: "on"
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.reolink_detect
+      - service: switch.turn_off
+        target:
+          entity_id: switch.reolink_motion
+      - service: switch.turn_off
+        target:
+          entity_id: switch.r2m_1_onvif_detect
+      - service: switch.turn_off
+        target:
+          entity_id: switch.r2m_1_onvif_motion
