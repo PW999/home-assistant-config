@@ -120,7 +120,7 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "memfree")
           |> filter(fn: (r) => r["host"] == "pve")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-10m"
+        range_start: "-20m"
       - group_function: min
         name: "PVE pvedata free"
         unique_id: pve_pvedata_free
@@ -132,7 +132,7 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "avail")
           |> filter(fn: (r) => r["host"] == "pvedata")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-10m"
+        range_start: "-20m"
       - group_function: min
         name: "PVE pvedatathin free"
         unique_id: pve_pvedatathin_free
@@ -144,7 +144,7 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "avail")
           |> filter(fn: (r) => r["host"] == "pvedatathin")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-10m"
+        range_start: "-20m"
       - group_function: min
         name: "PVE pvedir free"
         unique_id: pve_pvedir_free
@@ -156,7 +156,7 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "avail")
           |> filter(fn: (r) => r["host"] == "pvedir")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-10m"
+        range_start: "-20m"
       - group_function: min
         name: "PVE synology free"
         unique_id: pve_synology_free
@@ -168,4 +168,4 @@ sensor:
           |> filter(fn: (r) => r["_field"] == "avail")
           |> filter(fn: (r) => r["host"] == "synology")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-10m"
+        range_start: "-20m"
