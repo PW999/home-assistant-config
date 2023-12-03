@@ -104,7 +104,7 @@ automation:
         entity_id: sensor.gosund_sp112_3_wattage
         below: 3
         for:
-          minutes: 30
+          minutes: 45
     condition:
       condition: and
       conditions:
