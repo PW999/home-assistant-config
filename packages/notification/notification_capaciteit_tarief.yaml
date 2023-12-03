@@ -8,18 +8,45 @@
 ###############################################################################
 
 automation:
-  - id: morning_notification_capaciteit_tarief
+  - id: notification_capaciteit_tarief
     alias: Notification - Capaciteit tarief
-    description: Send a notification when using more than the 'basic' 2.5kWh
+    description: Send a notification when risking to use more than the 'basic' 2.5kWh
     mode: single
     trigger:
+        # retrigger often, the template as trigger will be too expensive to run
       - platform: numeric_state
         entity_id: sensor.electricity_meter_current_average_demand
-        above: 1.75
+        above: 1.80
+      - platform: numeric_state
+        entity_id: sensor.electricity_meter_current_average_demand
+        above: 1.90
+      - platform: numeric_state
+        entity_id: sensor.electricity_meter_current_average_demand
+        above: 2.0
+      - platform: numeric_state
+        entity_id: sensor.electricity_meter_current_average_demand
+        above: 2.1
+      - platform: numeric_state
+        entity_id: sensor.electricity_meter_current_average_demand
+        above: 2.2
+      - platform: numeric_state
+        entity_id: sensor.electricity_meter_current_average_demand
+        above: 2.3
+    condition:
+      - condition: or
+        conditions:
+            # div by zero but let's just assume we won't even hit 1kWh avg demand at start of window
+          - alias: "If the continue load will result in > 2.5kWh"
+            condition: template
+            value_template: "(float(states('sensor.electricity_meter_current_average_demand')) / float(now().strftime('%M')) * 15) > 2.45"
+          - alias: "Always notify if it's very high"
+            condition: numeric_state
+            entity_id: sensor.electricity_meter_current_average_demand
+            above: 2.29
     action:
       - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Average power consumption is {{ states('sensor.electricity_meter_current_average_demand') }}.
           title: Capaciteits tarief
-      - delay: 900 # cheap trick to only send it once every 15 min
+      - delay: 300 # cheap trick to only send it once every 5 min
