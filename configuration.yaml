@@ -121,11 +121,6 @@ logbook:
     domains:
       - update                                    # Some update sensors constantly switch between "Unavailable" and "Update/No update"
 
-device_tracker:
-  - platform: ping
-    hosts:
-      pwnitrogen: 10.0.1.101                      # My desktop pc (now called PWManjaro)
-
 logger:
   logs:
     # https://github.com/home-assistant/core/issues/95036
