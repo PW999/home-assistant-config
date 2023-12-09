@@ -23,8 +23,6 @@ homeassistant:
       icon: mdi:memory
     sensor.pve_pvedata_free:
       icon: mdi:harddisk
-    sensor.pve_pvedatathin_free:
-      icon: mdi:harddisk
     sensor.pve_pvedir_free:
       icon: mdi:harddisk
     sensor.pve_synology_free:
@@ -131,18 +129,6 @@ sensor:
           filter(fn: (r) => r["_measurement"] == "system")
           |> filter(fn: (r) => r["_field"] == "avail")
           |> filter(fn: (r) => r["host"] == "pvedata")
-          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
-        range_start: "-20m"
-      - group_function: min
-        name: "PVE pvedatathin free"
-        unique_id: pve_pvedatathin_free
-        unit_of_measurement: "GB"
-        imports:
-          - math
-        query: >
-          filter(fn: (r) => r["_measurement"] == "system")
-          |> filter(fn: (r) => r["_field"] == "avail")
-          |> filter(fn: (r) => r["host"] == "pvedatathin")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
         range_start: "-20m"
       - group_function: min
