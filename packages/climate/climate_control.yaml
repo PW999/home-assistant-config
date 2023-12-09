@@ -17,6 +17,7 @@
 
 # Living room: 000A1709AF6337
 # Office: 00201d89a8ac5e
+# Thermostat: 000ea0c990ca42
 
 # Presences
 # - Normal # Not a working day (weekend, public holiday, day off), usually at home
@@ -47,7 +48,7 @@ script:
               - condition: numeric_state
                 entity_id: weather.pw_casa
                 value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
-                above: 21
+                above: 20
               - alias: Summer mode is on
                 condition: state
                 entity_id: input_boolean.summer
@@ -102,7 +103,7 @@ script:
               - condition: numeric_state
                 entity_id: weather.pw_casa
                 value_template: "{{ state_attr('weather.pw_casa', 'temperature') | float }}"
-                above: 21
+                above: 20
               - alias: Summer mode is on
                 condition: state
                 entity_id: input_boolean.summer
@@ -184,8 +185,8 @@ automation:
         entity_id: script.climate_control_set_all
       data:
         variables:
-          living_room_target_temperature: 21
-          office_target_temperature: 21
+          living_room_target_temperature: 20
+          office_target_temperature: 20
           climate_mode: "on"
           source: climate_control_normal_turn_on
 
@@ -211,7 +212,7 @@ automation:
           data:
             variables:
               living_room_target_temperature: 18
-              office_target_temperature: 21
+              office_target_temperature: 20
               climate_mode: "on"
               source: climate_control_wfh_turn_on
         else:
@@ -220,7 +221,7 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 21
+              living_room_target_temperature: 20
               office_target_temperature: 20
               climate_mode: "on"
               source: climate_control_wfh_turn_on
@@ -253,7 +254,7 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 21
+              living_room_target_temperature: 20
               office_target_temperature: 15
               climate_mode: "on"
               source: climate_control_workday_turn_on
@@ -263,8 +264,8 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 21
-              office_target_temperature: 21
+              living_room_target_temperature: 20
+              office_target_temperature: 20
               climate_mode: "on"
               source: climate_control_workday_turn_on
 

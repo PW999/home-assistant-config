@@ -56,7 +56,8 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | Device                            | Integration                                                   | Remarks                      |
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
 | [Homematic basic thermostat](https://homematic-ip.com/en/product/radiator-thermostat-basic) | [Homematic](https://www.home-assistant.io/integrations/homematic/) | No cloud required |
-| [Homematic radiator thermostat](https://homematic-ip.com/en/product/radiator-thermostat) | [Homematic](https://www.home-assistant.io/integrations/homematic/) | No cloud required, slightly better build quality |
+| [Homematic radiator thermostat](https://homematic-ip.com/en/product/wall-thermostat-basic) | [Homematic](https://www.home-assistant.io/integrations/homematic/) | PITA to properly link in CCU, but now the basic thermostat knows the actual temp. |
+| [Homematic wall thermostat](https://homematic-ip.com/en/product/radiator-thermostat) | [Homematic](https://www.home-assistant.io/integrations/homematic/) | No cloud required, slightly better build quality |
 | [Heatbooster](https://www.sdr-engineering.nl/webshop/index.php?route=product/category&path=59_61) | [MQTT](https://www.home-assistant.io/integrations/mqtt/) | With 5x 80mm zip-tied together underneath a radiator |
 
 ## Power
