@@ -2,16 +2,16 @@
 ###############################################################################
 #   @author         :   Phillip (P_W999)
 #   @date           :   12/2023
-#   @package        :   Disables/Enables Frigate
-#   @description    :   Frigate consumes a lot of CPU, don't when I'm at home
+#   @package        :   Disables/Enables Frigate and Reolink detection
+#   @description    :   Frigate consumes a lot of CPU, don't when I'm at home. Also disable Reolink detection so it doesn't record my every move to SD.
 #   @url            :   https://github.com/PW999/home-assistant-config/
 ###############################################################################
 
 automation:
-  - id: camera_frigate_enable_detection
-    alias: Camera - Enable Frigate detection
+  - id: camera_enable_detection
+    alias: Camera - Enable camera detection
     mode: single
-    description: Enables frigate when I'm not at home (or asleep)
+    description: Enables camera detection when I'm not at home (or asleep)
     trigger:
       - platform: state
         entity_id: input_boolean.master_switch
@@ -31,21 +31,37 @@ automation:
     action:
       - service: switch.turn_on
         target:
-          entity_id: switch.reolink_motion
+          entity_id: switch.reolink_rlc510wa_motion
       - service: switch.turn_on
         target:
-          entity_id: switch.reolink_detect
+          entity_id: switch.reolink_rlc520a_motion
       - service: switch.turn_on
         target:
           entity_id: switch.r2m_1_onvif_motion
       - service: switch.turn_on
         target:
+          entity_id: switch.reolink_rlc510wa_detect
+      - service: switch.turn_on
+        target:
+          entity_id: switch.reolink_rlc520a_detect
+      - service: switch.turn_on
+        target:
           entity_id: switch.r2m_1_onvif_detect
+      - service: number.set_value
+        target:
+          entity_id: number.rlc_510wa_motion_sensitivity
+        data:
+          value: 22
+      - service: number.set_value
+        target:
+          entity_id: number.rlc_520a_motion_sensitivity
+        data:
+          value: 22    
 
-  - id: camera_frigate_disable_detection
-    alias: Camera - Disable Frigate detection
+  - id: camera_disable_detection
+    alias: Camera - Disable detection
     mode: single
-    description: Disable frigate when I'm at home
+    description: Disable camera detection when I'm at home
     trigger:
       - platform: state
         entity_id: input_boolean.master_switch
@@ -63,13 +79,29 @@ automation:
     action:
       - service: switch.turn_off
         target:
-          entity_id: switch.reolink_detect
+          entity_id: switch.reolink_rlc510wa_detect
       - service: switch.turn_off
         target:
-          entity_id: switch.reolink_motion
+          entity_id: switch.reolink_rlc520a_detect
       - service: switch.turn_off
         target:
           entity_id: switch.r2m_1_onvif_detect
       - service: switch.turn_off
         target:
+          entity_id: switch.reolink_rlc510wa_motion
+      - service: switch.turn_off
+        target:
+          entity_id: switch.reolink_rlc520a_motion
+      - service: switch.turn_off
+        target:
           entity_id: switch.r2m_1_onvif_motion
+      - service: number.set_value
+        target:
+          entity_id: number.rlc_510wa_motion_sensitivity
+        data:
+          value: 1
+      - service: number.set_value
+        target:
+          entity_id: number.rlc_520a_motion_sensitivity
+        data:
+          value: 1
