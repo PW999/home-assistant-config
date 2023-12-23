@@ -185,7 +185,7 @@ automation:
         entity_id: script.climate_control_set_all
       data:
         variables:
-          living_room_target_temperature: 20
+          living_room_target_temperature: 19
           office_target_temperature: 20
           climate_mode: "on"
           source: climate_control_normal_turn_on
@@ -221,7 +221,7 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 20
+              living_room_target_temperature: 19
               office_target_temperature: 20
               climate_mode: "on"
               source: climate_control_wfh_turn_on
@@ -254,7 +254,7 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 20
+              living_room_target_temperature: 19
               office_target_temperature: 15
               climate_mode: "on"
               source: climate_control_workday_turn_on
@@ -264,7 +264,7 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 20
+              living_room_target_temperature: 19
               office_target_temperature: 20
               climate_mode: "on"
               source: climate_control_workday_turn_on
