@@ -43,7 +43,7 @@ automation:
         then:
           - service: light.turn_on
             data:
-              color_temp: 330
+              color_temp: 285
               brightness: 255
             target:
               entity_id: light.bathroom_light
@@ -60,7 +60,7 @@ automation:
             then:
               - service: light.turn_on
                 data:
-                  color_temp: 380
+                  color_temp: 420
                   brightness: 96
                 target:
                   entity_id: light.bathroom_light
