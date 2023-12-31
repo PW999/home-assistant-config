@@ -8,17 +8,10 @@
 ###############################################################################
 
 timer:
+  # Motion detection doesn't work when I'm in the shower
   bathroom_light_extended_time:
     name: Bathroom light extended timer
     duration: "00:25:00"
-
-input_boolean:
-  bathroom_light_increase_brightness:
-    name: Bathroom on switch pressed continuously
-    initial: false
-  bathroom_light_decrease_brightness:
-    name: Bathroom off switch pressed continuously
-    initial: false
 
 automation:
   - id: light_bathroom_turn_on
@@ -129,117 +122,3 @@ automation:
           flash: short
         target:
           entity_id: light.bathroom_light
-
-  - id: switch_bathroom_on_continuous
-    alias: Bathroom - On switch pressed continuously
-    description: When pressing the on button continously, enable boolean which will increase brightness
-    trigger:
-      - device_id: 38c1a38ab3652833a89847b70a2e1a2a
-        domain: deconz
-        platform: device
-        type: remote_button_long_press
-        subtype: turn_on
-    action:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.bathroom_light_decrease_brightness
-      - service: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.bathroom_light_increase_brightness
-
-  - id: switch_bathroom_off_continuous
-    alias: Bathroom - Off switch pressed continuously
-    description: When pressing the off button continously, enable boolean which will decrease brightness
-    trigger:
-      - device_id: 38c1a38ab3652833a89847b70a2e1a2a
-        domain: deconz
-        platform: device
-        type: remote_button_long_press
-        subtype: turn_off
-    action:
-      - service: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.bathroom_light_decrease_brightness
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.bathroom_light_increase_brightness
-
-  - id: switch_bathroom_continuous_released
-    alias: Bathroom - Switch no longer pressed continuously
-    description: When no longer pressing the button continously, disable booleans which will change brightness
-    trigger:
-      - device_id: 38c1a38ab3652833a89847b70a2e1a2a
-        domain: deconz
-        platform: device
-        type: remote_button_long_release
-        subtype: turn_on
-      - device_id: 38c1a38ab3652833a89847b70a2e1a2a
-        domain: deconz
-        platform: device
-        type: remote_button_long_release
-        subtype: turn_off
-    action:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.bathroom_light_decrease_brightness
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.bathroom_light_increase_brightness
-
-  - id: bathroom_light_change_brightness
-    alias: Bathroom - Change bathroom light brightness
-    trigger:
-      - entity_id: input_boolean.bathroom_light_increase_brightness
-        platform: state
-        to: "on"
-      - entity_id: input_boolean.bathroom_light_decrease_brightness
-        platform: state
-        to: "on"
-    action:
-      if:
-        - condition: state
-          entity_id: input_boolean.bathroom_light_increase_brightness
-          state: "on"
-      then:
-        - repeat:
-            until:
-              - condition: state
-                entity_id: input_boolean.bathroom_light_increase_brightness
-                state: "off"
-            sequence:
-              - service: light.turn_on
-                target:
-                  entity_id: light.bathroom_light
-                data:
-                  brightness_step: 2
-      else: # kind of implies that the decrease boolean is on
-        - repeat:
-            until:
-              - condition: state
-                entity_id: input_boolean.bathroom_light_decrease_brightness
-                state: "off"
-            sequence:
-              - service: light.turn_on
-                target:
-                  entity_id: light.bathroom_light
-                data:
-                  brightness_step: -2
-
-  - id: switch_bathroom_auto_reset
-    alias: Bathroom - Reset continuous on booleans
-    trigger:
-      - entity_id: input_boolean.bathroom_light_increase_brightness
-        platform: state
-        to: "on"
-        for: "00:01:00"
-      - entity_id: input_boolean.bathroom_light_decrease_brightness
-        platform: state
-        to: "on"
-        for: "00:01:00"
-    action:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.bathroom_light_decrease_brightness
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.bathroom_light_increase_brightness
