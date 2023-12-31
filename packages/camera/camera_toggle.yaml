@@ -13,6 +13,8 @@ automation:
     mode: single
     description: Enables camera detection when I'm not at home (or asleep)
     trigger:
+      - platform: homeassistant
+        event: start
       - platform: state
         entity_id: input_boolean.master_switch
         to: "off"
@@ -29,24 +31,9 @@ automation:
             entity_id: input_boolean.master_switch
             state: "off"
     action:
-      - service: switch.turn_on
-        target:
-          entity_id: switch.reolink_rlc510wa_motion
-      - service: switch.turn_on
-        target:
-          entity_id: switch.reolink_rlc520a_motion
-      - service: switch.turn_on
-        target:
-          entity_id: switch.r2m_1_onvif_motion
-      - service: switch.turn_on
-        target:
-          entity_id: switch.reolink_rlc510wa_detect
-      - service: switch.turn_on
-        target:
-          entity_id: switch.reolink_rlc520a_detect
-      - service: switch.turn_on
-        target:
-          entity_id: switch.r2m_1_onvif_detect
+      - service: hassio.addon_start
+        data:
+          addon: ccab4aaf_frigate
       - service: number.set_value
         target:
           entity_id: number.rlc_510wa_motion_sensitivity
@@ -63,6 +50,8 @@ automation:
     mode: single
     description: Disable camera detection when I'm at home
     trigger:
+      - platform: homeassistant
+        event: start
       - platform: state
         entity_id: input_boolean.master_switch
         to: "on"
@@ -77,24 +66,9 @@ automation:
           entity_id: input_boolean.master_switch
           state: "on"
     action:
-      - service: switch.turn_off
-        target:
-          entity_id: switch.reolink_rlc510wa_detect
-      - service: switch.turn_off
-        target:
-          entity_id: switch.reolink_rlc520a_detect
-      - service: switch.turn_off
-        target:
-          entity_id: switch.r2m_1_onvif_detect
-      - service: switch.turn_off
-        target:
-          entity_id: switch.reolink_rlc510wa_motion
-      - service: switch.turn_off
-        target:
-          entity_id: switch.reolink_rlc520a_motion
-      - service: switch.turn_off
-        target:
-          entity_id: switch.r2m_1_onvif_motion
+      - service: hassio.addon_stop
+        data:
+          addon: ccab4aaf_frigate
       - service: number.set_value
         target:
           entity_id: number.rlc_510wa_motion_sensitivity
