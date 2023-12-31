@@ -64,7 +64,7 @@ automation:
     condition:
       - condition: numeric_state
         entity_id: sensor.living_room
-        above: 15
+        above: 16   # 70% @ 15°c == 52% @ 20°c
       - condition: numeric_state
         entity_id: sensor.living_room_2
         above: 70
