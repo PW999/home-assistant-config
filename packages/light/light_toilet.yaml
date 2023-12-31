@@ -25,12 +25,12 @@ automation:
 
   - id: light_toilet_off
     alias: Toilet light off
-    description: Turns the toilet light off when motion is not detected for 4 min
+    description: Turns the toilet light off when motion is not detected for 5 min
     trigger:
       - entity_id: binary_sensor.toilet_presence
         platform: state
         to: "off"
-        for: "00:04:00"
+        for: "00:05:00"
     action:
       - service: light.turn_off
         data:
