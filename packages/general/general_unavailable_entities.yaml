@@ -20,14 +20,9 @@ template:
           entity_id: >
             {% set ignore_seconds = 7200 %}
             {% set ignored = [
-              'sensor.pm2_5', 
-              'sensor.pm2_5_2', 
-              'sensor.pm2_5_3', 
-              'sensor.pm10', 
-              'sensor.pm10_2', 
-              'sensor.pm10_3', 
               'sensor.lightify_switch_mini_26_battery_level', 
               'sensor.lightify_switch_mini_27_battery_level',
+              'sensor.bathroom_switch_battery',
               'button.pwmanjaro_suspend',
               'camera.pwmanjaro_screenshot',
               'select.pwmanjaro_boot_select',

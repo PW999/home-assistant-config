@@ -108,7 +108,6 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | Integration                                                   | Remarks                      |
 | --------------------------------------------------------------|------------------------------|
 | [Electricity Maps](https://www.home-assistant.io/integrations/co2signal) | Reports CO2eq, requires API key     |
-| [Sensor Community](https://www.home-assistant.io/integrations/luftdaten) | Community air quality indicators, no API key 
 | [Met.no weather](https://www.home-assistant.io/integrations/met)  | |
 | [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time)
 | [Buienradar](https://www.home-assistant.io/integrations/buienradar) | Shows a map with expected rainfall |
