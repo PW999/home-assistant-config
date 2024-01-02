@@ -176,11 +176,11 @@ scene:
         effect: Palette
       light.living_room_big:
         color_temp: 370
-        brightness: 128
+        brightness: 220
         state: "on"
       light.living_room_small:
         color_temp: 370
-        brightness: 160
+        brightness: 192
         state: "on"
       switch.gosund_sp112_4_usb:
         state: "on"
