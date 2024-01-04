@@ -128,16 +128,16 @@ automation:
       - service: light.turn_on
         data:
           brightness_pct: 100
-          effect: Noise 3
+          effect: Pixels
           rgb_color:
-            - 29
             - 255
-            - 0
+            - 218
+            - 153
         target:
           entity_id: light.office_ceiling
       - service: select.select_option
         data:
-          option: "* Color Gradient"
+          option: "* Pixels"
         target:
           entity_id: select.office_ceiling_color_palette
 
