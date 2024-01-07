@@ -50,7 +50,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | [Xiami Aqara motion sensor P1](https://www.aqara.com/us/product/motion-sensor-p1/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) |  |
 | Osram Smart+ Motion sensors | [Deconz](https://www.home-assistant.io/integrations/deconz/) | | 
 | [Aquara door & window sensor](https://www.aqara.com/us/product/door-and-window-sensor/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) |  |
-| [Ikea TRÅDFRI motion sensor](https://www.ikea.com/be/nl/p/tradfri-draadloze-bewegingssensor-smart-wit-70429913/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) |  |
+| [Ikea TRÅDFRI motion sensor](https://www.ikea.com/be/nl/p/tradfri-draadloze-bewegingssensor-smart-wit-70429913/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) | No longer sold, probably for the best. Randomly thinks there's motion. |
 
 ## Climate
 | Device                            | Integration                                                   | Remarks                      |
