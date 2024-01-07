@@ -55,6 +55,10 @@ automation:
         platform: state
         to: "on"
         for: "00:10:00"
+      - platform: state
+        entity_id: media_player.fire_tv_10_0_1_142
+        from: "playing"
+        for: "00:25:00"
     condition:
       - condition: or
         conditions:
@@ -74,6 +78,12 @@ automation:
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
+      - condition: not
+        conditions:
+          - alias: "Do not turn off lights when I'm watching anything on TV"
+            condition: state
+            entity_id: media_player.fire_tv_10_0_1_142
+            state: "playing"
     action:
       service: scene.apply
       data:
@@ -175,11 +185,11 @@ scene:
         brightness: 192
         effect: Palette
       light.living_room_big:
-        color_temp: 370
+        color_temp: 320
         brightness: 220
         state: "on"
       light.living_room_small:
-        color_temp: 370
+        color_temp: 320
         brightness: 192
         state: "on"
       switch.gosund_sp112_4_usb:
@@ -194,11 +204,11 @@ scene:
       light.living_room_big:
         state: "on"
         brightness: 0
-        color_temp: 370
+        color_temp: 320
       light.living_room_small:
         state: "on"
         brightness: 0
-        color_temp: 370
+        color_temp: 320
       switch.gosund_sp112_4_usb:
         state: "off"
   - id: light_living_room_scene_dimmed
