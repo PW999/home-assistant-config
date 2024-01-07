@@ -1,0 +1,21 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   01/2024
+#   @package        :   General System Configuration
+#   @description    :   Stops vscode add-on
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  ## Stop the add-on at night
+  - id: system_stop_vscode
+    alias: System - Stop vscode
+    description: Stops the vscode add-on if not needed
+    trigger:
+      - platform: time
+        at: "05:00:00"
+    action:
+      - service: hassio.addon_stop
+        data:
+          addon: a0d7b954_vscode
