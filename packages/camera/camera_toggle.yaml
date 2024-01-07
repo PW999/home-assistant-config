@@ -11,7 +11,7 @@ automation:
   - id: camera_enable_detection
     alias: Camera - Enable camera detection
     mode: single
-    description: Enables camera detection when I'm not at home (or asleep)
+    description: Enables camera detection when I'm not at home (or asleep), or if on vacation
     trigger:
       - platform: homeassistant
         event: start
@@ -50,8 +50,6 @@ automation:
     mode: single
     description: Disable camera detection when I'm at home
     trigger:
-      - platform: homeassistant
-        event: start
       - platform: state
         entity_id: input_boolean.master_switch
         to: "on"
@@ -79,3 +77,26 @@ automation:
           entity_id: number.rlc_520a_motion_sensitivity
         data:
           value: 1
+
+  - id: camera_load_frigate_integration
+    alias: Camera - Load frigate integration
+    mode: single
+    description: After startup, temporarily launch frigate so HA can load the ingration
+    trigger:
+      - platform: homeassistant
+        event: start
+    condition:
+        - condition: state
+          entity_id: input_boolean.vacation
+          state: "off"
+        - condition: state
+          entity_id: input_boolean.master_switch
+          state: "on"
+    action:
+      - service: hassio.addon_start
+        data:
+          addon: ccab4aaf_frigate
+      - delay: 600
+      - service: hassio.addon_stop
+        data:
+          addon: ccab4aaf_frigate
