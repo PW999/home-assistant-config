@@ -36,7 +36,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 ## Lights
 | Device                            | Integration                                                   | Remarks                      |
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
-| Osram Smart+ Light bulb  (x4)     | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable light with temperature control (warm/cold) |
+| Osram Smart+ Light bulb  (x2)     | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable light with temperature control (warm/cold) |
 | Philips Hue spots GU10   (x4)     | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable spots               |
 | Ikea TRÅDFRI 1055 lumen E27 bulb  | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable light with temperature control (warm/cold) |
 | WLED on [ESP8266](doc/img/wled.jpg) | [WLED](https://www.home-assistant.io/integrations/wled/)    | BTF-Lighting WS2811 BTF-12V-60L-W led strip |
