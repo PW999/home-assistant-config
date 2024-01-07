@@ -25,6 +25,9 @@ automation:
       - condition: state
         entity_id: light.bathroom_light
         state: "off"
+      - alias: "Mitigate Ikea false positives"  # I can't go into my bathroom without triggering the hall lights, even at night.
+        condition: template
+        value_template: "{{ as_local(states.light.hall_2.last_updated) > (now() - timedelta(minutes = 30)) }}"
     action:
       - if: # during the day when master is on
           - condition: state
