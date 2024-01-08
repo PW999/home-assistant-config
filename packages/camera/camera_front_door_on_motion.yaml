@@ -8,22 +8,13 @@
 ###############################################################################
 
 automation:
-  - id: camera_front_door_on_motion_detected
-    alias: Camera - Notify on motion
+  - id: camera_person_detected
+    alias: Camera - Person detected
     mode: single
-    description: Take snapshot from camera and notify in case of motion
     trigger:
-      - platform: state
-        entity_id: binary_sensor.front_door_presence
-        to: "on"
-        from: "off"
+      - platform: mqtt
+        topic: frigate/events
     condition:
-      - condition: state
-        entity_id: switch.foscam_r2m_one_motion
-        state: "on"
-      - alias: "Button triggered long enough ago"
-        condition: template
-        value_template: "{{ (as_timestamp(now()) - as_timestamp(state_attr('automation.button_toggle_master_switch_off', 'last_triggered'))) > 300 }}"
       - condition: or
         conditions:
           - alias: Master switch off and button_toggle_master_switch_off not running still
@@ -40,68 +31,28 @@ automation:
             condition: state
             entity_id: input_boolean.vacation
             state: "on"
+      - "{{ trigger.payload_json['after']['label'] == 'person' }}"
+      - "{{ as_local(state_attr('automation.button_toggle_master_switch_off', 'last_triggered')) < (now() - timedelta(minutes = 5)) }}"
     action:
-      - service: script.camera_front_door_on_motion_detected_script
+      - service: script.turn_on
+        target: 
+          entity_id: script.camera_motion_detected_script
+        data:
+          variables:
+            camera: "{{ trigger.payload_json['after']['camera'] }}"
+            event_id: "{{ trigger.payload_json['after']['id'] }}"
 
-  - id: camera_front_door_on_motion_detected_snapshot_loop
-    alias: Camera - Take snapshots to media folder on motion
-    description: Take snapshot from camera and store in media folder (can run more frequently)
-    trigger:
-      - platform: state
-        entity_id: binary_sensor.front_door_presence
-        to: "on"
-        from: "off"
-    condition:
-      - condition: state
-        entity_id: switch.foscam_r2m_one_motion
-        state: "on"
-      - alias: Only run it when motion is detected (steps out of the loop)
-        condition: state
-        entity_id: binary_sensor.front_door_presence
-        state: "on"
-      - condition: or
-        conditions:
-          - alias: Master switch off and button_toggle_master_switch_off not running still
-            condition: and
-            conditions:
-              - condition: state
-                entity_id: input_boolean.master_switch
-                state: "off"
-              - condition: numeric_state
-                entity_id: automation.button_toggle_master_switch_off
-                attribute: current
-                below: 1
-          - alias: On vacation, trigger always
-            condition: state
-            entity_id: input_boolean.vacation
-            state: "on"
-    action:
-      - service: script.camera_front_door_on_motion_detected_snapshot_loop_script
 
 script:
-  camera_front_door_on_motion_detected_script:
-    description: Captures hall camera when motion is detected and notify if not home in 5 min
+  camera_motion_detected_script:
+    description: Notify on motion if not detected home within 5 minutes
     mode: single
     sequence:
-      - service: camera.snapshot
-        alias: Take snapshot for notification
-        data:
-          filename: /config/www/snap_hall.jpg
-        target:
-          entity_id: camera.r2m_1_onvif_prof0_name
-      - service: camera.record
-        target:
-          entity_id: camera.r2m_1_onvif_prof0_name
-        data:
-          duration: 15
-          filename: >-
-            /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M')
-            }}.mp4
       - wait_for_trigger:
           - platform: state
             entity_id: group.household_members
             to: home
-        timeout: "00:07:00"
+        timeout: "00:05:00"
         continue_on_timeout: true
       - condition: state
         alias: Check if nobody is home
@@ -111,34 +62,12 @@ script:
         data:
           message: |
             It is {{ as_timestamp(now()) | timestamp_custom('%a %B %-m, %I:%M %p') }}
-          title: Motion detected in hallway
+          title: Motion detected by {{ camera }}
           data:
             sticky: true
-            image: https://homeassistant.pwcasa.local/local/snap_hall.jpg
-      - delay: 1800 # do no spam me with notifications (and keep HA's cost low)
-
-  camera_front_door_on_motion_detected_snapshot_loop_script:
-    description: Make multiple captures when motion is detected
-    mode: single
-    sequence:
-      repeat:
-        sequence:
-          - service: camera.snapshot
-            alias: Take a snapshot for storage
-            data:
-              filename: /media/snap_{{ as_timestamp(now()) | timestamp_custom('%Y_%m_%d_%H_%M') }}.jpg
-            target:
-              entity_id: camera.r2m_1_onvif_prof0_name
-          - delay: 5
-        until:
-          - condition: or
-            conditions:
-              - condition: state
-                entity_id: group.household_members
-                state: home
-              - condition: state
-                entity_id: input_boolean.master_switch
-                state: "on"
-              - condition: state
-                entity_id: binary_sensor.front_door_presence
-                state: "off"
+            image: https://homeassistant.pwcasa.local/api/frigate/notifications/{{ event_id }}/snapshot.jpg?format=android
+            actions:
+              - action: URI
+                title: "View clip"
+                uri: https://homeassistant.pwcasa.local/api/frigate/notifications/{{ event_id }}/clip.mp4
+      - delay: 1800 # do no spam me with notifications

@@ -87,7 +87,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
 | [Reolink RLC-520A](https://reolink.com/product/rlc-520a/) | [Reolink](https://www.home-assistant.io/integrations/reolink/)  | No cloud or app required |
 | [Reolink RLC-510WA](https://reolink.com/product/rlc-510wa/) | [Reolink](https://www.home-assistant.io/integrations/reolink/)  | No cloud or app required |
-| [Foscam R2M PT-camera](https://www.foscam.eu/r2m-wb.html) | [Foscam](https://www.home-assistant.io/integrations/foscam/) <br />[Onvif](https://www.home-assistant.io/integrations/onvif/)<br />[Command line](https://www.home-assistant.io/integrations/command_line/) | No cloud or app required. Human detection requires app. <br/>Web interface requires IE6 and ActiveX, desktop app is ok. Security is very weak.<br /> Integration mostly broken, worked around it with Onvif and shell commands. |
+| [Foscam R2M PT-camera](https://www.foscam.eu/r2m-wb.html) | [Command line](https://www.home-assistant.io/integrations/command_line/) | No cloud or app required. Human detection requires app. <br/>Web interface requires IE6 and ActiveX, desktop app is ok. Security is very weak.<br /> Integration mostly broken, worked around it with Frigate and shell commands. |
 
 ## Other
 | Device                            | Integration                                                   |
