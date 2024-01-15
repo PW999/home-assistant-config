@@ -198,9 +198,8 @@ sensor:
     unit_of_measurement: dB
 
 ##############################################
-# DSMR integration (8000000010xxx)
+# DSMR integration
 ##############################################
-# NEXT_ID 4
 automation:
   - id: dsmr_save_yesterday_consumption
     alias: DSMR - Record yesterday consumption
