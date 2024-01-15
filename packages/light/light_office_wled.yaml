@@ -137,7 +137,7 @@ automation:
           entity_id: light.office_ceiling
       - service: select.select_option
         data:
-          option: "* Pixels"
+          option: "* Color Gradient"
         target:
           entity_id: select.office_ceiling_color_palette
 
