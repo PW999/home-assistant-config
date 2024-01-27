@@ -35,6 +35,32 @@
 # 15 < Target temperature < 18: we want heat, but eco-mode (due to absence)
 # Target temperature <= 15: heating off
 
+input_number:
+  climate_living_target:
+    name: Living target temperature
+    initial: 19
+    min: 17
+    max: 21
+    unit_of_measurement: "°C"
+  climate_office_target:
+    name: Office target temperature
+    initial: 20
+    min: 17
+    max: 21
+    unit_of_measurement: "°C"
+  climate_living_target_night:
+    name: Living target temperature off
+    initial: 15
+    min: 14
+    max: 17
+    unit_of_measurement: "°C"
+  climate_office_target_night:
+    name: Office target temperature off
+    initial: 15
+    min: 14
+    max: 17
+    unit_of_measurement: "°C"
+
 script:
   climate_control_set_single:
     description: Sets the target temperature on a single thermostat
@@ -185,8 +211,8 @@ automation:
         entity_id: script.climate_control_set_all
       data:
         variables:
-          living_room_target_temperature: 19
-          office_target_temperature: 20
+          living_room_target_temperature: "{{ states('input_number.climate_living_target') }}"
+          office_target_temperature: "{{ states('input_number.climate_office_target') }}"
           climate_mode: "on"
           source: climate_control_normal_turn_on
 
@@ -211,8 +237,8 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 18
-              office_target_temperature: 20
+              living_room_target_temperature: "{{ states('input_number.climate_living_target_night') }}"
+              office_target_temperature: "{{ states('input_number.climate_office_target') }}"
               climate_mode: "on"
               source: climate_control_wfh_turn_on
         else:
@@ -221,8 +247,8 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 19
-              office_target_temperature: 20
+              living_room_target_temperature: "{{ states('input_number.climate_living_target') }}"
+              office_target_temperature: "{{ states('input_number.climate_office_target') }}"
               climate_mode: "on"
               source: climate_control_wfh_turn_on
 
@@ -254,8 +280,8 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 19
-              office_target_temperature: 15
+              living_room_target_temperature: "{{ states('input_number.climate_living_target') }}"
+              office_target_temperature: "{{ states('input_number.climate_office_target_night') }}"
               climate_mode: "on"
               source: climate_control_workday_turn_on
         else:
@@ -264,8 +290,8 @@ automation:
             entity_id: script.climate_control_set_all
           data:
             variables:
-              living_room_target_temperature: 19
-              office_target_temperature: 20
+              living_room_target_temperature: "{{ states('input_number.climate_living_target') }}"
+              office_target_temperature: "{{ states('input_number.climate_office_target') }}"
               climate_mode: "on"
               source: climate_control_workday_turn_on
 
@@ -289,8 +315,8 @@ automation:
         entity_id: script.climate_control_set_all
       data:
         variables:
-          living_room_target_temperature: 15
-          office_target_temperature: 15
+          living_room_target_temperature: "{{ states('input_number.climate_living_target_night') }}"
+          office_target_temperature: "{{ states('input_number.climate_office_target_night') }}"
           climate_mode: "off"
           source: climate_control_turn_off
 
@@ -306,8 +332,8 @@ automation:
         entity_id: script.climate_control_set_all
       data:
         variables:
-          living_room_target_temperature: 15
-          office_target_temperature: 15
+          living_room_target_temperature: "{{ states('input_number.climate_living_target_night') }}"
+          office_target_temperature: "{{ states('input_number.climate_office_target_night') }}"
           climate_mode: "off"
           source: climate_control_vacation_mode
 
@@ -325,6 +351,7 @@ automation:
         entity_id:
           - person.phillip
         event: leave
+        for: "00:05:00"
       - platform: state
         entity_id: input_boolean.master_switch
         to: "on"
