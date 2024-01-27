@@ -25,6 +25,13 @@ automation:
       - entity_id: binary_sensor.living_room_presence
         platform: state
         to: "on"
+      - entity_id: media_player.fire_tv_10_0_1_142  # immediately switch to movie mode
+        platform: state
+        to: "playing"
+      - entity_id: media_player.fire_tv_10_0_1_142
+        platform: state
+        from: "playing"
+        for: "00:02:00"
     condition:
       - condition: or
         conditions:
@@ -38,10 +45,32 @@ automation:
         entity_id: input_boolean.master_switch
         state: "on"
     action:
-      - service: scene.turn_on
-        entity_id: scene.living_room_evening
-        data:
-          transition: 3
+      - if:
+          - condition: state
+            entity_id: media_player.fire_tv_10_0_1_142
+            state: "playing"
+          - condition: not
+            conditions:
+              - condition: state
+                entity_id: media_player.fire_tv_10_0_1_142
+                state: "org.polymorphicshade.newpipe"
+                attribute: "source"
+              - condition: state
+                entity_id: media_player.fire_tv_10_0_1_142
+                state: "Spotify"
+                attribute: "source"
+        then:
+          - service: scene.turn_on
+            entity_id: scene.living_room_movie
+            data:
+              transition: 2
+        # The `else` is fully optional and can be omitted
+        else:
+          - service: scene.turn_on
+            entity_id: scene.living_room_evening
+            data:
+              transition: 2
+
 
   - id: light_living_room_off_no_presence
     alias: Living room - turn off WLED strips if no presence detected
@@ -191,6 +220,35 @@ scene:
       light.living_room_small:
         color_temp: 320
         brightness: 192
+        state: "on"
+      switch.gosund_sp112_4_usb:
+        state: "on"
+  - id: light_living_room_scene_movie
+    name: Living Room Movie
+    entities:
+      light.front_window:
+        intensity: 97
+        speed: 35
+        state: "on"
+        brightness: 192
+        effect: Candle Multi
+        rgb_color:
+          - 255
+          - 0
+          - 0
+      light.living_room_tv:
+        intensity: 166
+        speed: 25
+        state: "on"
+        brightness: 192
+        effect: Palette
+      light.living_room_big:
+        color_temp: 320
+        brightness: 100
+        state: "on"
+      light.living_room_small:
+        color_temp: 320
+        brightness: 16
         state: "on"
       switch.gosund_sp112_4_usb:
         state: "on"
