@@ -351,7 +351,6 @@ automation:
         entity_id:
           - person.phillip
         event: leave
-        for: "00:05:00"
       - platform: state
         entity_id: input_boolean.master_switch
         to: "on"
