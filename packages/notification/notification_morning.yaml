@@ -14,7 +14,7 @@ automation:
     mode: single
     trigger:
       - platform: time
-        at: "07:00:00"
+        at: "06:50:00"
     condition:
       - condition: state
         entity_id: input_select.presence_mode
@@ -40,7 +40,7 @@ automation:
     mode: single
     trigger:
       - platform: time
-        at: "08:30:00"
+        at: "08:15:00"
     condition:
       - condition: state
         entity_id: input_select.presence_mode
