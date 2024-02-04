@@ -3,21 +3,10 @@
 #   @author         :   Phillip (P_W999)
 #   @date           :   01/2022
 #   @package        :   Roomba automation
-#   @description    :   Presence based automation for Roomba
+#   @description    :   Keep track of last Roomba clean
 #   @url            :   https://github.com/PW999/home-assistant-config/
 #   @credit         :   https://community.home-assistant.io/t/scheduled-timeslot-automation-e-g-vacuum/259147/3
 ###############################################################################
-
-# Roomba integration can't be placed in packages (UI is favoured method anyaway)
-
-timer:
-  # If everybody left, start a countdown. Once the countdown has finished,
-  # check everybody's positions, last time the Roomba vacuumed and then
-  # decide if it needs to clean or not. It's a bit easier to debug compared to a
-  #   for: '00:15:00'
-  roomba_countdown:
-    name: Delays starting Roomba after leaving home
-    duration: "00:05:00"
 
 input_datetime:
   roomba_last_clean:
@@ -38,84 +27,3 @@ automation:
         data:
           entity_id: input_datetime.roomba_last_clean
           datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
-
-  # No longer using this since roomba always gets stuck on my cat's touys, keeping it just in case
-  # - id: roomba_start_countdown
-  #   alias: Roomba - Start countdown
-  #   description: Start the countdown once I leave home (but only during the day)
-  #   trigger:
-  #     - platform: zone
-  #       zone: zone.home
-  #       entity_id:
-  #         - person.phillip
-  #       event: leave
-  #   condition:
-  #     - condition: time
-  #       after: "07:00:00"
-  #       before: "19:30:00"
-  #   action:
-  #     service: timer.start
-  #     data:
-  #       entity_id: timer.roomba_countdown
-
-  - id: roomba_automatic_stop
-    alias: Roomba - Stop
-    description: Makes Roomba return if I get home or if I am closer to home (or stop the timer)
-    trigger:
-      - platform: zone
-        zone: zone.home
-        entity_id:
-          - person.phillip
-        event: enter
-      - platform: zone
-        zone: zone.5km_from_home  # FYI, I shrunk it to 2.5 but the zone is still called zone.5km_from_home, don't name your zones like this
-        entity_id:
-          - person.phillip
-        event: enter
-      - platform: zone
-        zone: zone.mama   # I live close to my mom, but if I'm there, there's usually time enough for Roomba to clean
-        entity_id:
-          - person.phillip
-        event: leave
-      - platform: zone
-        zone: zone.work
-        entity_id:
-          - person.phillip
-        event: leave
-      - platform: time
-        at: "21:00:00"
-    condition:
-      - alias: Only when it's running  # return_to_base when already returning stops it
-        condition: state
-        entity_id: vacuum.pwroomba
-        state: cleaning
-    action:
-      - service: timer.cancel
-        data:
-          entity_id: timer.roomba_countdown
-      - service: vacuum.return_to_base
-        data:
-          entity_id: vacuum.pwroomba
-
-  - id: roomba_start_after_timer
-    alias: Roomba - Start clean
-    description: Starts cleaning after timer expired except if it already ran today
-    trigger:
-      platform: event
-      event_type: timer.finished
-      event_data:
-        entity_id: timer.roomba_countdown
-    # No longer using this condition. Timer is started manually, don't care if it's the second time it runs in a day.
-    # condition:
-    #   - condition: template
-    #     value_template: >
-    #         {% set current_date = now().strftime("%Y-%m-%d") %}
-    #         {% set timeslot_begin = strptime(current_date + " 07:00:00", "%Y-%m-%d %H:%M:%S") %}
-    #         {% set timeslot_end = strptime(current_date + " 20:00:00", "%Y-%m-%d %H:%M:%S") %}
-    #         {% set last_triggered_at = strptime(states('input_datetime.roomba_last_clean'), "%Y-%m-%d %H:%M:%S") %}
-    #         {% set already_triggered_today =  timeslot_begin <= last_triggered_at < timeslot_end %}
-    #         {{ not already_triggered_today }}
-    action:
-      service: vacuum.start
-      data:
-        entity_id: vacuum.pwroomba
