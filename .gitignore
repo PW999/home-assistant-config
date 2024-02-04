@@ -36,3 +36,6 @@ custom_components_repo
 
 .shopping_list.json
 frigate.yaml
+
+.timeline
+.vacuum
