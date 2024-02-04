@@ -155,3 +155,15 @@ sensor:
           |> filter(fn: (r) => r["host"] == "synology")
           |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
         range_start: "-20m"
+      - group_function: min
+        name: "PVE pvehdd free"
+        unique_id: pve_pvehdd_free
+        unit_of_measurement: "GB"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "system")
+          |> filter(fn: (r) => r["_field"] == "avail")
+          |> filter(fn: (r) => r["host"] == "pvehdd")
+          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
+        range_start: "-20m"
