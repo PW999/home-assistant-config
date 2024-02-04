@@ -8,9 +8,9 @@
 ###############################################################################
 
 automation:
-  - id: light_hall_presence_day
-    alias: Hall presence detected during day
-    description: Increase hall brightness during the day when presence is detected
+  - id: light_hall_presence
+    alias: Hall presence detected
+    description: Increase hall brightness when presence is detected
     trigger:
       - entity_id: binary_sensor.hall_presence
         platform: state
@@ -25,44 +25,20 @@ automation:
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
-      - condition: state
-        entity_id: input_select.home_mode
-        state: Day
       - condition: state
         entity_id: binary_sensor.hall_presence
         state: "on"
     action:
-      - service: scene.turn_on
-        entity_id: scene.hall_100
-
-  - id: light_hall_presence_morning_and_evening
-    alias: Hall presence detected during morning and evening
-    description: Increase hall brightness during the morning and evening when presence is detected
-    trigger:
-      - entity_id: binary_sensor.hall_presence
-        platform: state
-        to: "on"
-      - entity_id: binary_sensor.pantry_door
-        platform: state
-        to: "off"
-      - entity_id: input_boolean.master_switch
-        platform: state
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: input_boolean.master_switch
-        state: "on"
-      - condition: state
-        entity_id: binary_sensor.hall_presence
-        state: "on"
-      - condition: not
-        conditions:
+      - if:
           - condition: state
             entity_id: input_select.home_mode
             state: Day
-    action:
-      - service: scene.turn_on
-        entity_id: scene.hall_50
+        then:
+          - service: scene.turn_on
+            entity_id: scene.hall_100
+        else:
+          - service: scene.turn_on
+            entity_id: scene.hall_50
 
   - id: light_hall_presence_night
     alias: Hall presence detected during night
@@ -91,8 +67,8 @@ automation:
         entity_id: scene.hall_night
 
   ## SENSOR CLEAR ##
-  - id: light_hall_clear_day
-    alias: Hall no presence during day
+  - id: light_hall_clear
+    alias: Hall no presence
     description: Keep a dim light on during the day when no presence is detected
     trigger:
       - entity_id: binary_sensor.hall_presence
@@ -107,7 +83,6 @@ automation:
         to: "off"
       - platform: state
         entity_id: input_select.home_mode
-        to: Day
     condition:
       - condition: state
         entity_id: input_select.home_mode
@@ -118,40 +93,6 @@ automation:
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
-    action:
-      - service: scene.turn_on
-        entity_id: scene.hall_25
-        data:
-          transition: 3
-
-  - id: light_hall_clear_evening
-    alias: Hall no presence during the evening
-    description: Keeps a dim light on during the evening when no motion is detected
-    trigger:
-      - entity_id: binary_sensor.hall_presence
-        platform: state
-        to: "off"
-        for: "00:01:00"
-      - entity_id: input_boolean.master_switch
-        platform: state
-        to: "on"
-      - entity_id: binary_sensor.pantry_door
-        platform: state
-        to: "off"
-      - platform: state
-        entity_id: input_select.home_mode
-    condition:
-      - condition: state
-        entity_id: input_boolean.master_switch
-        state: "on"
-      - condition: not
-        conditions:
-          - condition: state
-            entity_id: input_select.home_mode
-            state: Day
-      - condition: state
-        entity_id: binary_sensor.hall_presence
-        state: "off"
     action:
       - service: scene.turn_on
         entity_id: scene.hall_25
@@ -186,8 +127,8 @@ automation:
         entity_id: scene.hall_off
 
   # Pantry
-  - id: light_hall_pantry_on_day
-    alias: Pantry open day
+  - id: light_hall_pantry_on
+    alias: Pantry open
     description: Turn on the hall light closest to the pantry to get some extra pantry light
     trigger:
       - entity_id: binary_sensor.pantry_door
@@ -197,32 +138,17 @@ automation:
       - condition: state
         entity_id: binary_sensor.pantry_door
         state: "on"
-      - condition: not
-        conditions:
+    action:
+      - if:
           - condition: state
             entity_id: input_select.home_mode
             state: Night
-    action:
-      - service: scene.turn_on
-        entity_id: scene.pantry_day
-
-  - id: light_hall_pantry_on_night
-    alias: Pantry open night
-    description: Turn on the hall light closest to the pantry to get some extra pantry light (but less bright because it's night time)
-    trigger:
-      - entity_id: binary_sensor.pantry_door
-        platform: state
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: binary_sensor.pantry_door
-        state: "on"
-      - condition: state
-        entity_id: input_select.home_mode
-        state: Night
-    action:
-      - service: scene.turn_on
-        entity_id: scene.pantry_night
+        then:
+          - service: scene.turn_on
+            entity_id: scene.pantry_night
+        else:
+          - service: scene.turn_on
+            entity_id: scene.pantry_day
 
 scene:
   - id: light_hall_100

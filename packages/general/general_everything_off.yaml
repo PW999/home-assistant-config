@@ -8,55 +8,35 @@
 ###############################################################################
 
 automation:
-  # APPLY GLOBAL SCENES TO ALL LIGHTS AT NIGHT - Night scene has all lights off exception some very dim light in the living room for my cat #
-  - id: general_everything_off_night
-    alias: Global - Home to night mode
-    description: If master switch is turned of in the night
+  - id: general_everything_off
+    alias: Global - Turn lights off
+    description: If master switch is turned off
     trigger:
       - entity_id: input_boolean.master_switch
         platform: state
         to: "off"
       - entity_id: input_select.home_mode
         platform: state
-        to: Night
     condition:
-      - condition: state
-        entity_id: input_select.home_mode
-        state: Night
       - condition: state
         entity_id: input_boolean.master_switch
         state: "off"
     action:
-      - service: scene.turn_on
-        entity_id: scene.home_off_night
-        data:
-          transition: 4
-
-  # APPLY GLOBAL SCENES TO ALL LIGHTS WHEN I LEAVE #
-  - id: general_everything_off_day
-    alias: Global - Home alone
-    description: If everybody left during the day, turn off all lights using the home off scene
-    trigger:
-      - entity_id: input_boolean.master_switch
-        for: "00:01:00"
-        platform: state
-        to: "off"
-      - entity_id: input_select.home_mode
-        platform: state
-    condition:
-      - condition: state
-        entity_id: input_boolean.master_switch
-        state: "off"
-      - condition: not
-        conditions:
+      - if:
+          # Night scene has all lights off exception some very dim light in the living room for my cat
           - condition: state
             entity_id: input_select.home_mode
             state: Night
-    action:
-      - service: scene.turn_on
-        entity_id: scene.home_off
-        data:
-          transition: 4
+        then:        
+          - service: scene.turn_on
+            entity_id: scene.home_off_night
+            data:
+              transition: 4
+        else:
+            - service: scene.turn_on
+              entity_id: scene.home_off
+              data:
+                transition: 2
 
 scene:
   - id: general_everything_off_scene_night
