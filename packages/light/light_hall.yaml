@@ -84,9 +84,11 @@ automation:
       - platform: state
         entity_id: input_select.home_mode
     condition:
-      - condition: state
-        entity_id: input_select.home_mode
-        state: Day
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: input_select.home_mode
+            state: Night
       - condition: state
         entity_id: binary_sensor.hall_presence
         state: "off"
