@@ -127,3 +127,6 @@ logger:
     # https://github.com/home-assistant/core/issues/94713
     homeassistant.components.command_line: error
     homeassistant.components.bluetooth_le_tracker: debug
+    custom_components.frigate.api: critical
+    custom_components.frigate: critical
+    homeassistant.components.compensation.sensor: warning
