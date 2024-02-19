@@ -129,4 +129,4 @@ logger:
     homeassistant.components.bluetooth_le_tracker: debug
     custom_components.frigate.api: critical
     custom_components.frigate: critical
-    homeassistant.components.compensation.sensor: warning
+    homeassistant.components.compensation.sensor: error
