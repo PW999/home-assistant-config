@@ -78,10 +78,10 @@ automation:
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
           - alias: Trigger when bedroom humidity rises from below to above threshold
             condition: template
-            value_template: "{{ trigger.entity_id == 'sensor.living_room_2' and (trigger.from_state.state | float) <= 70.0 }}"
+            value_template: "{{ trigger.entity_id == 'sensor.living_room_2' and (trigger.from_state.state | float(100)) <= 70.0 }}"
           - alias: Trigger when outside humidity lowers
             condition: template
-            value_template: "{{ trigger.entity_id == 'sensor.terrace_2' and (trigger.from_state.state | float) > (trigger.to_state.state | float) }}"
+            value_template: "{{ trigger.entity_id == 'sensor.terrace_2' and (trigger.from_state.state | float(0)) > (trigger.to_state.state | float(100)) }}"
       - alias: If outside humidity is much lower than inside humidity
         condition: template
         value_template: >
