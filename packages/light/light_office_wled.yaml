@@ -47,11 +47,9 @@ automation:
                 entity_id: sensor.pwzenbookux303_cpuload
                 state: "unavailable"
     action:
-      - service: select.select_option
-        data:
-          option: Desk
+      - service: light.turn_on
         target:
-          entity_id: select.bureau_wled_preset
+          entity_id: light.bureau_wled_master
 
   - id: light_office_wled_turn_off
     alias: Office - turn LEDs off
@@ -93,11 +91,9 @@ automation:
                 entity_id: sensor.pwzenbookux303_cpuload
                 state: "unavailable"
     action:
-      - service: select.select_option
-        data:
-          option: "Off"
+      - service: light.turn_off
         target:
-          entity_id: select.bureau_wled_preset
+          entity_id: light.bureau_wled_master
 
   - id: light_office_ceiling_turn_on
     alias: Office - Turn ceiling WLED on
