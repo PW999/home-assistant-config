@@ -151,7 +151,7 @@ automation:
       - entity_id: binary_sensor.office_presence
         platform: state
         to: "off"
-        for: "00:05:00"
+        for: "00:07:00"
       - entity_id: input_select.home_mode
         platform: state
         to: "Day"
