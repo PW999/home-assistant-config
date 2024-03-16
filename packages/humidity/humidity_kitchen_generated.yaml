@@ -85,36 +85,14 @@ automation:
       - alias: If outside humidity is much lower than inside humidity
         condition: template
         value_template: >
-          {% set current_humidity = float(states('sensor.kitchen_2')) %}
-          {% set current_temperature = float(states('sensor.kitchen')) %}
-          {% set terrace_absolute_humidity = float(states('sensor.terrace_absolute_humidity')) %}
-          {% set inside_out_humidity = (
-            100 * ( terrace_absolute_humidity * ( ( current_temperature + 273.5) * float(100.0) * float(0.08314) ) )
-            /
-            ( float(6.112) * e**( (( float(17.67) * current_temperature )/(  current_temperature + float(243.5) )))  *   float(18.02) )
-          ) %}
-          {{ ( current_humidity - inside_out_humidity ) >= 12 }}
+          {{ ( float(states('sensor.kitchen_humidity_at_20')) - float(states('sensor.terrace_humidity_at_20')) ) >= 15 }}
     action:
       - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Relative humidity is {{ float(states('sensor.kitchen_2')) }}%, consider opening a window.
+            Debug: IN: {{ float(states('sensor.kitchen_humidity_at_20'))}} - OUT: {{float(states('sensor.terrace_humidity_at_20'))}}
           title: Kitchen humidity warning
-      - service: logbook.log
-        data:
-          name: humidity_kitchen_automation_humidity_too_high
-          message: >
-            {% set current_humidity = float(states('sensor.kitchen_2')) %}
-            {% set current_temperature = float(states('sensor.kitchen')) %}
-            {% set terrace_absolute_humidity = float(states('sensor.terrace_absolute_humidity')) %}
-            {% set inside_out_humidity = (
-              100 * ( terrace_absolute_humidity * ( ( current_temperature + 273.5) * float(100.0) * float(0.08314) ) )
-              /
-              ( float(6.112) * e**( (( float(17.67) * current_temperature )/(  current_temperature + float(243.5) )))  *   float(18.02) )
-            ) %}
-            Humidity warning triggered: current vs inside out: {{ current_humidity }}, {{ inside_out_humidity }}
-          entity_id: sensor.kitchen_2
-          domain: sensor
       - delay: 7200
 
 
