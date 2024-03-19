@@ -18,7 +18,7 @@ automation:
     alias: Bathroom - turn light on
     description: Turn on the light in the bathroom on motion
     trigger:
-      - entity_id: binary_sensor.bathroom_presence
+      - entity_id: binary_sensor.bathroom_presence_motion
         platform: state
         to: "on"
     condition:
@@ -77,11 +77,11 @@ automation:
     alias: Bathroom - turn light off
     description: Turn off the light
     trigger:
-      - entity_id: binary_sensor.bathroom_presence
+      - entity_id: binary_sensor.bathroom_presence_motion
         platform: state
         to: "off"
         for: "00:04:00"
-      # - entity_id: binary_sensor.bathroom_presence
+      # - entity_id: binary_sensor.bathroom_presence_motion
       #   platform: state
       #   to: "off"
       #   for: "00:06:00" # second attempt if Ikea missed it
@@ -96,7 +96,7 @@ automation:
       - condition: state
         entity_id: timer.bathroom_light_extended_time
         state: idle
-      - entity_id: binary_sensor.bathroom_presence
+      - entity_id: binary_sensor.bathroom_presence_motion
         condition: state
         state: "off"
     action:
