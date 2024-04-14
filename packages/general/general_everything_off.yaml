@@ -65,7 +65,7 @@ scene:
         state: "off"
       switch.gosund_sp112_4_usb:
         state: "off"
-      switch.fan_switch:
+      switch.bathroom_fan_switch:
         state: "off"
 
   - id: general_everything_off_scene
@@ -91,5 +91,5 @@ scene:
         state: "off"
       switch.gosund_sp112_4_usb:
         state: "off"
-      switch.fan_switch:
+      switch.bathroom_fan_switch:
         state: "off"

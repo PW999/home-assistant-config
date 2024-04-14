@@ -9,7 +9,7 @@
 
 homeassistant:
   customize:
-    switch.fan_switch:
+    switch.bathroom_fan_switch:
       icon: mdi:fan
 
 automation:
@@ -33,7 +33,7 @@ automation:
     action:
       - service: switch.turn_on
         data:
-          entity_id: switch.fan_switch
+          entity_id: switch.bathroom_fan_switch
       - service: logbook.log
         data:
           name: humidity_bathroom_fan_on
@@ -69,7 +69,7 @@ automation:
         platform: numeric_state
         below: 68
         for: "00:10:00"
-      - entity_id: switch.fan_switch
+      - entity_id: switch.bathroom_fan_switch
         platform: state
         to: "on"
         for: "00:30:00"
@@ -87,4 +87,4 @@ automation:
     action:
       - service: switch.turn_off
         data:
-          entity_id: switch.fan_switch
+          entity_id: switch.bathroom_fan_switch
