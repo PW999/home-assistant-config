@@ -15,7 +15,7 @@ automation:
       - entity_id: binary_sensor.hall_presence
         platform: state
         to: "on"
-      - entity_id: binary_sensor.pantry_door
+      - entity_id: binary_sensor.pantry_door_opening
         platform: state
         to: "off"
       - entity_id: input_boolean.master_switch
@@ -47,7 +47,7 @@ automation:
       - entity_id: binary_sensor.hall_presence
         platform: state
         to: "on"
-      - entity_id: binary_sensor.pantry_door
+      - entity_id: binary_sensor.pantry_door_opening
         platform: state
         to: "off"
     condition:
@@ -78,7 +78,7 @@ automation:
       - entity_id: input_boolean.master_switch
         platform: state
         to: "on"
-      - entity_id: binary_sensor.pantry_door
+      - entity_id: binary_sensor.pantry_door_opening
         platform: state
         to: "off"
       - platform: state
@@ -108,7 +108,7 @@ automation:
       - entity_id: binary_sensor.hall_presence
         platform: state
         to: "off"
-      - entity_id: binary_sensor.pantry_door
+      - entity_id: binary_sensor.pantry_door_opening
         platform: state
         to: "off"
       - entity_id: input_boolean.master_switch
@@ -133,12 +133,12 @@ automation:
     alias: Pantry open
     description: Turn on the hall light closest to the pantry to get some extra pantry light
     trigger:
-      - entity_id: binary_sensor.pantry_door
+      - entity_id: binary_sensor.pantry_door_opening
         platform: state
         to: "on"
     condition:
       - condition: state
-        entity_id: binary_sensor.pantry_door
+        entity_id: binary_sensor.pantry_door_opening
         state: "on"
     action:
       - if:

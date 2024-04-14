@@ -18,7 +18,7 @@ compensation:
       - [25, 25.7]
 
   pantry_temperature_corrected:
-    source: sensor.pantry_door_temperature
+    source: sensor.pantry_door_device_temperature
     unit_of_measurement: °C
     degree: 1
     precision: 1

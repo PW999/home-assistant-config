@@ -8,5 +8,5 @@ SENSOR_OFFICE = 'sensor.bureau'
 SENSOR_LIVING_ROOM = 'sensor.living_room'
 
 MOTION_SENSOR_TOILET = 'sensor.toilet_presence'
-MOTION_SENSOR_PANTRY = 'binary_sensor.pantry_door'
+MOTION_SENSOR_PANTRY = 'binary_sensor.pantry_door_opening'
 MOTION_SENSOR_HALL = 'sensor.hall_presence'

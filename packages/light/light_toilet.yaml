@@ -21,7 +21,7 @@ automation:
           brightness: "{{ [16, (255 * ( cos(0.12* ( 13 - now().hour)) - 0.05 ) / 0.8)] | max | round(0) }}"  # https://www.desmos.com/calculator
           transition: 1
           entity_id:
-            - light.toilet
+            - toilet_light_light
 
   - id: light_toilet_off
     alias: Toilet light off
@@ -36,4 +36,4 @@ automation:
         data:
           transition: 4
           entity_id:
-            - light.toilet
+            - toilet_light_light
