@@ -8,7 +8,7 @@
 #   @template:      :   <%= __FILE__ %>
 ###############################################################################
 <%
-  hue_lights = %w(toilet_light_light light.hall_1 light.hall_2 light.hall_3)
+  hue_lights = %w(light.toilet_light light.hall_1 light.hall_2 light.hall_3)
 %>
 sensor:
 <% hue_lights.each do |hue_light| %>
