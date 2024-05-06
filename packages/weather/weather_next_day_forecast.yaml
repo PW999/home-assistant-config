@@ -33,6 +33,27 @@ input_text:
   weather_forecast:
     name: Weather forecast
     icon: mdi:cloud-outline
+# Workaround https://github.com/home-assistant/core/issues/112583#issuecomment-1994163007
+# Also see https://github.com/home-assistant/core/issues/112628
+
+template:
+  - trigger:
+      - platform: time
+        at: "22:00:00"
+      - platform: homeassistant
+        event: start
+    action:
+      - service: weather.get_forecasts
+        data:
+          type: daily
+        target:
+          entity_id: weather.pw_casa
+        response_variable: tomorrow
+    sensor:
+      - name: Weather tomorrow
+        state: "{{ tomorrow['weather.pw_casa'].forecast[1].datetime }}"
+        attributes:
+          forecast: "{{ tomorrow['weather.pw_casa'].forecast[1] }}"
 
 automation:
   - id: weather_save_next_day_forecast
@@ -40,21 +61,21 @@ automation:
     description: Save's tomorrow's forecast so we can use it the next day as today's forecast
     trigger:
       - platform: time
-        at: "22:00:00"
+        at: "22:02:00"
     action:
       - service: input_text.set_value
         data:
           entity_id: input_text.weather_forecast
-          value: "{{ state_attr('weather.pw_casa', 'forecast')[0].condition }}"
+          value: "{{ state_attr('sensor.weather_tomorrow', 'forecast').condition }}"
       - service: input_number.set_value
         data:
           entity_id: input_number.forecast_min_temp
-          value: "{{ state_attr('weather.pw_casa', 'forecast')[0].templow | float }}"
+          value: "{{ state_attr('sensor.weather_tomorrow', 'forecast').templow | float }}"
       - service: input_number.set_value
         data:
           entity_id: input_number.forecast_precip
-          value: "{{ state_attr('weather.pw_casa', 'forecast')[0].precipitation | float }}"
+          value: "{{ state_attr('sensor.weather_tomorrow', 'forecast').precipitation | float }}"
       - service: input_number.set_value
         data:
           entity_id: input_number.forecast_temp
-          value: "{{ state_attr('weather.pw_casa', 'forecast')[0].temperature | float }}"
+          value: "{{ state_attr('sensor.weather_tomorrow', 'forecast').temperature | float }}"
