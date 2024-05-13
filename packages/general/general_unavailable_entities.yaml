@@ -59,7 +59,8 @@ template:
               'sensor.pwzenbookux303_gpuload',
               'sensor.pwzenbookux303_gputemperature',
               'sensor.pwzenbookux303_memoryusage',
-              'sensor.pwzenbookux303_satellite_cpuload'
+              'sensor.pwzenbookux303_satellite_cpuload',
+              'conversation.home_assistant'
             ] %}
             {% set ignore_ts = (now().timestamp() - ignore_seconds)|as_datetime %}
             {% set entities = states|rejectattr('domain','in',['group','button','number', 'select', 'input_boolean', 'scene', 'input_boolean', 'update', 'device_tracker'])
