@@ -22,7 +22,7 @@ automation:
         platform: state
         from: "off"
         to: "on"
-      - entity_id: binary_sensor.living_room_presence
+      - entity_id: binary_sensor.living_room_presence_motion
         platform: state
         to: "on"
       - entity_id: media_player.fire_tv_10_0_1_142  # immediately switch to movie mode
@@ -76,7 +76,7 @@ automation:
     alias: Living room - turn off WLED strips if no presence detected
     description: Turn of power hungry WLED strips when I am not in the living
     trigger:
-      - entity_id: binary_sensor.living_room_presence
+      - entity_id: binary_sensor.living_room_presence_motion
         platform: state
         to: "off"
         for: "00:25:00"
@@ -101,7 +101,7 @@ automation:
             entity_id: input_select.home_mode
             state: Morning
       - condition: state # for the tv light trigger
-        entity_id: binary_sensor.living_room_presence
+        entity_id: binary_sensor.living_room_presence_motion
         state: "off"
         for: "00:10:00"
       - condition: state
@@ -154,7 +154,7 @@ automation:
         platform: state
         from: "off"
         to: "on"
-      - entity_id: binary_sensor.living_room_presence
+      - entity_id: binary_sensor.living_room_presence_motion
         platform: state
         to: "on"
     condition:
@@ -176,7 +176,7 @@ automation:
             conditions:
               - alias: Check if the trigger is the motion sensor
                 condition: template
-                value_template: "{{ trigger.entity_id == 'binary_sensor.living_room_presence' }}"
+                value_template: "{{ trigger.entity_id == 'binary_sensor.living_room_presence_motion' }}"
               - alias: Check if the lights are still on
                 condition: state
                 entity_id: light.living_room_big
