@@ -39,7 +39,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
 | Osram Smart+ Light bulb  (x2)     | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable light with temperature control (warm/cold) |
 | Philips Hue spots GU10   (x4)     | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable spots               |
-| Ikea TRÅDFRI 1055 lumen E27 bulb  | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Dimmable light with temperature control (warm/cold) |
+| Ikea TRÅDFRI 1055 lumen E27 bulb  | [ZHA](https://www.home-assistant.io/integrations/zha/)        | Dimmable light with temperature control (warm/cold) |
 | WLED on [ESP8266](doc/img/wled.jpg) | [WLED](https://www.home-assistant.io/integrations/wled/)    | BTF-Lighting WS2811 BTF-12V-60L-W led strip |
 | [Athom WLED controller](https://www.athom.tech/blank-1/wled-high-power-led-strip-controller)| [WLED](https://www.home-assistant.io/integrations/wled/)    | BTF-Lighting WS2811 BTF-12V-60L-W led strip |
 
@@ -48,10 +48,10 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | Device                            | Integration                                                   | Remarks                      |
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
 | [Xiaomi Aqara temperature & humidity sensor](https://www.aqara.com/us/product/temperature-humidity-sensor/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) | Indoor & outdoor temperature reporting |
-| [Xiami Aqara motion sensor P1](https://www.aqara.com/us/product/motion-sensor-p1/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) |  |
-| Osram Smart+ Motion sensors | [Deconz](https://www.home-assistant.io/integrations/deconz/) | | 
-| [Aquara door & window sensor](https://www.aqara.com/us/product/door-and-window-sensor/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) |  |
-| [Ikea TRÅDFRI motion sensor](https://www.ikea.com/be/nl/p/tradfri-draadloze-bewegingssensor-smart-wit-70429913/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) | No longer sold, probably for the best. Randomly thinks there's motion. |
+| [Xiami Aqara motion sensor P1](https://www.aqara.com/us/product/motion-sensor-p1/) | [ZHA](https://www.home-assistant.io/integrations/zha/) |  |
+| Osram Smart+ Motion sensors | [Deconz](https://www.home-assistant.io/integrations/deconz/) | No ZHA support |
+| [Aquara door & window sensor](https://www.aqara.com/us/product/door-and-window-sensor/) | [ZHA](https://www.home-assistant.io/integrations/zha/) |  |
+| [Ikea TRÅDFRI motion sensor](https://www.ikea.com/be/nl/p/tradfri-draadloze-bewegingssensor-smart-wit-70429913/) | [ZHA](https://www.home-assistant.io/integrations/zha/)  | No longer sold, probably for the best. Randomly thinks there's motion. |
 
 ## Climate
 | Device                            | Integration                                                   | Remarks                      |
@@ -67,15 +67,15 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | GoSund (/Tuya) SP-112 (x4)        | [ESPHome](https://www.home-assistant.io/integrations/esphome/) | "Hacked" and flashed with ESPHome |
 | GoSund (/Tuya) SP-1 (x2)          | [ESPHome](https://www.home-assistant.io/integrations/esphome/) | "Hacked" and flashed with ESPHome |
 | [Athom Tasmota EU plug v2](https://www.athom.tech/blank-1/EU-plug) | [Tasmota](https://www.home-assistant.io/integrations/tasmota/) | |
-| Ledvance Smart+ smart plug AB32570| [Deconz](https://www.home-assistant.io/integrations/deconz/) | Only on/off, does not report power usage |
-| Xiaomi Mi Smart plug ZNCZ04LM     | [Deconz](https://www.home-assistant.io/integrations/deconz/) | Only on/off, does not report power usage |
+| Ledvance Smart+ smart plug AB32570| [ZHA](https://www.home-assistant.io/integrations/zha/) | Only on/off, does not report power usage |
+| Xiaomi Mi Smart plug ZNCZ04LM     | [ZHA](https://www.home-assistant.io/integrations/zha/)       | Only on/off + power usage |
 | [Fluvius digital meter](https://www.fluvius.be/nl/meters-en-meterstanden/digitale-meter)  | [DSMR](https://www.home-assistant.io/integrations/dsmr_reader/) | Official BE smart meter with [SlimmeLezer](https://www.zuidwijk.com/slimmelezer-smartreader/) connected to P1 port |
 
 ## Buttons
 | Device                            | Integration                                                   | Remarks                      |
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
 | Osram Smart+ Switch mini  (x2)    | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Has 3 buttons and short/long press support |
-| [IKEA wireless dimmer](https://www.ikea.com/be/nl/p/tradfri-draadloze-dimmer-smart-wit-70408595/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) | 2 buttons with short/long press support |
+| [IKEA wireless dimmer](https://www.ikea.com/be/nl/p/tradfri-draadloze-dimmer-smart-wit-70408595/) | [ZHA](https://www.home-assistant.io/integrations/zha/) | 2 buttons with short/long press support |
 
 ## Device tracking
 | Device                            | Integration                                                   |
