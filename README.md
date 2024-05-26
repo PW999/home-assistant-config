@@ -31,6 +31,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | Device                            | Integration                                                   | Remarks                      |
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
 | Conbee II USB Stick               | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | 
+| SONOFF ZigBee 3.0 USB Dongle Plus | [ZHA](https://www.home-assistant.io/integrations/zha/)        | TI CC2652P
 | [HM-MOD-RPI-PCB](https://de.elv.com/elv-homematic-komplettbausatz-funkmodul-fuer-raspberry-pi-hm-mod-rpi-pcb-fuer-smart-home-hausautomation-142141) | [Homematic](https://www.home-assistant.io/integrations/homematic/)  | Installed on RPI 3B to control smart heating valves using [Rasbperrimatic](https://raspberrymatic.de/)  |
 
 ## Lights
@@ -120,7 +121,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | [Nginx add-on](https://github.com/home-assistant/addons/tree/master/nginx_proxy)  | Using certificates signed by my own, trusted CA |
 | [Studio code server](https://github.com/hassio-addons/addon-vscode) | Since remotely mounting the config folder is pretty damn hard on HAOS |
 | [Terminal & SSH](https://github.com/home-assistant/addons/tree/master/ssh) | For those special cases |
-| [Glances](https://github.com/hassio-addons/addon-glances) | To monitor the add-on CPU usage (stored in InfluxDB) |
+| [Glances](https://github.com/hassio-addons/addon-glances) | Disabled for now, it's a lot of data I barely need |
 | [Frigate](https://github.com/blakeblackshear/frigate-hass-addons) | Centralizes IP cameras with GPU accelerated object detection |
 
 ## Custom components
