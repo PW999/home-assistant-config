@@ -108,11 +108,11 @@ automation:
     alias: Bathroom - Start extended timer
     description: Start extended light timer in case I want to shower (can't detection motion in the shower)
     trigger:
-      - platform: device
-        device_id: 38c1a38ab3652833a89847b70a2e1a2a
-        domain: deconz
-        type: remote_button_short_press
-        subtype: turn_on
+      - platform: event
+        event_type: zha_event
+        event_data:
+          device_id: 38c1a38ab3652833a89847b70a2e1a2a # bathroom_switch
+          command: "on"
     action:
       - service: timer.cancel
         target:
