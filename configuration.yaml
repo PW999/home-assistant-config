@@ -64,7 +64,7 @@ recorder:
 # Influx runs in a separate LCX container. Running it on a Pi will result in
 # issues once you have enough data in it since it's only 32-bit.
 influxdb:
-  host: influx.pwcasa.local
+  host: lxc-influx-01.pwcasa.internal
   port: 443
   api_version: 2
   token: !secret influx_token

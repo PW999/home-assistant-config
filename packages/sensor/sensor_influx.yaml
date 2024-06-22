@@ -31,7 +31,7 @@ homeassistant:
 sensor:
   - platform: influxdb
     api_version: 2
-    host: influx.pwcasa.local
+    host: lxc-influx-01.pwcasa.internal
     port: 443
     ssl: true
     ssl_ca_cert: /config/ssl/ca_certificate.crt
@@ -87,7 +87,7 @@ sensor:
         range_start: "-2m"
   - platform: influxdb
     api_version: 2
-    host: influx.pwcasa.local
+    host: lxc-influx-01.pwcasa.internal
     port: 443
     ssl: true
     ssl_ca_cert: /config/ssl/ca_certificate.crt
