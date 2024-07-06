@@ -51,6 +51,7 @@ api:
 
 # Enable over-the-air updates
 ota:
+  platform: esphome
   password: !secret ota_password
   
 time:
