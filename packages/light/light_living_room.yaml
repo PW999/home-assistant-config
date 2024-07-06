@@ -40,6 +40,9 @@ automation:
             state: Evening
           - condition: state
             entity_id: input_select.home_mode
+            state: Night
+          - condition: state
+            entity_id: input_select.home_mode
             state: Morning
       - condition: state
         entity_id: input_boolean.master_switch
@@ -64,7 +67,6 @@ automation:
             entity_id: scene.living_room_movie
             data:
               transition: 2
-        # The `else` is fully optional and can be omitted
         else:
           - service: scene.turn_on
             entity_id: scene.living_room_evening
