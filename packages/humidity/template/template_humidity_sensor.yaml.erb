@@ -12,17 +12,17 @@ sensor:
         icon_template: mdi:water
         availability_template: >-
             {{ not (
-                  is_state('<%= sensor_id %>', 'unavailable')
-                  or is_state('<%= sensor_id %>_2', 'unavailable')
-                  or is_state('<%= sensor_id %>', 'unknown')
-                  or is_state('<%= sensor_id %>_2', 'unknown')
+                  is_state('<%= sensor_id %>_sensor_temperature', 'unavailable')
+                  or is_state('<%= sensor_id %>_sensor_humidity', 'unavailable')
+                  or is_state('<%= sensor_id %>_sensor_temperature', 'unknown')
+                  or is_state('<%= sensor_id %>_sensor_humidity', 'unknown')
                 )
             }}
         value_template: >-
             {{
-            ( float(6.112) * e**( (( float(17.67) * float(states('<%= sensor_id %>')) )/(  float(states('<%= sensor_id %>')) + float(243.5) ))) * ( float(states('<%= sensor_id %>_2')) / 100 ) * float(18.02)  )
+            ( float(6.112) * e**( (( float(17.67) * float(states('<%= sensor_id %>_sensor_temperature')) )/(  float(states('<%= sensor_id %>_sensor_temperature')) + float(243.5) ))) * ( float(states('<%= sensor_id %>_sensor_humidity')) / 100 ) * float(18.02)  )
             /
-            ( ( float(states('<%= sensor_id %>')) + 273.5) * float(100.0) * float(0.08314) )
+            ( ( float(states('<%= sensor_id %>_sensor_temperature')) + 273.5) * float(100.0) * float(0.08314) )
             }}
       <%= location_id %>_humidity_at_20:
         friendly_name: <%= location_name %> humidity at 20°c

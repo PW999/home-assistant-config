@@ -4,7 +4,7 @@ SENSOR_BEDROOM = 'sensor.bedroom'
 SENSOR_OUTSIDE = 'sensor.terrace'
 SENSOR_BATHROOM = 'sensor.bathroom'
 SENSOR_KITCHEN = 'sensor.kitchen'
-SENSOR_OFFICE = 'sensor.bureau'
+SENSOR_OFFICE = 'sensor.office'
 SENSOR_LIVING_ROOM = 'sensor.living_room'
 
 MOTION_SENSOR_TOILET = 'sensor.toilet_presence'

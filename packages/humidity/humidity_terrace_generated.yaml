@@ -24,17 +24,17 @@ sensor:
         icon_template: mdi:water
         availability_template: >-
             {{ not (
-                  is_state('sensor.terrace', 'unavailable')
-                  or is_state('sensor.terrace_2', 'unavailable')
-                  or is_state('sensor.terrace', 'unknown')
-                  or is_state('sensor.terrace_2', 'unknown')
+                  is_state('sensor.terrace_sensor_temperature', 'unavailable')
+                  or is_state('sensor.terrace_sensor_humidity', 'unavailable')
+                  or is_state('sensor.terrace_sensor_temperature', 'unknown')
+                  or is_state('sensor.terrace_sensor_humidity', 'unknown')
                 )
             }}
         value_template: >-
             {{
-            ( float(6.112) * e**( (( float(17.67) * float(states('sensor.terrace')) )/(  float(states('sensor.terrace')) + float(243.5) ))) * ( float(states('sensor.terrace_2')) / 100 ) * float(18.02)  )
+            ( float(6.112) * e**( (( float(17.67) * float(states('sensor.terrace_sensor_temperature')) )/(  float(states('sensor.terrace_sensor_temperature')) + float(243.5) ))) * ( float(states('sensor.terrace_sensor_humidity')) / 100 ) * float(18.02)  )
             /
-            ( ( float(states('sensor.terrace')) + 273.5) * float(100.0) * float(0.08314) )
+            ( ( float(states('sensor.terrace_sensor_temperature')) + 273.5) * float(100.0) * float(0.08314) )
             }}
       terrace_humidity_at_20:
         friendly_name: terrace humidity at 20°c

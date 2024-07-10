@@ -17,13 +17,13 @@ automation:
     alias: Bathroom fan - turn on
     description: Turn the bathroom fan on if is too humid in the house or if dryer is on
     trigger:
-      - entity_id: sensor.bathroom_2
+      - entity_id: sensor.bathroom_sensor_humidity
         platform: numeric_state
         above: 68
-      - entity_id: sensor.bureau_2
+      - entity_id: sensor.office_sensor_humidity
         platform: numeric_state
         above: 73
-      - entity_id: sensor.living_room_2
+      - entity_id: sensor.living_room_sensor_humidity
         platform: numeric_state
         above: 73
       - platform: state
@@ -38,34 +38,34 @@ automation:
         data:
           name: humidity_bathroom_fan_on
           message: Bathroom fan turned on by {{ trigger.entity_id }}
-          entity_id: sensor.bathroom_2
+          entity_id: sensor.bathroom_sensor_humidity
           domain: sensor
       - service: logbook.log
         data:
           name: humidity_bathroom_fan_on
           message: Bathroom fan turned on by {{ trigger.entity_id }}
-          entity_id: sensor.living_room_2
+          entity_id: sensor.living_room_sensor_humidity
           domain: sensor
       - service: logbook.log
         data:
           name: humidity_bathroom_fan_on
           message: Bathroom fan turned on by {{ trigger.entity_id }}
-          entity_id: sensor.bureau_2
+          entity_id: sensor.office_sensor_humidity
           domain: sensor
 
   - id: humidity_bathroom_fan_off
     alias: Bathroom fan - turn off
     description: Turn the bathroom fan off base on humidity, dryer state of after a time-out
     trigger:
-      - entity_id: sensor.bathroom_2
+      - entity_id: sensor.bathroom_sensor_humidity
         platform: numeric_state
         below: 68
         for: "00:10:00"
-      - entity_id: sensor.bureau_2
+      - entity_id: sensor.office_sensor_humidity
         platform: numeric_state
         below: 68
         for: "00:10:00"
-      - entity_id: sensor.living_room_2
+      - entity_id: sensor.living_room_sensor_humidity
         platform: numeric_state
         below: 68
         for: "00:10:00"

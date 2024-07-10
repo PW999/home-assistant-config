@@ -63,7 +63,12 @@ template:
               'sensor.pwzenbookux303_memoryusage',
               'sensor.pwzenbookux303_satellite_cpuload',
               'conversation.home_assistant',
-              'remote.fire_tv_10_0_1_142'
+              'remote.fire_tv_10_0_1_142',
+              'media_player.android_tv_10_0_1_143',
+              'remote.android_tv_10_0_1_143',
+              'media_player.kdl_50w807c',
+              'media_player.kdl_50w807c_2',
+              'remote.kdl_50w807c'
             ] %}
             {% set ignore_ts = (now().timestamp() - ignore_seconds)|as_datetime %}
             {% set entities = states|rejectattr('domain','in',['group','button','number', 'select', 'input_boolean', 'scene', 'input_boolean', 'update', 'device_tracker'])

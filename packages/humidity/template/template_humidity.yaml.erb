@@ -19,21 +19,21 @@ automation:
     mode: single
     trigger:
       - platform: numeric_state
-        entity_id: <%= sensor_id %>_2
+        entity_id: <%= sensor_id %>_sensor_humidity
         above: <%= humidity_high_threshold %>
         for: "00:10:00"
       - platform: state
-        entity_id: <%= outside_sensor_id %>_2
+        entity_id: <%= outside_sensor_id %>_sensor_humidity
       - platform: state
         entity_id: input_boolean.master_switch
         to: "on"
         for: "00:15:00"
     condition:
       - condition: numeric_state
-        entity_id: <%= sensor_id %>
+        entity_id: <%= sensor_id %>_sensor_temperature
         above: 16   # 70% @ 15°c == 52% @ 20°c
       - condition: numeric_state
-        entity_id: <%= sensor_id %>_2
+        entity_id: <%= sensor_id %>_sensor_humidity
         above: <%= humidity_high_threshold %>
       - condition: state
         entity_id: input_boolean.master_switch
@@ -45,10 +45,10 @@ automation:
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
           - alias: Trigger when bedroom humidity rises from below to above threshold
             condition: template
-            value_template: "{{ trigger.entity_id == '<%= sensor_id %>_2' and (trigger.from_state.state | float(100)) <= <%= humidity_high_threshold %>.0 }}"
+            value_template: "{{ trigger.entity_id == '<%= sensor_id %>_sensor_humidity' and (trigger.from_state.state | float(100)) <= <%= humidity_high_threshold %>.0 }}"
           - alias: Trigger when outside humidity lowers
             condition: template
-            value_template: "{{ trigger.entity_id == '<%= outside_sensor_id %>_2' and (trigger.from_state.state | float(0)) > (trigger.to_state.state | float(100)) }}"
+            value_template: "{{ trigger.entity_id == '<%= outside_sensor_id %>_sensor_humidity' and (trigger.from_state.state | float(0)) > (trigger.to_state.state | float(100)) }}"
       - alias: If outside humidity is much lower than inside humidity
         condition: template
         value_template: >
@@ -57,7 +57,7 @@ automation:
       - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
-            Relative humidity is {{ float(states('<%= sensor_id %>_2')) }}%, consider opening a window.
+            Relative humidity is {{ float(states('<%= sensor_id %>_sensor_humidity')) }}%, consider opening a window.
             Debug: IN: {{ float(states('<%= sensor_id %>_humidity_at_20'))}} - OUT: {{float(states('<%= outside_sensor_id %>_humidity_at_20'))}}
           title: <%= location_name %> humidity warning
       - delay: 7200
@@ -68,25 +68,25 @@ automation:
     mode: single
     trigger:
       - platform: numeric_state
-        entity_id: <%= sensor_id %>_2
+        entity_id: <%= sensor_id %>_sensor_humidity
         below: <%= humidity_low_threshold %>
         for: "00:10:00"
     condition:
       - alias: Only if we cross the treshold
         condition: template
         value_template: >
-          {%  if trigger.entity_id != '<%= sensor_id %>_2'  %}
+          {%  if trigger.entity_id != '<%= sensor_id %>_sensor_humidity'  %}
           false
           {% else %}
           {{ trigger.from_state.state | float >= <%= humidity_low_threshold%>.0   }}
           {% endif %}
       - condition: numeric_state
-        entity_id: <%= sensor_id %>_2
+        entity_id: <%= sensor_id %>_sensor_humidity
         below: <%= humidity_low_threshold %>
     action:
       - service: notify.mobile_app_pwxperia10iv
         data:
           message: |
-            Relative humidity is at {{ float(states('<%= sensor_id %>_2')) }}% !
+            Relative humidity is at {{ float(states('<%= sensor_id %>_sensor_humidity')) }}% !
           title: <%= location_name %> humidity warning
       - delay: 7200
