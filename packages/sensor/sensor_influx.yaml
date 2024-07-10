@@ -15,8 +15,13 @@ homeassistant:
       icon: mdi:cpu-64-bit
     sensor.pve2_nvme_temperature:
       icon: mdi:thermometer
-    sensor.pve2_sda_temperature:
+    sensor.pve_cpu_package_temperature:
       icon: mdi:thermometer
+    sensor.pve_cpu_package_power:
+      icon: mdi:cpu-64-bit
+    sensor.pve_nvme_temperature:
+      icon: mdi:thermometer
+
     sensor.pve2_cpu_usage:
       icon: mdi:cpu-64-bit
     sensor.pve2_mem_free:
@@ -24,6 +29,14 @@ homeassistant:
     sensor.pve2_local_free:
       icon: mdi:harddisk
     sensor.pve2_local_lvm_free:
+      icon: mdi:harddisk
+    sensor.pve_cpu_usage:
+      icon: mdi:cpu-64-bit
+    sensor.pve_mem_free:
+      icon: mdi:memory
+    sensor.pve_local_free:
+      icon: mdi:harddisk
+    sensor.pve_local_lvm_free:
       icon: mdi:harddisk
     sensor.pve2_synology_free:
       icon: mdi:nas
@@ -39,6 +52,43 @@ sensor:
     bucket: telegraf
     token: !secret influx_telegraf_token
     queries_flux:
+      - group_function: max
+        name: "pve CPU package temperature"
+        unique_id: pve_cpu_package_temperature
+        unit_of_measurement: °C
+        query: >
+          filter(fn: (r) => r["_measurement"] == "sensors")
+          |> filter(fn: (r) => r["_field"] == "temp_input")
+          |> filter(fn: (r) => r["chip"] == "coretemp-isa-0000")
+          |> filter(fn: (r) => r["feature"] == "package_id_0")
+          |> filter(fn: (r) => r["host"] == "pve.pwcasa.internal")
+        range_start: "-2m"
+      - group_function: max
+        name: "pve NVMe temperature"
+        unique_id: pve_nvme_temperature
+        unit_of_measurement: °C
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "sensors")
+          |> filter(fn: (r) => r["_field"] == "temp_input")
+          |> filter(fn: (r) => r["chip"] == "nvme-pci-0200")
+          |> filter(fn: (r) => r["feature"] == "sensor_1")
+          |> filter(fn: (r) => r["host"] == "pve.pwcasa.internal")
+          |> map(fn: (r) => ({ r with _value: math.round(x: r._value) }))
+        range_start: "-2m"
+      - group_function: max
+        name: "pve CPU Package power"
+        unique_id: pve_cpu_package_power
+        unit_of_measurement: W
+        query: >
+          filter(fn: (r) => r["_measurement"] == "powerstat_package")
+          |> filter(fn: (r) => r["_field"] == "current_power_consumption_watts")
+          |> filter(fn: (r) => r["host"] == "pve.pwcasa.internal")
+          |> group(columns: ["host"])
+          |> aggregateWindow(every: 10s, fn: sum, createEmpty: false)
+        range_start: "-2m"
+
       - group_function: max
         name: "pve2 CPU package temperature"
         unique_id: pve2_cpu_package_temperature
@@ -75,6 +125,8 @@ sensor:
           |> group(columns: ["host"])
           |> aggregateWindow(every: 10s, fn: sum, createEmpty: false)
         range_start: "-2m"
+
+
   - platform: influxdb
     api_version: 2
     host: lxc-influx-01.pwcasa.internal
@@ -85,6 +137,58 @@ sensor:
     bucket: proxmox
     token: !secret influx_proxmox_token
     queries_flux:
+      - group_function: max
+        name: "pve CPU usage"
+        unique_id: pve_cpu_usage
+        unit_of_measurement: "%"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "cpustat")
+          |> filter(fn: (r) => r["host"] == "pve")
+          |> filter(fn: (r) => r["_field"] == "cpu")
+          |> map(fn: (r) => ({ r with _value: math.round(x: r._value * 100.0) }))
+        range_start: "-2m"
+      - group_function: min
+        name: "pve Memory free"
+        unique_id: pve_mem_free
+        unit_of_measurement: "GB"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "memory")
+          |> filter(fn: (r) => r["_field"] == "memfree")
+          |> filter(fn: (r) => r["host"] == "pve")
+          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
+        range_start: "-20m"
+      - group_function: min
+        name: "pve local free"
+        unique_id: pve_local_free
+        unit_of_measurement: "GB"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "system")
+          |> filter(fn: (r) => r["_field"] == "avail")
+          |> filter(fn: (r) => r["host"] == "local")
+          |> filter(fn: (r) => r["nodename"] == "pve")
+          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
+        range_start: "-20m"
+      - group_function: min
+        name: "pve local-lvm free"
+        unique_id: pve_local_lvm_free
+        unit_of_measurement: "GB"
+        imports:
+          - math
+        query: >
+          filter(fn: (r) => r["_measurement"] == "system")
+          |> filter(fn: (r) => r["_field"] == "avail")
+          |> filter(fn: (r) => r["host"] == "local-lvm")
+          |> filter(fn: (r) => r["nodename"] == "pve")
+          |> map(fn: (r) => ({ r with _value: math.round(x: 10.0 * r._value / (1024.0*1024.0*1024.0)) / 10.0 }))
+        range_start: "-20m"
+
+      
       - group_function: max
         name: "pve2 CPU usage"
         unique_id: pve2_cpu_usage
