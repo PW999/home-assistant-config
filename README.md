@@ -13,13 +13,13 @@ I mainly focus on using cloudless solution for controling and managing my device
 # Hardware
 
 ## Core
-HP Prodesk 600 G3 Desktop mini (Intel Core i5-7500T CPU with 16GB of RAM).
+Intel Nuc 10 (Intel Core i3-10110U CPU with 16GB of RAM).
 
-![HPProdesk](./doc/img/hpprodesk.jpg)
+![Intel Nuc10](./doc/img/IntelNuc10.jpg)
 
 I'm running HAOS as a virtual machine on Proxmox in a 2 core 4GB VM.
 
-On the same Proxmox server I have the following LXC containers to support HA:
+On the same Proxmox cluster I have the following LXC containers to support HA:
 
 * Postgresql v15
 * InfluxDB v2
