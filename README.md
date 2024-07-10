@@ -3,7 +3,7 @@
 ![Last commits](https://img.shields.io/github/last-commit/PW999/home-assistant-config)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/PW999/home-assistant-config)
 ![Maintenance](https://img.shields.io/maintenance/yes/2024)
-![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2024.4-blue)
+![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2024.7-blue)
 ![Ruby](https://img.shields.io/badge/Made%20with-Ruby-red?logo=ruby)
 
 
@@ -47,7 +47,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 
 | Device                            | Integration                                                   | Remarks                      |
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
-| [Xiaomi Aqara temperature & humidity sensor](https://www.aqara.com/us/product/temperature-humidity-sensor/) | [Deconz](https://www.home-assistant.io/integrations/deconz/) | Indoor & outdoor temperature reporting |
+| [Xiaomi Aqara temperature & humidity sensor](https://www.aqara.com/us/product/temperature-humidity-sensor/) | [ZHA](https://www.home-assistant.io/integrations/zha/) | Indoor & outdoor temperature reporting |
 | [Xiami Aqara motion sensor P1](https://www.aqara.com/us/product/motion-sensor-p1/) | [ZHA](https://www.home-assistant.io/integrations/zha/) |  |
 | Osram Smart+ Motion sensors | [Deconz](https://www.home-assistant.io/integrations/deconz/) | No ZHA support |
 | [Aquara door & window sensor](https://www.aqara.com/us/product/door-and-window-sensor/) | [ZHA](https://www.home-assistant.io/integrations/zha/) |  |
