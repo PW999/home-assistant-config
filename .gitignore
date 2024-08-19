@@ -36,6 +36,9 @@ custom_components_repo
 
 .shopping_list.json
 frigate.yaml
+.jwt_secret
+.exports
+backup_config.yaml
 
 .timeline
 .vacuum
