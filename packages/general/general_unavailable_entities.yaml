@@ -97,9 +97,8 @@ automation:
               and is_number(trigger.to_state.state) }}
     action:
       - if:
-          - condition: numeric_state
-            entity_id: sensor.unavailable_entities
-            below: 1
+          - condition: template
+            value_template: "{{ state_attr('sensor.unavailable_entities', 'entity_id') | count != 0 }}"
         then:
           - service: persistent_notification.dismiss
             data:
