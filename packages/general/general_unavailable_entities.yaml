@@ -98,7 +98,7 @@ automation:
     action:
       - if:
           - condition: template
-            value_template: "{{ state_attr('sensor.unavailable_entities', 'entity_id') | count != 0 }}"
+            value_template: "{{ state_attr('sensor.unavailable_entities', 'entity_id') | count == 0 }}"
         then:
           - service: persistent_notification.dismiss
             data:
