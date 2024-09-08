@@ -68,7 +68,30 @@ template:
               'remote.android_tv_10_0_1_143',
               'media_player.kdl_50w807c',
               'media_player.kdl_50w807c_2',
-              'remote.kdl_50w807c'
+              'remote.kdl_50w807c',
+              'switch.r2m_1_onvif_detect',
+              'binary_sensor.r2m_1_onvif_motion',
+              'switch.r2m_1_onvif_motion',
+              'camera.r2m_1_onvif_person',
+              'switch.r2m_1_onvif_recordings',
+              'switch.r2m_1_onvif_snapshots',
+              'camera.r2m_1_onvif',
+              
+              'switch.reolink_rlc510wa_detect',
+              'binary_sensor.reolink_rlc510wa_motion',
+              'switch.reolink_rlc510wa_motion',
+              'camera.reolink_rlc510wa_person',
+              'switch.reolink_rlc510wa_recordings',
+              'switch.reolink_rlc510wa_snapshots',
+              'camera.reolink_rlc510wa',
+
+              'switch.reolink_rlc520a_detect',
+              'binary_sensor.reolink_rlc520a_motion',
+              'switch.reolink_rlc520a_motion',
+              'camera.reolink_rlc520a_person',
+              'switch.reolink_rlc520a_recordings',
+              'switch.reolink_rlc520a_snapshots',
+              'camera.reolink_rlc520a'
             ] %}
             {% set ignore_ts = (now().timestamp() - ignore_seconds)|as_datetime %}
             {% set entities = states|rejectattr('domain','in',['group','button','number', 'select', 'input_boolean', 'scene', 'input_boolean', 'update', 'device_tracker'])
