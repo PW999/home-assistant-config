@@ -90,14 +90,14 @@ light:
   - platform: monochromatic
     output: ${plug_id}_state_led
     id: ${plug_id}_led
-    restore_mode: ALWAYS_ON 
+    restore_mode: RESTORE_DEFAULT_ON 
 
 
 switch:
 - platform: gpio
   name: ${plug_name} Main relay
   id: ${plug_id}_relay
-  restore_mode: ALWAYS_ON 
+  restore_mode: RESTORE_DEFAULT_ON 
   pin: GPIO14
   on_turn_on:
     - light.turn_on: ${plug_id}_led
