@@ -14,6 +14,7 @@ group:
     entities:
       - device_tracker.intel_corporate_1d_4f_89
       - device_tracker.intel_corporate_e3_df_41
+      - device_tracker.nmap_tracker_06_c3_50_0b_a3_9c # Dell work
       - device_tracker.pwzenbookux303
       - device_tracker.pwnitrogen_bt
       - device_tracker.pwnitrogen
