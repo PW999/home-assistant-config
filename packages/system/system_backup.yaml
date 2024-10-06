@@ -12,12 +12,12 @@ automation:
   - id: system_automatic_backup
     alias: System - Full backup
     description: Takes a full backup every week on Monday
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "04:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - mon
     action:
-      - service: hassio.backup_full
+      - action: hassio.backup_full

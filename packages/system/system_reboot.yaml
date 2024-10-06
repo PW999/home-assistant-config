@@ -12,12 +12,12 @@ automation:
   - id: system_automatic_reboot
     alias: System - Reboot
     description: Reboots the system every week on Saterday
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "04:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sat
-    action:
-      - service: hassio.host_reboot
+    actions:
+      - action: hassio.host_reboot

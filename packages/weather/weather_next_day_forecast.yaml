@@ -38,12 +38,12 @@ input_text:
 
 template:
   - trigger:
-      - platform: time
+      - trigger: time
         at: "22:00:00"
-      - platform: homeassistant
+      - trigger: homeassistant
         event: start
     action:
-      - service: weather.get_forecasts
+      - action: weather.get_forecasts
         data:
           type: daily
         target:
@@ -59,23 +59,23 @@ automation:
   - id: weather_save_next_day_forecast
     alias: Forecast - Save tomorrow weather
     description: Save's tomorrow's forecast so we can use it the next day as today's forecast
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "22:02:00"
-    action:
-      - service: input_text.set_value
+    actions:
+      - action: input_text.set_value
         data:
           entity_id: input_text.weather_forecast
           value: "{{ state_attr('sensor.weather_tomorrow', 'forecast').condition }}"
-      - service: input_number.set_value
+      - action: input_number.set_value
         data:
           entity_id: input_number.forecast_min_temp
           value: "{{ state_attr('sensor.weather_tomorrow', 'forecast').templow | float }}"
-      - service: input_number.set_value
+      - action: input_number.set_value
         data:
           entity_id: input_number.forecast_precip
           value: "{{ state_attr('sensor.weather_tomorrow', 'forecast').precipitation | float }}"
-      - service: input_number.set_value
+      - action: input_number.set_value
         data:
           entity_id: input_number.forecast_temp
           value: "{{ state_attr('sensor.weather_tomorrow', 'forecast').temperature | float }}"

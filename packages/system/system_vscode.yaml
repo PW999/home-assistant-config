@@ -12,10 +12,10 @@ automation:
   - id: system_stop_vscode
     alias: System - Stop vscode
     description: Stops the vscode add-on if not needed
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "05:00:00"
-    action:
-      - service: hassio.addon_stop
+    actions:
+      - action: hassio.addon_stop
         data:
           addon: a0d7b954_vscode

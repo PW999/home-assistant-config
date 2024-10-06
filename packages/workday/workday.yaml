@@ -16,46 +16,46 @@ automation:
   - id: workday_timer_start
     alias: Workday - Start at work timer
     description: Starts timer when I arrive at work or start my work laptop
-    trigger:
-      - platform: zone
+    triggers:
+      - trigger: zone
         entity_id:
           - person.phillip
         zone: zone.work
         event: enter
-      - platform: state
+      - trigger: state
         entity_id:
           - device_tracker.as_hq_lt_108
         to: home
-    condition:
+    conditions:
       - condition: state
         entity_id: timer.workday_countdown
         state: idle
-    action:
+    actions:
       - delay: 300 # Zone is pretty big, gotta park my car and stuff
-      - service: timer.start
+      - action: timer.start
         data:
           entity_id: timer.workday_countdown
 
   - id: workday_timer_cancel
     alias: Workday - Stop at work timer
     description: Stops the timer when I leave work or if my laptop is off
-    trigger:
-      - platform: zone
+    triggers:
+      - trigger: zone
         entity_id:
           - person.phillip
         zone: zone.work
         event: leave
-      - platform: state
+      - trigger: state
         entity_id:
           - device_tracker.as_hq_lt_108
         to: away
         for: "00:20:00" # bluetooth tracking is not so accurate
-    condition:
+    conditions:
       - condition: state
         entity_id: timer.workday_countdown
         state: active
     action:
-      - service: timer.cancel
+      - action: timer.cancel
         data:
           entity_id: timer.workday_countdown
 
@@ -63,13 +63,13 @@ automation:
     alias: Workday - travel to home time notification
     description: Send travel to home time when I'm at work for 8h
     mode: single
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: timer.finished
         event_data:
           entity_id: timer.workday_countdown
-    action:
-      - service: notify.mobile_app_pwxperia10iv
+    actions:
+      - action: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Almost time to go home, travel time is {{ states('sensor.to_home') }} {{ state_attr('sensor.to_home', 'unit_of_measurement') }} via {{ state_attr('sensor.to_home', 'route') }}
