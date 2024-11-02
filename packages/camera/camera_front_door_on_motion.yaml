@@ -13,7 +13,7 @@ automation:
     mode: single
     trigger:
       - platform: mqtt
-        topic: frigate/events
+        topic: frigate/reviews
     condition:
       - condition: or
         conditions:
@@ -65,9 +65,9 @@ script:
           title: Motion detected by {{ camera }}
           data:
             sticky: true
-            image: https://homeassistant.pwcasa.local/api/frigate/notifications/{{ event_id }}/snapshot.jpg?format=android
+            image: https://homeassistant.pwcasa.internal/api/frigate/notifications/{{ event_id }}/snapshot.jpg?format=android
             actions:
               - action: URI
                 title: "View clip"
-                uri: https://homeassistant.pwcasa.local/api/frigate/notifications/{{ event_id }}/clip.mp4
+                uri: https://homeassistant.pwcasa.internal/api/frigate/notifications/{{ event_id }}/clip.mp4
       - delay: 1800 # do no spam me with notifications
