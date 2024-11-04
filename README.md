@@ -74,7 +74,7 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 ## Buttons
 | Device                            | Integration                                                   | Remarks                      |
 |-----------------------------------|---------------------------------------------------------------|------------------------------|
-| Osram Smart+ Switch mini  (x2)    | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Has 3 buttons and short/long press support |
+| Osram Smart+ Switch mini  (x2)    | [Deconz](https://www.home-assistant.io/integrations/deconz/)  | Has 3 buttons and short/long press support. Broadcasts to random devices in ZHA. |
 | [IKEA wireless dimmer](https://www.ikea.com/be/nl/p/tradfri-draadloze-dimmer-smart-wit-70408595/) | [ZHA](https://www.home-assistant.io/integrations/zha/) | 2 buttons with short/long press support |
 
 ## Device tracking
