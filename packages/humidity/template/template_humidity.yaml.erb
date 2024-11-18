@@ -19,7 +19,7 @@ automation:
     mode: single
     triggers:
       - trigger: numeric_state
-        entity_id: <%= sensor_id %>_humidity_at_20
+        entity_id: sensor.<%= location_id %>_humidity_at_20
         above: <%= humidity_high_threshold %>
         for: "00:10:00"
       - trigger: state
@@ -28,7 +28,7 @@ automation:
         for: "00:15:00"
     conditions:
       - condition: numeric_state
-        entity_id: <%= sensor_id %>_humidity_at_20
+        entity_id: sensor.<%= location_id %>_humidity_at_20
         above: <%= humidity_high_threshold %>
       - condition: state
         entity_id: input_boolean.master_switch
@@ -38,14 +38,14 @@ automation:
           - alias: Trigger when I get home or wake up
             condition: template
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
-          - alias: Trigger when <%= sensor_id %> humidity rises from below to above threshold
+          - alias: Trigger when <%= location_id %> humidity rises from below to above threshold
             condition: template
-            value_template: "{{ trigger.entity_id == '<%= sensor_id %>_humidity_at_20' and (trigger.from_state.state | float(100)) <= <%= humidity_high_threshold %>.0 }}"
+            value_template: "{{ trigger.entity_id == 'sensor.<%= location_id %>_humidity_at_20' and (trigger.from_state.state | float(100)) <= <%= humidity_high_threshold %>.0 }}"
     actions:
       - action: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Relative humidity is {{ float(states('<%= sensor_id %>_sensor_humidity')) }}%, consider opening a window.
-            Debug: IN: {{ float(states('<%= sensor_id %>_humidity_at_20'))}} - OUT: {{float(states('<%= outside_sensor_id %>_humidity_at_20'))}}
+            Debug: IN: {{ float(states('sensor.<%= location_id %>_humidity_at_20'))}} - OUT: {{float(states('<%= outside_sensor_id %>_humidity_at_20'))}}
           title: <%= location_name %> humidity warning
       - delay: 7200

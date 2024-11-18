@@ -20,10 +20,10 @@ automation:
       - entity_id: sensor.bathroom_sensor_humidity
         trigger: numeric_state
         above: 68
-      - entity_id: sensor.office_sensor_humidity_at_20
+      - entity_id: sensor.office_humidity_at_20
         trigger: numeric_state
         above: 68
-      - entity_id: sensor.living_room_sensor_humidity_at_20
+      - entity_id: sensor.living_room_humidity_at_20
         trigger: numeric_state
         above: 68
       - trigger: state
@@ -44,13 +44,13 @@ automation:
         data:
           name: humidity_bathroom_fan_on
           message: Bathroom fan turned on by {{ trigger.entity_id }}
-          entity_id: sensor.living_room_sensor_humidity_at_20
+          entity_id: sensor.living_room_humidity_at_20
           domain: sensor
       - action: logbook.log
         data:
           name: humidity_bathroom_fan_on
           message: Bathroom fan turned on by {{ trigger.entity_id }}
-          entity_id: sensor.office_sensor_humidity_at_20
+          entity_id: sensor.office_humidity_at_20
           domain: sensor
 
   - id: humidity_bathroom_fan_off
@@ -61,11 +61,11 @@ automation:
         trigger: numeric_state
         below: 65
         for: "00:10:00"
-      - entity_id: sensor.office_sensor_humidity_at_20
+      - entity_id: sensor.office_humidity_at_20
         trigger: numeric_state
         below: 67
         for: "00:10:00"
-      - entity_id: sensor.living_room_sensor_humidity_at_20
+      - entity_id: sensor.living_room_humidity_at_20
         trigger: numeric_state
         below: 67
         for: "00:10:00"

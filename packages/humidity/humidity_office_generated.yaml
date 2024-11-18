@@ -71,7 +71,7 @@ automation:
           - alias: Trigger when I get home or wake up
             condition: template
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
-          - alias: Trigger when sensor.office humidity rises from below to above threshold
+          - alias: Trigger when office humidity rises from below to above threshold
             condition: template
             value_template: "{{ trigger.entity_id == 'sensor.office_humidity_at_20' and (trigger.from_state.state | float(100)) <= 70.0 }}"
     actions:

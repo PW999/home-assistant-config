@@ -53,7 +53,7 @@ automation:
     triggers:
       - trigger: numeric_state
         entity_id: sensor.bedroom_humidity_at_20
-        above: 75
+        above: 70
         for: "00:10:00"
       - trigger: state
         entity_id: input_boolean.master_switch
@@ -62,7 +62,7 @@ automation:
     conditions:
       - condition: numeric_state
         entity_id: sensor.bedroom_humidity_at_20
-        above: 75
+        above: 70
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
@@ -71,9 +71,9 @@ automation:
           - alias: Trigger when I get home or wake up
             condition: template
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
-          - alias: Trigger when sensor.bedroom humidity rises from below to above threshold
+          - alias: Trigger when bedroom humidity rises from below to above threshold
             condition: template
-            value_template: "{{ trigger.entity_id == 'sensor.bedroom_humidity_at_20' and (trigger.from_state.state | float(100)) <= 75.0 }}"
+            value_template: "{{ trigger.entity_id == 'sensor.bedroom_humidity_at_20' and (trigger.from_state.state | float(100)) <= 70.0 }}"
     actions:
       - action: notify.mobile_app_pwxperia10iv
         data:
