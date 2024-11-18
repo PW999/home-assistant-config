@@ -16,37 +16,37 @@ automation:
   - id: humidity_bathroom_fan_on
     alias: Bathroom fan - turn on
     description: Turn the bathroom fan on if is too humid in the house or if dryer is on
-    trigger:
+    triggers:
       - entity_id: sensor.bathroom_sensor_humidity
-        platform: numeric_state
+        trigger: numeric_state
         above: 68
       - entity_id: sensor.office_sensor_humidity
-        platform: numeric_state
+        trigger: numeric_state
         above: 73
       - entity_id: sensor.living_room_sensor_humidity
-        platform: numeric_state
+        trigger: numeric_state
         above: 73
-      - platform: state
+      - trigger: state
         entity_id: sensor.dryer_status
         to: Running
         for: "00:15:00"   # do not turn it on immediately, humidity won't rise this fast
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         data:
           entity_id: switch.bathroom_fan_switch
-      - service: logbook.log
+      - action: logbook.log
         data:
           name: humidity_bathroom_fan_on
           message: Bathroom fan turned on by {{ trigger.entity_id }}
           entity_id: sensor.bathroom_sensor_humidity
           domain: sensor
-      - service: logbook.log
+      - action: logbook.log
         data:
           name: humidity_bathroom_fan_on
           message: Bathroom fan turned on by {{ trigger.entity_id }}
           entity_id: sensor.living_room_sensor_humidity
           domain: sensor
-      - service: logbook.log
+      - action: logbook.log
         data:
           name: humidity_bathroom_fan_on
           message: Bathroom fan turned on by {{ trigger.entity_id }}
@@ -56,35 +56,35 @@ automation:
   - id: humidity_bathroom_fan_off
     alias: Bathroom fan - turn off
     description: Turn the bathroom fan off base on humidity, dryer state of after a time-out
-    trigger:
+    triggers:
       - entity_id: sensor.bathroom_sensor_humidity
-        platform: numeric_state
+        trigger: numeric_state
         below: 68
         for: "00:10:00"
       - entity_id: sensor.office_sensor_humidity
-        platform: numeric_state
+        trigger: numeric_state
         below: 68
         for: "00:10:00"
       - entity_id: sensor.living_room_sensor_humidity
-        platform: numeric_state
+        trigger: numeric_state
         below: 68
         for: "00:10:00"
       - entity_id: switch.bathroom_fan_switch
-        platform: state
+        trigger: state
         to: "on"
         for: "00:30:00"
-      - platform: state
+      - trigger: state
         entity_id: sensor.dryer_status
         from: Running
         for: "00:20:00"   # give it some de-bounce time and after run time
-    condition:
+    conditions:
       - condition: not
         conditions:
           - alias: Keep the fan on while the dryer is on
             condition: state
             entity_id: sensor.dryer_status
             state: Running
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         data:
           entity_id: switch.bathroom_fan_switch
