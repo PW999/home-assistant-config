@@ -11,12 +11,12 @@ automation:
   - id: light_toilet_on
     alias: Toilet light on
     description: Turns the toilet light on when motion is detected
-    trigger:
+    triggers:
       - entity_id: binary_sensor.toilet_presence
-        platform: state
+        trigger: state
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         data_template:
           brightness: "{{ [16, (255 * ( cos(0.12* ( 13 - now().hour)) - 0.05 ) / 0.8)] | max | round(0) }}"  # https://www.desmos.com/calculator
           transition: 1
@@ -26,13 +26,13 @@ automation:
   - id: light_toilet_off
     alias: Toilet light off
     description: Turns the toilet light off when motion is not detected for 5 min
-    trigger:
+    triggers:
       - entity_id: binary_sensor.toilet_presence
-        platform: state
+        trigger: state
         to: "off"
         for: "00:05:00"
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         data:
           transition: 4
           entity_id:

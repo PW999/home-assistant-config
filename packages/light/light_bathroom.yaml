@@ -17,14 +17,14 @@ automation:
   - id: light_bathroom_turn_on
     alias: Bathroom - turn light on
     description: Turn on the light in the bathroom on motion
-    trigger:
+    triggers:
       - entity_id: binary_sensor.bathroom_presence_motion
-        platform: state
+        trigger: state
         to: "on"
       - entity_id: input_boolean.master_switch
-        platform: state
+        trigger: state
         to: "on"
-    action:
+    actions:
       - if: # during the day when master is on
           - condition: state
             entity_id: input_select.home_mode
@@ -33,7 +33,7 @@ automation:
             entity_id: input_boolean.master_switch
             state: "on"
         then:
-          - service: light.turn_on
+          - action: light.turn_on
             data:
               color_temp: 285
               brightness: 255
@@ -50,7 +50,7 @@ automation:
                 entity_id: input_boolean.master_switch
                 state: "off"
             then:
-              - service: light.turn_on
+              - action: light.turn_on
                 data:
                   color_temp: 420
                   brightness: 96
@@ -62,7 +62,7 @@ automation:
                     entity_id: input_boolean.master_switch
                     state: "on"
                 then:
-                  - service: light.turn_on
+                  - action: light.turn_on
                     data:
                       color_temp: 330
                       brightness: 224
@@ -72,43 +72,43 @@ automation:
   - id: light_bathroom_turn_off
     alias: Bathroom - turn light off
     description: Turn off the light
-    trigger:
+    triggers:
       - entity_id: binary_sensor.bathroom_presence_motion
-        platform: state
+        trigger: state
         to: "off"
         for: "00:04:00"
       - entity_id: timer.bathroom_light_extended_time
-        platform: state
+        trigger: state
         to: idle
-    condition:
+    conditions:
       - condition: state
         entity_id: timer.bathroom_light_extended_time
         state: idle
       - entity_id: binary_sensor.bathroom_presence_motion
         condition: state
         state: "off"
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           entity_id: light.bathroom_light
 
   - id: light_bathroom_start_extended_timer
     alias: Bathroom - Start extended timer
     description: Start extended light timer in case I want to shower (can't detection motion in the shower)
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: zha_event
         event_data:
           device_id: 38c1a38ab3652833a89847b70a2e1a2a # bathroom_switch
           command: "on"
-    action:
-      - service: timer.cancel
+    actions:
+      - action: timer.cancel
         target:
           entity_id: timer.bathroom_light_extended_time
-      - service: timer.start
+      - action: timer.start
         target:
           entity_id: timer.bathroom_light_extended_time
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           flash: short
         target:

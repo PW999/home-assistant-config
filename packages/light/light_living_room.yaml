@@ -11,28 +11,28 @@ automation:
   - id: light_living_room_evening_turn_on
     alias: Living room - turn on lights in the evening
     description: Turn on the living room lights in the evening based on sunset
-    trigger:
+    triggers:
       - entity_id: input_select.home_mode
-        platform: state
+        trigger: state
         to: Evening
       - entity_id: input_select.home_mode
-        platform: state
+        trigger: state
         to: Morning
       - entity_id: input_boolean.master_switch
-        platform: state
+        trigger: state
         from: "off"
         to: "on"
       - entity_id: binary_sensor.living_room_presence_motion
-        platform: state
+        trigger: state
         to: "on"
       - entity_id: media_player.fire_tv_10_0_1_142  # immediately switch to movie mode
-        platform: state
+        trigger: state
         to: "playing"
       - entity_id: media_player.fire_tv_10_0_1_142
-        platform: state
+        trigger: state
         from: "playing"
         for: "00:02:00"
-    condition:
+    conditions:
       - condition: or
         conditions:
           - condition: state
@@ -47,7 +47,7 @@ automation:
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
-    action:
+    actions:
       - if:
           - condition: state
             entity_id: media_player.fire_tv_10_0_1_142
@@ -67,12 +67,12 @@ automation:
                 state: "Spotify"
                 attribute: "source"
         then:
-          - service: scene.turn_on
+          - action: scene.turn_on
             entity_id: scene.living_room_movie
             data:
               transition: 2
         else:
-          - service: scene.turn_on
+          - action: scene.turn_on
             entity_id: scene.living_room_evening
             data:
               transition: 2
@@ -81,20 +81,20 @@ automation:
   - id: light_living_room_off_no_presence
     alias: Living room - turn off WLED strips if no presence detected
     description: Turn of power hungry WLED strips when I am not in the living
-    trigger:
+    triggers:
       - entity_id: binary_sensor.living_room_presence_motion
-        platform: state
+        trigger: state
         to: "off"
         for: "00:25:00"
       - entity_id: light.living_room_tv # handles the case where the lights go on but I'm not in the living for the next couple of hours
-        platform: state
+        trigger: state
         to: "on"
         for: "00:10:00"
-      - platform: state
+      - trigger: state
         entity_id: media_player.fire_tv_10_0_1_142
         from: "playing"
         for: "00:25:00"
-    condition:
+    conditions:
       - condition: or
         conditions:
           - condition: state
@@ -119,8 +119,8 @@ automation:
             condition: state
             entity_id: media_player.fire_tv_10_0_1_142
             state: "playing"
-    action:
-      service: scene.apply
+    actions:
+      action: scene.apply
       data:
         transition: 4
         entities:
@@ -132,19 +132,19 @@ automation:
   - id: light_living_room_morning_turn_off
     alias: Living room - turn off ligts in the morning
     description: Turn off the living room lights in the morning
-    trigger:
+    triggers:
       - entity_id: input_select.home_mode
-        platform: state
+        trigger: state
         to: Day
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.master_switch
         state: "on"
       - condition: state
         entity_id: input_select.home_mode
         state: Day
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         entity_id: scene.living_room_off
         data:
           transition: 3
@@ -152,18 +152,18 @@ automation:
   - id: light_living_room_dimm_lights
     alias: Living room - dimm the lights later in the evening
     description: Slowly dimm the living room lights at night
-    trigger:
+    triggers:
       - entity_id: input_select.home_mode
-        platform: state
+        trigger: state
         to: Night
       - entity_id: input_boolean.master_switch
-        platform: state
+        trigger: state
         from: "off"
         to: "on"
       - entity_id: binary_sensor.living_room_presence_motion
-        platform: state
+        trigger: state
         to: "on"
-    condition:
+    conditions:
       - condition: or
         conditions:
           - alias: Always trigger when master switch is the trigger
@@ -193,8 +193,8 @@ automation:
       - condition: state
         entity_id: input_select.home_mode
         state: Night
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         entity_id: scene.living_room_evening_dimmed
         data:
           transition: 60
