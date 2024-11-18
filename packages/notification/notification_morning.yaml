@@ -29,8 +29,8 @@ automation:
           message: >
             Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
             Travel time is {{ states('sensor.to_work') }} {{ state_attr('sensor.to_work', 'unit_of_measurement') }}<br />
-            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') | trim }}
-            - {{ states('input_number.forecast_temp') | trim }}°C with {{ states('input_number.forecast_precip') | trim }}mm rain.
+            Today will be {{ state_attr('sensor.weather_tomorrow', 'forecast').condition }} at {{ state_attr('sensor.weather_tomorrow', 'forecast').templow }}
+            - {{ state_attr('sensor.weather_tomorrow', 'forecast').temperature }}°C with {{ state_attr('sensor.weather_tomorrow', 'forecast').precipitation }}mm rain.
           title: Good morning
       - delay: 600
 
@@ -54,8 +54,8 @@ automation:
                 title: Turn master on
           message: >
             Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
-            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') | trim }}
-             - {{ states('input_number.forecast_temp') | trim }}°C with {{ states('input_number.forecast_precip') | trim }}mm rain.
+            Today will be {{ state_attr('sensor.weather_tomorrow', 'forecast').condition }} at {{ state_attr('sensor.weather_tomorrow', 'forecast').templow }}
+            - {{ state_attr('sensor.weather_tomorrow', 'forecast').temperature }}°C with {{ state_attr('sensor.weather_tomorrow', 'forecast').precipitation }}mm rain.
           title: Good morning
       - delay: 600
 
@@ -63,15 +63,15 @@ automation:
     alias: Notification - Morning notification when working from home
     description: Send morning updates to my smartphone when working from home
     mode: single
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "07:55:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_mode
         state: "WFH"
-    action:
-      - service: notify.mobile_app_pwxperia10iv
+    actions:
+      - action: notify.mobile_app_pwxperia10iv
         data:
           data:
             actions:
@@ -79,7 +79,7 @@ automation:
                 title: Turn master on
           message: >
             Goodmorning, it's a {{ states('weather.pw_casa') }} {{ state_attr('weather.pw_casa', 'temperature') }}°C.<br />
-            Today will be {{ states('input_text.weather_forecast') }} at {{ states('input_number.forecast_min_temp') | trim }}
-             - {{ states('input_number.forecast_temp') | trim }}°C with {{ states('input_number.forecast_precip') | trim }}mm rain.
+            Today will be {{ state_attr('sensor.weather_tomorrow', 'forecast').condition }} at {{ state_attr('sensor.weather_tomorrow', 'forecast').templow }}
+            - {{ state_attr('sensor.weather_tomorrow', 'forecast').temperature }}°C with {{ state_attr('sensor.weather_tomorrow', 'forecast').precipitation }}mm rain.
           title: Good morning
       - delay: 600
