@@ -50,23 +50,18 @@ automation:
   - id: humidity_kitchen_automation_humidity_too_high
     alias: Notification - Kitchen humidity too high
     mode: single
-    trigger:
-      - platform: numeric_state
-        entity_id: sensor.kitchen_sensor_humidity
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.kitchen_humidity_at_20
         above: 70
         for: "00:10:00"
-      - platform: state
-        entity_id: sensor.terrace_sensor_humidity
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.master_switch
         to: "on"
         for: "00:15:00"
-    condition:
+    conditions:
       - condition: numeric_state
-        entity_id: sensor.kitchen_sensor_temperature
-        above: 16   # 70% @ 15°c == 52% @ 20°c
-      - condition: numeric_state
-        entity_id: sensor.kitchen_sensor_humidity
+        entity_id: sensor.kitchen_humidity_at_20
         above: 70
       - condition: state
         entity_id: input_boolean.master_switch
@@ -76,50 +71,14 @@ automation:
           - alias: Trigger when I get home or wake up
             condition: template
             value_template: "{{ trigger.entity_id == 'input_boolean.master_switch' }}"
-          - alias: Trigger when bedroom humidity rises from below to above threshold
+          - alias: Trigger when sensor.kitchen humidity rises from below to above threshold
             condition: template
-            value_template: "{{ trigger.entity_id == 'sensor.kitchen_sensor_humidity' and (trigger.from_state.state | float(100)) <= 70.0 }}"
-          - alias: Trigger when outside humidity lowers
-            condition: template
-            value_template: "{{ trigger.entity_id == 'sensor.terrace_sensor_humidity' and (trigger.from_state.state | float(0)) > (trigger.to_state.state | float(100)) }}"
-      - alias: If outside humidity is much lower than inside humidity
-        condition: template
-        value_template: >
-          {{ ( float(states('sensor.kitchen_humidity_at_20')) - float(states('sensor.terrace_humidity_at_20')) ) >= 15 }}
-    action:
-      - service: notify.mobile_app_pwxperia10iv
+            value_template: "{{ trigger.entity_id == 'sensor.kitchen_humidity_at_20' and (trigger.from_state.state | float(100)) <= 70.0 }}"
+    actions:
+      - action: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Relative humidity is {{ float(states('sensor.kitchen_sensor_humidity')) }}%, consider opening a window.
             Debug: IN: {{ float(states('sensor.kitchen_humidity_at_20'))}} - OUT: {{float(states('sensor.terrace_humidity_at_20'))}}
-          title: Kitchen humidity warning
-      - delay: 7200
-
-
-  - id: humidity_kitchen_automation_humidity_too_low
-    alias: Notification - Kitchen humidity too low
-    mode: single
-    trigger:
-      - platform: numeric_state
-        entity_id: sensor.kitchen_sensor_humidity
-        below: 40
-        for: "00:10:00"
-    condition:
-      - alias: Only if we cross the treshold
-        condition: template
-        value_template: >
-          {%  if trigger.entity_id != 'sensor.kitchen_sensor_humidity'  %}
-          false
-          {% else %}
-          {{ trigger.from_state.state | float >= 40.0   }}
-          {% endif %}
-      - condition: numeric_state
-        entity_id: sensor.kitchen_sensor_humidity
-        below: 40
-    action:
-      - service: notify.mobile_app_pwxperia10iv
-        data:
-          message: |
-            Relative humidity is at {{ float(states('sensor.kitchen_sensor_humidity')) }}% !
           title: Kitchen humidity warning
       - delay: 7200
