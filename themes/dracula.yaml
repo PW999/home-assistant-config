@@ -1,0 +1,38 @@
+Dracula:
+      # Header:
+      app-header-background-color: RGB(68, 71, 90)
+      app-header-text-color: RGB(98, 114, 164)
+      app-header-selection-bar-color: RGB(189, 147, 249)
+      app-header-edit-background-color: RGB(255, 85, 85)
+      # Main Interface Colors
+      primary-color: RGB(189, 147, 249)
+      primary-background-color: RGB(40, 42, 54)
+      secondary-background-color: RGB(68, 71, 90)
+      divider-color: RGB(98, 114, 164)
+      accent-color: RGB(255, 121, 198)
+      # Text
+      primary-text-color: RGB(248, 248, 242)
+      secondary-text-color: RGB(98, 114, 164)
+      text-primary-color: var(--primary-text-color)
+      disabled-text-color: rgb(72, 72, 74)
+      # Sidebar Menu
+      sidebar-icon-color: RGB(98, 114, 164)
+      sidebar-text-color: RGB(98, 114, 164)
+      sidebar-background-color: RGB(40, 42, 54)
+      sidebar-selected-background-color: var(--primary-background-color)
+      sidebar-selected-icon-color: RGB(189, 147, 249)
+      sidebar-selected-text-color: var(--sidebar-selected-icon-color))
+      # Cards
+      card-background-color: RGB(68, 71, 90)
+      ha-card-background: RGB(68, 71, 90)
+      ha-card-border-color: RGB(68, 71, 90)
+      paper-dialog-background-color: var(--card-background-color)
+      paper-listbox-background-color: var(--card-background-color)
+      paper-card-background-color: var(--card-background-color)
+      # Input
+      input-fill-color: var(--secondary-background-color)
+      input-dropdown-icon-color: var(--secondary-text-color)
+      input-ink-color: var(--primary-text-color)
+      input-label-ink-color: var(--secondary-text-color)
+      input-idle-line-color: var(--primary-text-color)
+      input-hover-line-color: var(--accent-color)

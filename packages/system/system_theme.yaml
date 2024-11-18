@@ -17,4 +17,4 @@ automation:
     actions:
       action: frontend.set_theme
       data:
-        name: Fluent Blue
+        name: Catppuccin Mocha
