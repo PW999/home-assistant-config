@@ -21,13 +21,9 @@ automation:
       - entity_id: binary_sensor.bathroom_presence_motion
         platform: state
         to: "on"
-    condition:
-      - condition: state
-        entity_id: light.bathroom_light
-        state: "off"
-      # - alias: "Mitigate Ikea false positives"  # I can't go into my bathroom without triggering the hall lights, even at night.
-      #   condition: template
-      #   value_template: "{{ as_local(states.light.hall_2.last_updated) > (now() - timedelta(minutes = 20)) }}"
+      - entity_id: input_boolean.master_switch
+        platform: state
+        to: "on"
     action:
       - if: # during the day when master is on
           - condition: state
@@ -81,14 +77,6 @@ automation:
         platform: state
         to: "off"
         for: "00:04:00"
-      # - entity_id: binary_sensor.bathroom_presence_motion
-      #   platform: state
-      #   to: "off"
-      #   for: "00:06:00" # second attempt if Ikea missed it
-      # - entity_id: light.bathroom_light
-      #   platform: state
-      #   to: "on"
-      #   for: "00:30:00" # sometimes it just keeps on for no reason (thanks Ikea)
       - entity_id: timer.bathroom_light_extended_time
         platform: state
         to: idle
