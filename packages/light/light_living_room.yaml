@@ -60,6 +60,10 @@ automation:
                 attribute: "source"
               - condition: state
                 entity_id: media_player.fire_tv_10_0_1_142
+                state: "org.polymorphicshade.tubular"
+                attribute: "source"
+              - condition: state
+                entity_id: media_player.fire_tv_10_0_1_142
                 state: "Spotify"
                 attribute: "source"
         then:
