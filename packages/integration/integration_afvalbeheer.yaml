@@ -12,7 +12,6 @@ afvalbeheer:
   wastecollector: RecycleApp
   resources:
     - restafval
-    - gft
     - papier
     - pmd
   postcode: !secret postcode
