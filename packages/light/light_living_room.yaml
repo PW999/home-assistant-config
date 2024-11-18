@@ -232,7 +232,7 @@ scene:
         intensity: 97
         speed: 35
         state: "on"
-        brightness: 192
+        brightness: 64
         effect: Candle Multi
         rgb_color:
           - 255
@@ -242,11 +242,11 @@ scene:
         intensity: 166
         speed: 25
         state: "on"
-        brightness: 192
+        brightness: 96
         effect: Palette
       light.living_room_big:
         color_temp: 320
-        brightness: 100
+        brightness: 96
         state: "on"
       light.living_room_small:
         color_temp: 320
