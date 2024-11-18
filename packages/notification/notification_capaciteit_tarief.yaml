@@ -12,27 +12,27 @@ automation:
     alias: Notification - Capaciteit tarief
     description: Send a notification when risking to use more than the 'basic' 2.5kWh
     mode: single
-    trigger:
+    triggers:
         # retrigger often, the template as trigger will be too expensive to run
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.electricity_meter_current_average_demand
         above: 1.80
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.electricity_meter_current_average_demand
         above: 1.90
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.electricity_meter_current_average_demand
         above: 2.0
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.electricity_meter_current_average_demand
         above: 2.1
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.electricity_meter_current_average_demand
         above: 2.2
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.electricity_meter_current_average_demand
         above: 2.3
-    condition:
+    conditions:
       - condition: or
         conditions:
             # div by zero but let's just assume we won't even hit 1kWh avg demand at start of window
@@ -43,8 +43,8 @@ automation:
             condition: numeric_state
             entity_id: sensor.electricity_meter_current_average_demand
             above: 2.29
-    action:
-      - service: notify.mobile_app_pwxperia10iv
+    actions:
+      - action: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Average power consumption is {{ states('sensor.electricity_meter_current_average_demand') }}.

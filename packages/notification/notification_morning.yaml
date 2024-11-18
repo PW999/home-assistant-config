@@ -12,15 +12,15 @@ automation:
     alias: Notification - Morning notification on workday
     description: Send morning updates to my smartphone on a workday
     mode: single
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "06:50:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_mode
         state: "Workday"
-    action:
-      - service: notify.mobile_app_pwxperia10iv
+    actions:
+      - action: notify.mobile_app_pwxperia10iv
         data:
           data:
             actions:
@@ -38,15 +38,15 @@ automation:
     alias: Notification - Morning notification on non-workdays
     description: Send morning updates to my smartphone on a non-working day
     mode: single
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "08:15:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_mode
         state: "Normal"
-    action:
-      - service: notify.mobile_app_pwxperia10iv
+    actions:
+      - action: notify.mobile_app_pwxperia10iv
         data:
           data:
             actions:
