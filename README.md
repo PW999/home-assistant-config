@@ -3,7 +3,7 @@
 ![Last commits](https://img.shields.io/github/last-commit/PW999/home-assistant-config)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/PW999/home-assistant-config)
 ![Maintenance](https://img.shields.io/maintenance/yes/2024)
-![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2024.10-blue)
+![Home Assistant Version](https://img.shields.io/badge/Home%20Assistant%20Version-2024.11-blue)
 ![Ruby](https://img.shields.io/badge/Made%20with-Ruby-red?logo=ruby)
 
 
@@ -120,8 +120,6 @@ Raspberrymatic is running a Raspberry Pi-3B which boots from a USB SSD.
 | --------------------------------------------------------------|------------------------------|
 | [Nginx add-on](https://github.com/home-assistant/addons/tree/master/nginx_proxy)  | Using certificates signed by my own, trusted CA |
 | [Studio code server](https://github.com/hassio-addons/addon-vscode) | Since remotely mounting the config folder is pretty damn hard on HAOS |
-| [Terminal & SSH](https://github.com/home-assistant/addons/tree/master/ssh) | For those special cases |
-| [Glances](https://github.com/hassio-addons/addon-glances) | Disabled for now, it's a lot of data I barely need |
 | [Frigate](https://github.com/blakeblackshear/frigate-hass-addons) | Centralizes IP cameras with GPU accelerated object detection |
 
 ## Custom components
