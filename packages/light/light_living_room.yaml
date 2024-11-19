@@ -246,15 +246,15 @@ scene:
         intensity: 166
         speed: 25
         state: "on"
-        brightness: 96
+        brightness: 64
         effect: Palette
       light.living_room_big:
         color_temp: 320
-        brightness: 96
+        brightness: 64
         state: "on"
       light.living_room_small:
         color_temp: 320
-        brightness: 16
+        brightness: 8
         state: "on"
       switch.gosund_sp112_4_usb:
         state: "on"
