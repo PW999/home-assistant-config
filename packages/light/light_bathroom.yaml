@@ -24,6 +24,10 @@ automation:
       - entity_id: input_boolean.master_switch
         trigger: state
         to: "on"
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.bathroom_presence_motion
+        state: "on"
     actions:
       - if: # during the day when master is on
           - condition: state
