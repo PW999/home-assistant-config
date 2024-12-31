@@ -38,7 +38,12 @@ automation:
       - service: logbook.log
         data:
           name: general_master_switch_turn_on
-          message: "Master switched turned on by {{ trigger.entity_id }}"
+          message: >
+            {% if trigger.platform == 'event' %}
+            "Master switched turned on by event {{ trigger.event.data }}"
+            {% else %}
+            "Master switched turned on by entity {{ trigger.entity_id }}"
+            {% endif %}
           entity_id: input_boolean.master_switch
           domain: input_boolean
 
@@ -46,12 +51,6 @@ automation:
     alias: Switches - Master switch on on wifi change
     description: Turn on the master switch when phone connects to Wifi
     trigger:
-      - platform: state
-        entity_id: sensor.pwxperia10iv_wifi_connection
-        to: !secret wifi_ssid_2_4G
-      - platform: state
-        entity_id: sensor.pwxperia10iv_wifi_connection
-        to: !secret wifi_ssid_5G
       - platform: state
         entity_id: sensor.pwxperia10iv_wifi_connection
         to: !secret new_wifi_ssid_2_4G
