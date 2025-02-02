@@ -193,6 +193,26 @@ automation:
       - condition: state
         entity_id: input_select.home_mode
         state: Night
+      - condition: not
+        conditions:
+          - alias: "Do not dimm lights when I'm watching anything on TV"
+            condition: state
+            entity_id: media_player.fire_tv_10_0_1_142
+            state: "playing"
+          - condition: or
+            conditions:
+            - condition: state
+              entity_id: media_player.fire_tv_10_0_1_142
+              state: "org.polymorphicshade.newpipe"
+              attribute: "source"
+            - condition: state
+              entity_id: media_player.fire_tv_10_0_1_142
+              state: "org.polymorphicshade.tubular"
+              attribute: "source"
+            - condition: state
+              entity_id: media_player.fire_tv_10_0_1_142
+              state: "Spotify"
+              attribute: "source"
     actions:
       - action: scene.turn_on
         entity_id: scene.living_room_evening_dimmed
