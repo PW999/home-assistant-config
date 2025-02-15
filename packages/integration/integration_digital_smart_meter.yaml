@@ -192,7 +192,7 @@ sensor:
     name: P1 Reader RSSI
     resource: http://10.0.2.50/wifi/info
     timeout: 30
-    scan_interval: 240
+    scan_interval: 300
     value_template: "{{ value_json.rssi | replace('dB', '') | float }}"
     device_class: signal_strength
     unit_of_measurement: dB
@@ -224,7 +224,7 @@ automation:
     mode: single
     trigger:
       - platform: time_pattern
-        minutes: /5
+        minutes: /10
     condition:
       - condition: template
         value_template: >-

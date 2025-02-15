@@ -117,6 +117,7 @@ logbook:
       - number.heatbooster_front_window_fan_speed # This thing floods the logbook
       - media_player.kdl_50w807c_2                # These go on/off/unavailable all the time
       - remote.kdl_50w807c
+      - binary_sensor.office_presence             # This also logs a lot
     entity_globs:
       - light.hall*                               # Everytime I go through the hall this logs something, it's not needed
       - scene.hall*

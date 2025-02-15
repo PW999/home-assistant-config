@@ -27,10 +27,10 @@ afvalbeheer:
 automation:
   - id: afvalbeheer_notification_on_resource
     alias: Afvalbeheer - Notification on resource
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "18:00:00"
-    condition:
+    conditions:
       - alias: "Afval sensor has a value"
         condition: template
         value_template: "{{  states('sensor.recycleapp_tomorrow') != 'None' }}"
@@ -44,8 +44,8 @@ automation:
           {% else %}
           true
           {% endif %}
-    action:
-      - service: notify.mobile_app_pwxperia10iv
+    actions:
+      - action: notify.mobile_app_pwxperia10iv
         data:
           message: |
             Tomorrow we must put {{ states('sensor.recycleapp_tomorrow') }} outside
