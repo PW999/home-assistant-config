@@ -1,0 +1,27 @@
+---
+###############################################################################
+#   @author         :   Phillip (P_W999)
+#   @date           :   02/2025
+#   @package        :   Slower buienradar updates
+#   @description    :   Don't poll buienradar every 10 minutes
+#   @url            :   https://github.com/PW999/home-assistant-config/
+###############################################################################
+
+automation:
+  - id: buienradar_slow_update
+    alias: Buienradar - Slow update
+    description: Polls buienradar every 30 minutes
+    triggers:
+      - trigger: time_pattern
+        minutes: "/30"
+    conditions:
+      - alias: "Do not poll buienradar at night"
+        condition: time
+        after: "06:00:00"
+        before: "22:00:00"
+    actions:
+      - action: homeassistant.update_entity
+        target:
+          entity_id:
+          - weather.buienradar
+          - camera.buienradar_loop
