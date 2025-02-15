@@ -42,3 +42,4 @@ backup_config.yaml
 
 .timeline
 .vacuum
+model_cache/*
