@@ -8,7 +8,10 @@
 # REQUIRED - This is the template sensor
 
 template:
-  - sensor:
+  - trigger:
+      - trigger: time_pattern
+        minutes: "/60"
+    sensor:
       - name: "Unavailable Entities"
         unique_id: general_unavailable_entities
         icon: "{{ iif(states(this.entity_id)|int(0) > 0,'mdi:alert-circle','mdi:check-circle') }}"
@@ -118,22 +121,22 @@ automation:
     alias: Notification - Unavailable Entities Notification
     description: Create persistent notification if unavailable entities, dismiss if none.
     mode: restart
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.unavailable_entities
         attribute: entity_id
         to: ~
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ is_number(trigger.from_state.state)
               and is_number(trigger.to_state.state) }}
-    action:
+    actions:
       - if:
           - condition: template
             value_template: "{{ state_attr('sensor.unavailable_entities', 'entity_id') | count == 0 }}"
         then:
-          - service: persistent_notification.dismiss
+          - action: persistent_notification.dismiss
             data:
               notification_id: unavailable_entities
         else:
@@ -142,7 +145,7 @@ automation:
           #     notification_id: unavailable_entities
           #     title: "Unavailable Entities"
           #     message: "- {{ state_attr('sensor.unavailable_entities','entity_id')|join('\n- ') }}"
-          - service: notify.mobile_app_pwxperia10iv
+          - action: notify.mobile_app_pwxperia10iv
             data:
               message: |
                 - {{ state_attr('sensor.unavailable_entities','entity_id')|join('\n- ') }}
@@ -150,7 +153,7 @@ automation:
 
           # OPTIONAL Detailed notifcation message example courtesy of @ThomDietrich
 
-          - service: persistent_notification.create
+          - action: persistent_notification.create
             data:
               notification_id: unavailable_entities
               title: "Unavailable Entities"

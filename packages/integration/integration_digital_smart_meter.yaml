@@ -98,15 +98,18 @@ group:
       - input_number.electricity_last_yr_consumption_high
       - input_number.electricity_last_yr_consumption_low
 
-sensor:
-  - platform: template
-    sensors:
-      energy_daily_consumption:
-        friendly_name: Today's energy consumption
+template:
+    - trigger:
+      - trigger: time_pattern
+        minutes: "/20"
+      - trigger: homeassistant
+        event: start
+      sensor:
+      - name: Today's energy consumption
         unique_id: sensor_dsmr_todays_energy_consumption
         device_class: energy
         unit_of_measurement: kWh
-        availability_template: >-
+        availability: >-
           {{ True if
               not is_state('sensor.energy_consumption_tarif_1', 'unavailable')
               and not is_state('sensor.energy_consumption_tarif_2', 'unavailable')
@@ -114,7 +117,7 @@ sensor:
               and not is_state('sensor.energy_consumption_tarif_2', 'unknown')
               else False
           }}
-        value_template: >-
+        state: >-
           {{
             (
               float(states('sensor.energy_consumption_tarif_1')) - float(states('input_number.electricity_previous_consumption_high'))
@@ -123,14 +126,17 @@ sensor:
             ) | round(1)
           }}
 
-  - platform: template
-    sensors:
-      energy_yearly_consumption:
-        friendly_name: This year's energy consumption
+    - trigger:
+      - trigger: time_pattern
+        minutes: "/20"
+      - trigger: homeassistant
+        event: start
+      sensor:
+      - name: This year's energy consumption
         unique_id: sensor_dsmr_this_year_energy_consumption
         device_class: energy
         unit_of_measurement: kWh
-        availability_template: >-
+        availability: >-
           {{ True if
               not is_state('sensor.energy_consumption_tarif_1', 'unavailable')
               and not is_state('sensor.energy_consumption_tarif_2', 'unavailable')
@@ -138,7 +144,7 @@ sensor:
               and not is_state('sensor.energy_consumption_tarif_2', 'unknown')
               else False
           }}
-        value_template: >-
+        state: >-
           {{
             (
               float(states('sensor.energy_consumption_tarif_1')) - float(states('input_number.electricity_last_yr_consumption_high'))
@@ -147,46 +153,53 @@ sensor:
             ) | round(1)
           }}
 
-  - platform: template
-    sensors:
-      energy_daily_cost:
-        friendly_name: Today's energy cost
+    - trigger:
+      - trigger: time_pattern
+        minutes: "/30"
+      - trigger: homeassistant
+        event: start
+      sensor:
+      - name: Today's energy cost
         unique_id: sensor_dsmr_todays_energy_cost
         unit_of_measurement: €
-        icon_template: mdi:currency-eur
-        availability_template: >-
+        icon: mdi:currency-eur
+        availability: >-
           {{ True if
               not is_state('sensor.energy_daily_consumption', 'unavailable')
               and not is_state('sensor.energy_daily_consumption', 'unknown')
               else False
           }}
-        value_template: >-
+        state: >-
           {{
             (
               float(states('sensor.energy_daily_consumption')) * float(states('input_number.electricity_tarrif'))
             ) | round(2)
           }}
 
-  - platform: template
-    sensors:
-      energy_yearly_cost:
-        friendly_name: This year's energy cost
+    - trigger:
+      - trigger: time_pattern
+        minutes: "/30"
+      - trigger: homeassistant
+        event: start
+      sensor:
+      - name: This year's energy cost
         unique_id: sensor_dsmr_this_year_energy_cost
         unit_of_measurement: €
-        icon_template: mdi:currency-eur
-        availability_template: >-
+        icon: mdi:currency-eur
+        availability: >-
           {{ True if
               not is_state('sensor.energy_yearly_consumption', 'unavailable')
               and not is_state('sensor.energy_yearly_consumption', 'unknown')
               else False
           }}
-        value_template: >-
+        state: >-
           {{
             (
               float(states('sensor.energy_yearly_consumption')) * float(states('input_number.electricity_tarrif'))
             ) | round(2)
           }}
 
+sensor:
     # For esp-link based P1-port readers, also record the wifi RSSI
   - platform: rest
     name: P1 Reader RSSI
@@ -204,15 +217,15 @@ automation:
   - id: dsmr_save_yesterday_consumption
     alias: DSMR - Record yesterday consumption
     description: Set yesterday's high and low consumption in a variable
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    action:
-      - service: input_number.set_value
+    actions:
+      - action: input_number.set_value
         data:
           entity_id: input_number.electricity_previous_consumption_high
           value: "{{ states('sensor.energy_consumption_tarif_1') }}"
-      - service: input_number.set_value
+      - action: input_number.set_value
         data:
           entity_id: input_number.electricity_previous_consumption_low
           value: "{{ states('sensor.energy_consumption_tarif_2') }}"
@@ -222,18 +235,18 @@ automation:
     alias: DSMR - Reconnect
     description: Workaround for old bug, force DSMR integration reload if the P1 reader disconnected
     mode: single
-    trigger:
-      - platform: time_pattern
+    triggers:
+      - trigger: time_pattern
         minutes: /10
-    condition:
+    conditions:
       - condition: template
         value_template: >-
           {{ (as_timestamp(now()) -
           as_timestamp(states.sensor.power_consumption.last_updated)) |
           int > 120 }}
-    action:
-      - service: rest_command.reload_dsmr
+    actions:
+      - action: rest_command.reload_dsmr
         data: {}
-      - service: counter.increment
+      - action: counter.increment
         data:
           entity_id: counter.dsmr_reconnect
