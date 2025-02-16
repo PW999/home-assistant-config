@@ -418,8 +418,6 @@ automation:
       - platform: state
         entity_id: binary_sensor.office_presence
         to: "on"
-        for:
-          minutes: 5 # in case cat just walks by the sensor
     condition:
       - condition: not
         conditions:
