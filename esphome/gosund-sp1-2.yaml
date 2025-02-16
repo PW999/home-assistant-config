@@ -88,9 +88,8 @@ sensor:
           - 2.112 -> 2.83
           - 3.944 -> 6.36
         - lambda: if (x < 0.01) return 0; else return x;
-        - sliding_window_moving_average:
-            window_size: 5
-            send_every: 12
+        - throttle_average: 15s  
+        - filter_out: nan
     # Voltage sensor
     voltage:
       id: ${plug_id}_voltage
@@ -102,7 +101,7 @@ sensor:
         - calibrate_linear:
           - 0.0 -> 0.0
           - 216.2 -> 221
-        - throttle: 120s
+        - throttle_average: 120s
     # Power sensor
     power:
       id: ${plug_id}_wattage
@@ -131,12 +130,13 @@ sensor:
                 return 0.6;
               else 
                 return 0.6 + x;
-        - sliding_window_moving_average:
-            window_size: 3
-            send_every: 5
+        - throttle_average: 30s
+        - filter_out: nan
     energy:
       id: ${plug_id}_total_energy
       name: ${plug_name} Consumption
+      filters:
+      - throttle: 120s
 
   - platform: total_daily_energy
     name: ${plug_name} Total Daily Energy Consumption
@@ -145,12 +145,13 @@ sensor:
     filters:
         # Multiplication factor from W to kW is 0.001
         - multiply: 0.001
+        - throttle: 120s
     unit_of_measurement: kWh
     device_class: energy
     
   - platform: wifi_signal
     name: "${plug_name} RSSI"
-    update_interval: 120s
+    update_interval: 300s
     unit_of_measurement: dBm
 
 
