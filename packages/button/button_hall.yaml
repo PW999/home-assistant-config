@@ -4,7 +4,7 @@
 #   @date           :   01/2022
 #   @package        :   Hallway button configuration
 #   @description    :   Automation at the press of a button
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

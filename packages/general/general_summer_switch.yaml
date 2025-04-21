@@ -4,7 +4,7 @@
 #   @date           :   01/2022
 #   @package        :   Global switches
 #   @description    :   The summer switch
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 input_boolean:
   # The summer mode switch completely disables the heating by preventing it from turning on

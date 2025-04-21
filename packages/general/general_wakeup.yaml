@@ -4,7 +4,7 @@
 #   @date           :   04/2022
 #   @package        :   Android alarm trigger
 #   @description    :   Triggers the master switch on next companion alarm
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 #   @credit         :   https://community.home-assistant.io/t/how-to-use-next-alarm-sensor/221686/14
 ###############################################################################
 input_datetime:

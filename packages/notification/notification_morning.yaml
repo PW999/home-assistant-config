@@ -4,7 +4,7 @@
 #   @date           :   05/05/2021
 #   @package        :   Morning notification
 #   @description    :   Send me an update every morning
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

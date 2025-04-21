@@ -5,7 +5,7 @@
 #   @date           :   01/2022
 #   @package        :   Dish washer package
 #   @description    :   Monitor dish washer and notify so I don't forget to empty it
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 #   @credit         :   https://github.com/stanvx/Home-Assistant-Configuration/blob/master/packages/washing_machine.yaml
 #   @erb            :   ./appliance/template/appliance_dish_washer.erb
 # ##############################################################################

@@ -4,7 +4,7 @@
 #   @date           :   04/2021
 #   @package        :   Everything off
 #   @description    :   Turns everything off in one action
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

@@ -4,7 +4,7 @@
 #   @date           :   12/2023
 #   @package        :   Disables/Enables Frigate and Reolink detection
 #   @description    :   Frigate consumes a lot of CPU, don't when I'm at home. Also disable Reolink detection so it doesn't record my every move to SD.
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

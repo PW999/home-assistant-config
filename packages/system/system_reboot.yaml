@@ -4,7 +4,7 @@
 #   @date           :   04/2021
 #   @package        :   General System Configuration
 #   @description    :   Reboot the system once a week
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

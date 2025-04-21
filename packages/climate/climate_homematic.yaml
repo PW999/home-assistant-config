@@ -4,7 +4,7 @@
 #   @date           :   01/2022
 #   @package        :   Homematic package
 #   @description    :   Integrates local running RaspberryMatic and regulates thermostat
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 homematic:

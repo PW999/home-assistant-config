@@ -4,7 +4,7 @@
 #   @date           :   17/04/2022
 #   @package        :   Capacity tarif notification
 #   @description    :   When over 2.5kWh for 15 min, we have to pay more
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

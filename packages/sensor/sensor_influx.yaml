@@ -4,7 +4,7 @@
 #   @date           :   08/2023
 #   @package        :   Influx sensors
 #   @description    :   Fetch data from Influx2 as sensor
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 homeassistant:

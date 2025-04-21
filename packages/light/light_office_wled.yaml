@@ -4,7 +4,7 @@
 #   @date           :   05/05/2021
 #   @package        :   Office light automation
 #   @description    :   Automates the WLED strip behind my desk
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

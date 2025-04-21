@@ -4,7 +4,7 @@
 #   @date           :   01/2022
 #   @package        :   Front door camera on motion
 #   @description    :   Triggers some camera related actions on motion
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

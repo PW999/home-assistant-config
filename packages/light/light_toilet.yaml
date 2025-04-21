@@ -4,7 +4,7 @@
 #   @date           :   01/2022
 #   @package        :   General toilet light automation
 #   @description    :   Way to complex toilet light scheme for my toilet
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

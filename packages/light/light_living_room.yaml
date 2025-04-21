@@ -4,7 +4,7 @@
 #   @date           :   01/2022
 #   @package        :   General Living room light automation
 #   @description    :   Contains living room light
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 
 automation:

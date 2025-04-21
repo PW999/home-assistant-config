@@ -4,7 +4,7 @@
 #   @date           :   12/2022
 #   @package        :   Climate control
 #   @description    :   Manages the different thermostats
-#   @url            :   https://github.com/PW999/home-assistant-config/
+#   @url            :   https://codeberg.org/PW999/home-assistant-config/
 ###############################################################################
 # TODO:
 # [ ] Lower temperatures when no presence is detected in living/office
